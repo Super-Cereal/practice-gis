@@ -1,0 +1,57 @@
+.button {
+    width: 100%;
+    outline: none;
+    border: none;
+
+    cursor: pointer;
+
+    font-family: SFProRounded, sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 16px;
+
+    transition: 0.2s;
+
+    &_color_blue {
+        background: #6bbaff;
+
+        color: #265178;
+    }
+
+    &_color_orange {
+        background: #F28B53;
+
+        color: #853D16;
+    }
+
+    &_size_m {
+        height: 48px;
+        min-width: 48px;
+
+        border-radius: 16px;
+    }
+
+    &_size_s {
+        font-size: 18px;
+        line-height: 0;
+        height: 36px;
+        min-width: 36px;
+
+        border-radius: 8px;
+    }
+
+    &:disabled {
+        background: #bbbbbb;
+        color: #888888;
+
+        cursor: default;
+
+        svg {
+            fill: #888888;
+        }
+    }
+
+    &:active {
+        transform: scale(0.97);
+    }
+}

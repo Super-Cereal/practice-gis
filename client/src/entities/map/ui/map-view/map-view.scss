@@ -1,0 +1,10 @@
+.map-view {
+    background: var(--block);
+    overflow: hidden;
+    height: 80vh;
+    max-height: 800px;
+
+    &__container {
+        height: 100%;
+    }
+}
