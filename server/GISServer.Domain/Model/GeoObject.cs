@@ -33,6 +33,10 @@
             Console.WriteLine(Id);
             Console.WriteLine(Name);
             Console.WriteLine(GeoNameId);
+            Console.WriteLine(Status);
+            Console.WriteLine(GeoNameFeatureId);
+            Console.WriteLine(GeoNameFeature.FeatureKindNameRu);
+            Console.WriteLine(GeoNameId);
             foreach(TopologyLink link in OutputTopologyLinks)
                 Console.WriteLine(link.Id);
             foreach(TopologyLink link in InputTopologyLinks)
@@ -40,3 +44,4 @@
         }
     }
 }
+

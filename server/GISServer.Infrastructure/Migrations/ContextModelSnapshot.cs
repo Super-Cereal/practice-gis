@@ -43,7 +43,7 @@ namespace GISServer.Infrastructure.Migrations
 
                     b.Property<string>("FeatureNameEn")
                         .HasColumnType("text");
-
+
                     b.Property<string>("FeatureNameRu")
                         .HasColumnType("text");
 

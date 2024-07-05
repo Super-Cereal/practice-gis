@@ -8,8 +8,6 @@ namespace GISServer.Infrastructure.Data
         public Context(DbContextOptions<Context> options) : base(options)
         {
             Console.WriteLine();
-            Console.WriteLine("DbContext!!!");
-            Console.WriteLine();
         }
 
         public Context()

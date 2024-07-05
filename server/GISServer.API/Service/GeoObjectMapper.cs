@@ -132,6 +132,7 @@ namespace GISServer.API.Service
             }
             return geoObjectDTO;
         }
+
         public async Task<GeoObject> DTOToObject(GeoObjectDTO geoObjectDTO)
         {
             GeoObject geoObject = new GeoObject();
