@@ -15,19 +15,32 @@ namespace GISServer.Infrastructure.Service
 
         public async Task<List<GeoObject>> GetGeoObjects()
         {
-            return await _context.GeoObjects
-                .Include(gnf => gnf.GeoNameFeature)
-                .Include(gv => gv.GeometryVersion)
-                .Include(goi => goi.GeoObjectInfo)
-                .Include(pgo => pgo.ParentGeoObjects)
-                .Include(cgo => cgo.ChildGeoObjects)
-                .Include(otl => otl.OutputTopologyLinks)
-                .Include(itl => itl.InputTopologyLinks)
-                .ToListAsync();
+            try{
+                return await _context.GeoObjects
+                    .Include(gnf => gnf.GeoNameFeature)
+                    .Include(gv => gv.GeometryVersion)
+                    .Include(goi => goi.GeoObjectInfo)
+                    .Include(pgo => pgo.ParentGeoObjects)
+                    .Include(cgo => cgo.ChildGeoObjects)
+                    .Include(otl => otl.OutputTopologyLinks)
+                    .Include(itl => itl.InputTopologyLinks)
+                    .ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Source);
+                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine(ex.TargetSite);
+                Console.WriteLine();
+                return null;
+            }
         }
 
         public async Task<GeoObject> GetGeoObject(Guid id)
         {
+            try {
             return await _context.GeoObjects
                 .Where(go => go.Id == id)
                 .Include(gnf => gnf.GeoNameFeature)
@@ -38,7 +51,17 @@ namespace GISServer.Infrastructure.Service
                 .Include(otl => otl.OutputTopologyLinks)
                 .Include(itl => itl.InputTopologyLinks)
                 .FirstOrDefaultAsync();
-            
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Source);
+                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine(ex.TargetSite);
+                Console.WriteLine();
+                return null;
+            }
         }
 
         public async Task<GeoObject> GetByNameAsync(string name)
@@ -57,9 +80,22 @@ namespace GISServer.Infrastructure.Service
 
         public async Task<GeoObject> AddGeoObject(GeoObject geoObject)
         {
+            try{
+            geoObject.ToString();
             await _context.GeoObjects.AddAsync(geoObject);
             await _context.SaveChangesAsync();
             return await GetGeoObject(geoObject.Id);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.InnerException);
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Source);
+                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine(ex.TargetSite);
+                Console.WriteLine();
+                return null;
+            }
         }
 
         public async Task<GeoObject> UpdateGeoObject(GeoObject geoObject)

@@ -7,6 +7,9 @@ namespace GISServer.Infrastructure.Data
     {
         public Context(DbContextOptions<Context> options) : base(options)
         {
+            Console.WriteLine();
+            Console.WriteLine("DbContext!!!");
+            Console.WriteLine();
         }
 
         public Context()
@@ -23,7 +26,8 @@ namespace GISServer.Infrastructure.Data
         {
             if (!builder.IsConfigured)
             {
-                builder.UseNpgsql("Host=localhost;Port=5400;Database=gisserver;Username=postgres;Password=12345",
+                builder.EnableSensitiveDataLogging();
+                builder.UseNpgsql("Host=localhost;Port=5432;Database=gisserver;Username=postgres;Password=0000",
                 o => o.UseNetTopologySuite());
             }
         }

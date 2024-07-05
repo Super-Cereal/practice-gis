@@ -13,6 +13,7 @@ namespace GISServer.API.Controllers
         public GeoObjectController(IGeoObjectService service)
         {
             _service = service;
+            Console.WriteLine(); // Для красивого отображения в консоли
         }
 
         [HttpGet]
@@ -62,6 +63,7 @@ namespace GISServer.API.Controllers
         public async Task<ActionResult<GeoObjectDTO>> PostGeoObject(GeoObjectDTO geoObjectDTO)
         {
 
+            Console.WriteLine("PostGeoObject");
             var dbGeoObject = await _service.AddGeoObject(geoObjectDTO);
 
             if (dbGeoObject == null)

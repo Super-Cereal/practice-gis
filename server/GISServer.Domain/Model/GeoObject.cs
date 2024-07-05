@@ -28,5 +28,15 @@
             geo2.OutputTopologyLinks[0].Status = Model.Status.Archive;
 
         }
+        public void ToString()
+        {
+            Console.WriteLine(Id);
+            Console.WriteLine(Name);
+            Console.WriteLine(GeoNameId);
+            foreach(TopologyLink link in OutputTopologyLinks)
+                Console.WriteLine(link.Id);
+            foreach(TopologyLink link in InputTopologyLinks)
+                Console.WriteLine(link.Id);
+        }
     }
 }

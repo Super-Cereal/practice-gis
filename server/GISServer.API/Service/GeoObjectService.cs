@@ -57,8 +57,6 @@ namespace GISServer.API.Service
                return null;
            }
         }
-
-
         public async Task<GeoObjectDTO> UpdateGeoObject(GeoObjectDTO geoObjectDTO)
         {
            try
