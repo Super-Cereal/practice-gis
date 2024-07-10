@@ -7,7 +7,6 @@ namespace GISServer.Infrastructure.Data
     {
         public Context(DbContextOptions<Context> options) : base(options)
         {
-            Console.WriteLine();
         }
 
         public Context()
@@ -24,8 +23,7 @@ namespace GISServer.Infrastructure.Data
         {
             if (!builder.IsConfigured)
             {
-                builder.EnableSensitiveDataLogging();
-                builder.UseNpgsql("Host=localhost;Port=5432;Database=gisserver;Username=postgres;Password=0000",
+                builder.UseNpgsql("Host=localhost;Port=5432;Database=gisserver;Username=postgres;Password=12345",
                 o => o.UseNetTopologySuite());
             }
         }
@@ -71,6 +69,6 @@ namespace GISServer.Infrastructure.Data
                 .WithOne(e => e.GeographicalObjectOut)
                 .HasForeignKey(e => e.GeographicalObjectOutId);
         }
-        
+
     }
 }

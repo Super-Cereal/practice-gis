@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿////STARIY
+using Microsoft.AspNetCore.Mvc;
 using GISServer.API.Service;
 using GISServer.API.Model;
 
 namespace GISServer.API.Controllers
 {
-    [Route("api/[controller]")]
+
     [ApiController]
+    [Route("api/[controller]")]
     public class GeoObjectController : ControllerBase
     {
+
         private readonly IGeoObjectService _service;
 
         public GeoObjectController(IGeoObjectService service)
         {
             _service = service;
-            Console.WriteLine(); // Для красивого отображения в консоли
         }
 
         [HttpGet]
@@ -62,8 +64,6 @@ namespace GISServer.API.Controllers
         [HttpPost]
         public async Task<ActionResult<GeoObjectDTO>> PostGeoObject(GeoObjectDTO geoObjectDTO)
         {
-
-            Console.WriteLine("PostGeoObject");
             var dbGeoObject = await _service.AddGeoObject(geoObjectDTO);
 
             if (dbGeoObject == null)

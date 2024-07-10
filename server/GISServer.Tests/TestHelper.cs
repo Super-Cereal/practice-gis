@@ -20,6 +20,7 @@ namespace GISServer.Tests
                 .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Test")
                 .Options;
 
+
             _context = new Context(contextOptions);
 
             _context.Database.EnsureDeleted();
@@ -31,7 +32,7 @@ namespace GISServer.Tests
                 Name = "ОбъектТест_1",
                 Status = Status.Actual
             };
-            
+
             obj_1.InputTopologyLinks.Add(new TopologyLink { Status = Status.Actual, CommonBorder = "l1" });
             obj_1.OutputTopologyLinks.Add(new TopologyLink { Status = Status.Actual, CommonBorder = "l2" });
 

@@ -47,39 +47,42 @@ namespace GISServer.API.Service
 
         public async Task<GeoObjectDTO> AddGeoObject(GeoObjectDTO geoObjectDTO)
         {
-           try
-           {
-               GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
-               return await _geoObjectMapper.ObjectToDTO(await _repository.AddGeoObject(geoObject));
+            try
+            {
+                GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
+                return await _geoObjectMapper.ObjectToDTO(await _repository.AddGeoObject(geoObject));
             }
-           catch (Exception ex)
-           {
-               return null;
-           }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
+
+
         public async Task<GeoObjectDTO> UpdateGeoObject(GeoObjectDTO geoObjectDTO)
         {
-           try
-           {
-               GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
-               await _repository.UpdateGeoObject(geoObject);
-               return geoObjectDTO;
-           }
-           catch (Exception ex)
-           {
-               return null;
-           }
+            try
+            {
+                GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
+                await _repository.UpdateGeoObject(geoObject);
+                return geoObjectDTO;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
         public async Task<(bool, string)> DeleteGeoObject(Guid id)
         {
-           try
-           {
-               return await _repository.DeleteGeoObject(id);
-           }
-           catch (Exception ex)
-           {
-               return (false, $"An error occured. Error Message: {ex.Message}");
-           }
+            try
+            {
+                return await _repository.DeleteGeoObject(id);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"An error occured. Error Message: {ex.Message}");
+            }
         }
     }
 }
