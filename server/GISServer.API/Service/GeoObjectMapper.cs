@@ -130,6 +130,19 @@ namespace GISServer.API.Service
                     });
                 }
             }
+            if (geoObject.GeoClassifiers!= null)
+            {
+                foreach (var geoClassifier in geoObject.GeoClassifiers)
+                {
+                    geoObjectDTO.GeoClassifiers.Add(new GeoClassifierDTO
+                    {
+                        Id = geoClassifier.Id,
+                        Name = geoClassifier.Name,
+                        Code = geoClassifier.Code,
+                        CommonInfo = geoClassifier.CommonInfo
+                    });
+                }
+            }
             return geoObjectDTO;
         }
 
@@ -256,6 +269,19 @@ namespace GISServer.API.Service
                         CreationDateTime = (DateTime)inputTopologyLink.CreationDateTime,
                         LastUpdatedDateTime = (DateTime)inputTopologyLink.LastUpdatedDateTime,
                         CommonBorder = inputTopologyLink.CommonBorder
+                    });
+                }
+            }
+            if (geoObjectDTO.GeoClassifiers != null)
+            {
+                foreach (var geoClassifier in geoObjectDTO.GeoClassifiers)
+                {
+                    geoObject.GeoClassifiers.Add(new GeoClassifier
+                    {
+                        Id = (Guid)geoClassifier.Id,
+                        Name = (String)geoClassifier.Name,
+                        Code = (int)geoClassifier.Code,
+                        CommonInfo = (String)geoClassifier.CommonInfo
                     });
                 }
             }

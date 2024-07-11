@@ -14,11 +14,13 @@ namespace GISServer.Infrastructure.Data
         }
 
         public DbSet<GeoObject> GeoObjects { get; set; }
+        public DbSet<GeoClassifier> GeoClassifiers { get; set; }
         public DbSet<GeoNamesFeature> GeoNamesFeatures { get; set; }
         public DbSet<GeometryVersion> GeometryVersions { get; set; }
         public DbSet<GeoObjectInfo> GeoObjectInfos { get; set; }
         public DbSet<ParentChildObjectLink> ParentChildObjectLinks { get; set; }
-        public DbSet<TopologyLink> TopologyLinks { get; set; }
+        public DbSet<TopologyLink> TopologyLinks { get; set; }  
+        public DbSet<GeoObjectsGeoClassifiers> GeoObjectsGeoClassifiers { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             if (!builder.IsConfigured)
@@ -27,6 +29,7 @@ namespace GISServer.Infrastructure.Data
                 o => o.UseNetTopologySuite());
             }
         }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -68,6 +71,24 @@ namespace GISServer.Infrastructure.Data
                 .HasMany(e => e.OutputTopologyLinks)
                 .WithOne(e => e.GeographicalObjectOut)
                 .HasForeignKey(e => e.GeographicalObjectOutId);
+
+
+
+
+            modelBuilder 
+                .Entity<GeoObjectsGeoClassifiers>()
+                .HasKey(e => new {e.GeoClassifierId, e.GeoObjectId});
+
+            modelBuilder.Entity<GeoObjectsGeoClassifiers>()
+                .HasOne<GeoObject>(e => e.GeoObject)
+                .WithMany(e => e.GeoObjectsGeoClassifiers)
+                .HasForeignKey(e => e.GeoObjectId);
+
+            modelBuilder.Entity<GeoObjectsGeoClassifiers>()
+                .HasOne<GeoClassifier>(e => e.GeoClassifier)
+                .WithMany(e => e.GeoObjectsGeoClassifiers)
+                .HasForeignKey(e => e.GeoClassifierId);
+
         }
 
     }

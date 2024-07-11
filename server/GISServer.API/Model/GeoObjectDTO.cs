@@ -18,6 +18,7 @@ namespace GISServer.API.Model
         public List<ParentChildObjectLinkDTO>? ChildGeoObjects { get; set; } = new List<ParentChildObjectLinkDTO>(); 
         public List<TopologyLinkDTO>? OutputTopologyLinks { get; set; } = new List<TopologyLinkDTO>();
         public List<TopologyLinkDTO>? InputTopologyLinks { get; set; } = new List<TopologyLinkDTO>();
-        public GeoObjectClassifierDTO? GeoObjectClassifier { get; set; }
+        public List<GeoClassifierDTO>? GeoClassifiers { get; set; } = new List<GeoClassifierDTO>();
+        public List<GeoObjectsGeoClassifiersDTO> GeoObjectsGeoClassifiers { get; set; } = new List<GeoObjectsGeoClassifiersDTO>();
     }
 }
