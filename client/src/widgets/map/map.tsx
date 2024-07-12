@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useUnit } from 'effector-react';
 
-import { MapView, type Aspect } from '../../entities/map';
+import { MapView, mapModel } from '../../entities/map';
 import { InfoPlate } from '../../features/info-plate';
 import { Aspects } from '../../features/aspects';
-import { MapEditorActions, MapEditorPoints } from '../../features/map-editor';
+import { MapEditorActions, MapEditorPoints, MapEditorPolygons } from '../../features/map-editor';
 import { GeoobjectEditor } from '../../features/geoobject-editor';
 
 import { aspects } from './lib/mocks';
-
 import styles from './map.module.css';
-import { mapModel } from '../../entities/map';
 
+/** Рендерит карту и все ее настройки и действия */
 export const Map = () => {
     const $mapMode = useUnit(mapModel.$mapMode);
     const mapEditable = $mapMode === 'edit';
@@ -27,7 +26,14 @@ export const Map = () => {
             </div>
 
             <div className={styles.view}>
-                <MapView>{mapEditable && <MapEditorPoints />}</MapView>
+                <MapView>
+                    {mapEditable && (
+                        <>
+                            <MapEditorPoints />
+                            <MapEditorPolygons />
+                        </>
+                    )}
+                </MapView>
             </div>
 
             <aside className={styles.actions}>{mapEditable ? <MapEditorActions /> : <GeoobjectEditor />}</aside>

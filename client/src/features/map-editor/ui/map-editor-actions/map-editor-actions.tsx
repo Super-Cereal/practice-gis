@@ -2,7 +2,9 @@ import React from 'react';
 
 import { Button } from '../../../../shared/ui/button';
 import styles from './map-editor-actions.module.scss';
+import { editorModel } from '../../lib/editor.model';
 
+/** Рендерит список действий в черновиковом режиме (обьединение/удаление кнопок/полигонов) */
 export const MapEditorActions = () => {
     return (
         <div className={styles.editor}>
@@ -10,7 +12,7 @@ export const MapEditorActions = () => {
 
             <div className={styles.btns}>
                 <h3>Точки</h3>
-                <Button>Обьединить точки</Button>
+                <Button onClick={editorModel.createPolygon}>Обьединить точки в полигон</Button>
                 <Button color="orange">Удалить точки</Button>
             </div>
 

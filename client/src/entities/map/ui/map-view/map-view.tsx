@@ -5,7 +5,7 @@ import { mapModel } from '../../lib/map.model';
 
 import styles from './map-view.module.css';
 
-/** Рендерит всю карту */
+/** Рендерит саму карту */
 export const MapView = ({ children }: React.PropsWithChildren) => {
     return (
         <div className={styles.map}>

@@ -1,13 +1,13 @@
 import type { LatLngTuple } from 'leaflet';
 
-export interface Point {
+export interface EditorPoint {
     id: string;
     coordinates: LatLngTuple;
     selected?: boolean | undefined;
 }
 
-export interface Polygon {
+export interface EditorPolygon {
     id: string;
-    points: Point[];
+    points: EditorPoint[];
     selected?: boolean | undefined;
 }

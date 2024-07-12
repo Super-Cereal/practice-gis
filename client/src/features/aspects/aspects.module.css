@@ -16,7 +16,6 @@
     height: 28px;
     border: 1px solid var(--border);
 
-    will-change: transform, box-shadow;
     transition: all 100ms ease-out;
 }
 

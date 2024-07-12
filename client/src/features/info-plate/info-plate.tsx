@@ -6,6 +6,7 @@ import type { MapMode } from '../../entities/map/lib/types';
 
 import styles from './info-plate.module.css';
 
+/** Настройки страницы и карты (выбор режима просмотра) */
 export const InfoPlate = () => {
     const setMapMode = useUnit(mapModel.setMapMode);
 

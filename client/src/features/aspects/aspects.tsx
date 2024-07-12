@@ -9,8 +9,9 @@ interface Props {
     aspects: Aspect[];
 }
 
+/** Рендерит список радио-кнопок с выбором аспекта геообьектов */
 export const Aspects = ({ aspects }: Props) => {
-    const [$mapAspect, setMapAspect] = useUnit([mapModel.$mapAspect, mapModel.setMapAspect]);
+    const $mapAspect = useUnit(mapModel.$mapAspect);
 
     return (
         <div aria-label="Аспекты" role="radiogroup" className={cx(styles.list, 'a11y')}>
@@ -25,7 +26,7 @@ export const Aspects = ({ aspects }: Props) => {
                         aria-checked={isSelected}
                         className={cx(styles.aspect, { [styles.selected!]: isSelected })}
                         key={id}
-                        onClick={() => setMapAspect(isSelected ? null : aspect)}
+                        onClick={() => mapModel.setMapAspect(isSelected ? null : aspect)}
                     >
                         {title}
                     </button>

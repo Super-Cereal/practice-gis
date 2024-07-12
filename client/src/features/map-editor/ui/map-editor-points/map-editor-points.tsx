@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { Circle, Popup } from 'react-leaflet';
-import { LeafletMouseEvent, PathOptions } from 'leaflet';
+import type { LeafletMouseEvent, PathOptions } from 'leaflet';
 import { useUnit } from 'effector-react';
-import { nanoid } from 'nanoid';
 
 import { editorModel } from '../../lib/editor.model';
 import { mapModel } from '../../../../entities/map';
-import type { Point } from '../../lib/types';
 
+/** Рендерит черновиковые кнопки и обрабатывает их создание, выделение и сохранение */
 export const MapEditorPoints = () => {
     const $map = useUnit(mapModel.$map);
     const $points = useUnit(editorModel.$points);
@@ -18,7 +17,7 @@ export const MapEditorPoints = () => {
         }
 
         const handleMapClick = (e: LeafletMouseEvent) => {
-            editorModel.addPoint({ id: nanoid(), coordinates: [e.latlng.lat, e.latlng.lng], selected: true });
+            editorModel.addPoint([e.latlng.lat, e.latlng.lng]);
         };
 
         $map.addEventListener('click', handleMapClick);
@@ -28,23 +27,23 @@ export const MapEditorPoints = () => {
         };
     }, [$map]);
 
-    const handlePointClick = (e: LeafletMouseEvent) => {};
-
     return (
         <>
-            {Object.values($points).map((point, index) => {
-                // const usedInPolygon = $polygons.some(({ points }) => points.some(({ id }) => id === point.id));
+            {Object.values($points).map(({ id, coordinates, selected }, index) => {
+                // const usedInPolygon = Object.values($polygons).some(({ points }) =>
+                //     points.some(({ id }) => id === point.id),
+                // );
 
                 return (
                     <Circle
                         key={index}
-                        center={point.coordinates}
-                        pathOptions={point.selected ? selectedOptions : defaultOptions}
+                        center={coordinates}
+                        pathOptions={selected ? selectedOptions : defaultOptions}
                         radius={20}
-                        eventHandlers={{ click: () => editorModel.togglePointSelect(point.id) }}
+                        eventHandlers={{ click: () => editorModel.togglePointSelect(id) }}
                     >
                         <Popup>
-                            <h3>Точка {point.id}</h3>
+                            <h3>Точка {id}</h3>
                         </Popup>
                     </Circle>
                 );

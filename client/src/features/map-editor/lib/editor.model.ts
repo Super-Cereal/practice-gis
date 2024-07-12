@@ -1,18 +1,30 @@
 import { createStore, sample, createEvent } from 'effector';
+import { nanoid } from 'nanoid';
 
-import type { Point, Polygon } from './types';
+import type { EditorPoint, EditorPolygon } from './types';
 
-const $points = createStore<Record<Point['id'], Point>>({});
-const addPoint = createEvent<Point>();
-const togglePointSelect = createEvent<Point['id']>();
+const $points = createStore<Record<EditorPoint['id'], EditorPoint>>({});
+const $polygons = createStore<Record<EditorPolygon['id'], EditorPolygon>>({});
 
+/** Добавить точку по координатам */
+const addPoint = createEvent<EditorPoint['coordinates']>();
 sample({
     clock: addPoint,
     source: $points,
-    fn: (points, newPoint) => ({ ...points, [newPoint.id]: newPoint }),
+    fn: (points, coordinates) => {
+        const newPoint: EditorPoint = {
+            id: nanoid(),
+            coordinates,
+            selected: true,
+        };
+
+        return { ...points, [newPoint.id]: newPoint };
+    },
     target: $points,
 });
 
+/** Добавить/убрать выделение точке по id */
+const togglePointSelect = createEvent<EditorPoint['id']>();
 sample({
     clock: togglePointSelect,
     source: $points,
@@ -24,13 +36,37 @@ sample({
     target: $points,
 });
 
-const $polygons = createStore<Polygon[]>([]);
-const addPolygon = createEvent<Polygon>();
-
+/** Создать полигон из выбранных точек */
+const createPolygon = createEvent();
 sample({
-    clock: addPolygon,
+    clock: createPolygon,
+    source: { polygons: $polygons, points: $points },
+    fn: ({ polygons, points }) => {
+        const selectedPoints = Object.values(points).filter((point) => point.selected);
+
+        const newPolygon: EditorPolygon = {
+            id: nanoid(),
+            points: selectedPoints,
+            selected: true,
+        };
+
+        selectedPoints.forEach((point) => togglePointSelect(point.id));
+
+        return { ...polygons, [newPolygon.id]: newPolygon };
+    },
+    target: $polygons,
+});
+
+/** Добавить/убрать выделение полигону по id */
+const togglePolygonSelect = createEvent<EditorPolygon['id']>();
+sample({
+    clock: togglePolygonSelect,
     source: $polygons,
-    fn: (polygons, newPolygon) => [...polygons, newPolygon],
+    fn: (polygons, polygonIdToSelect) => {
+        const polygon = polygons[polygonIdToSelect];
+
+        return { ...polygons, [polygon.id]: { ...polygon, selected: !polygon.selected } };
+    },
     target: $polygons,
 });
 
@@ -40,5 +76,6 @@ export const editorModel = {
     togglePointSelect,
 
     $polygons,
-    addPolygon,
+    createPolygon,
+    togglePolygonSelect,
 };
