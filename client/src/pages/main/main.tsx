@@ -10,7 +10,7 @@ const b = bem('main');
 export const Main = () => {
     return (
         <>
-            <Header />
+            {/* <Header /> */}
             <Page>
                 <Map />
             </Page>

@@ -1,7 +1,7 @@
 @font-face {
     font-family: "SFMono";
-    src: url("shared/lib/fonts/SFMonoMedium.woff2") format("woff2"),
-    url("shared/lib/fonts/SFMonoMedium.woff") format("woff");
+    src: url("../shared/lib/fonts/SFMonoMedium.woff2") format("woff2"),
+    url("../shared/lib/fonts/SFMonoMedium.woff") format("woff");
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -9,8 +9,8 @@
 
 @font-face {
     font-family: "SFProRounded";
-    src: url("shared/lib/fonts/SF-Pro-Rounded-Medium.woff2") format("woff2"),
-    url("shared/lib/fonts/SF-Pro-Rounded-Medium.woff") format("woff");
+    src: url("../shared/lib/fonts/SF-Pro-Rounded-Medium.woff2") format("woff2"),
+    url("../shared/lib/fonts/SF-Pro-Rounded-Medium.woff") format("woff");
     font-weight: 500;  /* точно 700 и medium? */
     font-style: normal;
     font-display: swap;
@@ -18,8 +18,8 @@
 
 @font-face {
     font-family: "SFProDisplay";
-    src: url("shared/lib/fonts/SFProDisplay-Medium.woff2") format("woff2"),
-    url("shared/lib/fonts/SFProDisplay-Medium.woff") format("woff");
+    src: url("../shared/lib/fonts/SFProDisplay-Medium.woff2") format("woff2"),
+    url("../shared/lib/fonts/SFProDisplay-Medium.woff") format("woff");
     font-weight: 500;
     font-style: normal;
     font-display: swap;

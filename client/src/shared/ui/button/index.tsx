@@ -14,7 +14,7 @@ interface Props extends React.PropsWithChildren {
 
 const b = bem('button');
 
-export const Button = ({ disabled, mix, onClick, color = 'blue', children, size = 'm' }: Props) => {
+export const Button = ({ disabled, mix, onClick, color = 'blue', children, size = 's' }: Props) => {
     return (
         <button className={b(null, { color, size }, mix)} onClick={onClick} disabled={disabled}>
             {children}

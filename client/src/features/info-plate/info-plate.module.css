@@ -1,0 +1,11 @@
+.plate {
+    background: var(--block);
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.setting {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

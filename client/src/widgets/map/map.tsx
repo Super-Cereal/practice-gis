@@ -1,32 +1,36 @@
 import React, { useState } from 'react';
+import { useUnit } from 'effector-react';
 
-import { bem } from '../../shared/lib';
-import { InfoPlate } from '../../features/info-plate';
-import { Settings } from '../../features/settings';
 import { MapView, type Aspect } from '../../entities/map';
+import { InfoPlate } from '../../features/info-plate';
+import { Aspects } from '../../features/aspects';
+import { MapEditorActions, MapEditorPoints } from '../../features/map-editor';
+import { GeoobjectEditor } from '../../features/geoobject-editor';
 
 import { aspects } from './lib/mocks';
 
-import './map.scss';
-
-const b = bem('map');
+import styles from './map.module.css';
+import { mapModel } from '../../entities/map';
 
 export const Map = () => {
-    const [aspect, setAspect] = useState<Aspect>(aspects[0]);
+    const $mapMode = useUnit(mapModel.$mapMode);
+    const mapEditable = $mapMode === 'edit';
 
     return (
-        <div className={b()}>
-            <div className={b('info-plate')}>
+        <div className={styles.map}>
+            <aside className={styles.infoPlate}>
                 <InfoPlate />
+            </aside>
+
+            <div className={styles.aspects}>
+                <Aspects aspects={aspects} />
             </div>
 
-            <div className={b('settings')}>
-                <Settings aspects={aspects} selected={aspect} setSelected={setAspect} />
+            <div className={styles.view}>
+                <MapView>{mapEditable && <MapEditorPoints />}</MapView>
             </div>
 
-            <div className={b('map-view')}>
-                <MapView />
-            </div>
+            <aside className={styles.actions}>{mapEditable ? <MapEditorActions /> : <GeoobjectEditor />}</aside>
         </div>
     );
 };
