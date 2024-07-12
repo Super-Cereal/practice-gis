@@ -4,7 +4,7 @@ import { useUnit } from 'effector-react';
 import { MapView, mapModel } from '../../entities/map';
 import { InfoPlate } from '../../features/info-plate';
 import { Aspects } from '../../features/aspects';
-import { MapEditorActions, MapEditorPoints, MapEditorPolygons } from '../../features/map-editor';
+import { MapEditorActions, MapEditorObjects } from '../../features/map-editor';
 import { GeoobjectEditor } from '../../features/geoobject-editor';
 
 import { aspects } from './lib/mocks';
@@ -26,14 +26,7 @@ export const Map = () => {
             </div>
 
             <div className={styles.view}>
-                <MapView>
-                    {mapEditable && (
-                        <>
-                            <MapEditorPoints />
-                            <MapEditorPolygons />
-                        </>
-                    )}
-                </MapView>
+                <MapView>{mapEditable && <MapEditorObjects />}</MapView>
             </div>
 
             <aside className={styles.actions}>{mapEditable ? <MapEditorActions /> : <GeoobjectEditor />}</aside>

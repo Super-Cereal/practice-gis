@@ -1,3 +1,3 @@
 export { MapEditorActions } from './ui/map-editor-actions/map-editor-actions';
-export { MapEditorPoints } from './ui/map-editor-points/map-editor-points';
-export { MapEditorPolygons } from './ui/map-editor-polygons/map-editor-polygons';
+export { MapEditorObjects } from './ui/map-editor-objects/map-editor-objects';
+export { editorModel as mapEditorModel } from './lib/editor.model';

@@ -11,3 +11,9 @@ export interface EditorPolygon {
     points: EditorPoint[];
     selected?: boolean | undefined;
 }
+
+export interface EditorLine {
+    id: string;
+    points: EditorPoint[];
+    selected?: boolean | undefined;
+}

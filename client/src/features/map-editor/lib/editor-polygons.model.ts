@@ -5,6 +5,10 @@ import { editorPointsModel } from './editor-points.model';
 import type { EditorPolygon } from './types';
 
 const $polygons = createStore<Record<EditorPolygon['id'], EditorPolygon>>({});
+const $selectedPolygons = sample({
+    clock: $polygons,
+    fn: (polygons) => Object.values(polygons).filter(({ selected }) => selected),
+});
 
 /** Создать полигон из выбранных точек */
 const createPolygon = createEvent();
@@ -38,6 +42,14 @@ sample({
     target: $polygons,
 });
 
+/** Убрать выделение полигонов */
+const removePolygonSelection = createEvent();
+sample({
+    clock: removePolygonSelection,
+    source: $selectedPolygons,
+    fn: (polygons) => polygons.forEach(({ id }) => togglePolygonSelect(id)),
+});
+
 /** Удалить полигон */
 const deletePolygon = createEvent<EditorPolygon['id']>();
 sample({
@@ -52,9 +64,20 @@ sample({
     target: $polygons,
 });
 
+/** Удалить выделеные полигоны */
+const deleteSelectedPolygons = createEvent();
+sample({
+    clock: deleteSelectedPolygons,
+    source: $selectedPolygons,
+    fn: (polygons) => polygons.forEach(({ id }) => deletePolygon(id)),
+});
+
 export const editorPolygonsModel = {
     $polygons,
+    $selectedPolygons,
     createPolygon,
     togglePolygonSelect,
+    removePolygonSelection,
     deletePolygon,
+    deleteSelectedPolygons,
 };

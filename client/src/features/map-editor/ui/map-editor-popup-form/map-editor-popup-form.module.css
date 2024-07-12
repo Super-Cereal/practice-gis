@@ -1,6 +1,6 @@
 .btns {
-    margin-top: 8px;
-
     display: flex;
     gap: 8px;
+
+    margin-top: 12px;
 }

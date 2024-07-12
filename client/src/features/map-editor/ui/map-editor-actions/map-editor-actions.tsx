@@ -7,25 +7,9 @@ import { editorModel } from '../../lib/editor.model';
 
 /** Рендерит список действий в черновиковом режиме (обьединение/удаление кнопок/полигонов) */
 export const MapEditorActions = () => {
-    const selectedPoints = Object.values(useUnit(editorModel.$points)).filter(({ selected }) => selected);
-    const selectedPolygons = Object.values(useUnit(editorModel.$polygons)).filter(({ selected }) => selected);
-
-    const handleRemoveSelectedPoints = () => {
-        selectedPoints.forEach(({ id }) => editorModel.togglePointSelect(id));
-    };
-    const handleCreatePolygon = () => {
-        editorModel.createPolygon();
-    };
-    const handleDeleteSelectedPoints = () => {
-        selectedPoints.forEach(({ id }) => editorModel.deletePoint(id));
-    };
-
-    const handleRemoveSelectedPolygons = () => {
-        selectedPolygons.forEach(({ id }) => editorModel.togglePolygonSelect(id));
-    };
-    const handleDeleteSelectedPolygons = () => {
-        selectedPolygons.forEach(({ id }) => editorModel.deletePolygon(id));
-    };
+    const selectedPoints = useUnit(editorModel.$selectedPoints);
+    const selectedLines = useUnit(editorModel.$selectedLines);
+    const selectedPolygons = useUnit(editorModel.$selectedPolygons);
 
     return (
         <div className={styles.editor}>
@@ -40,9 +24,30 @@ export const MapEditorActions = () => {
                             <div>id: {id}</div>
                         ))}
                     </div>
-                    <Button onClick={handleRemoveSelectedPoints}>Снять выделение</Button>
-                    {selectedPoints.length > 2 && <Button onClick={handleCreatePolygon}>Обьединить в полигон</Button>}
-                    <Button onClick={handleDeleteSelectedPoints} color="orange">
+                    <Button onClick={() => editorModel.removePointsSelection()}>Снять выделение</Button>
+                    {selectedPoints.length > 1 && (
+                        <Button onClick={() => editorModel.createLine()}>Обьединить в линию</Button>
+                    )}
+                    {selectedPoints.length > 2 && (
+                        <Button onClick={() => editorModel.createPolygon()}>Обьединить в полигон</Button>
+                    )}
+                    <Button onClick={() => editorModel.deleteSelectedPoints()} color="orange">
+                        Удалить
+                    </Button>
+                </div>
+            )}
+
+            {selectedLines.length !== 0 && (
+                <div className={styles.container}>
+                    <h3>Линии ({selectedLines.length})</h3>
+
+                    <div>
+                        {selectedLines.map(({ id, points }) => (
+                            <div>id: {id}</div>
+                        ))}
+                    </div>
+                    <Button onClick={() => editorModel.removeLinesSelection()}>Снять выделение</Button>
+                    <Button onClick={() => editorModel.deleteSelectedLines()} color="orange">
                         Удалить
                     </Button>
                 </div>
@@ -56,8 +61,8 @@ export const MapEditorActions = () => {
                             <div>id: {id}</div>
                         ))}
                     </div>
-                    <Button onClick={handleRemoveSelectedPolygons}>Снять выделение</Button>
-                    <Button onClick={handleDeleteSelectedPolygons} color="orange">
+                    <Button onClick={() => editorModel.removePolygonSelection()}>Снять выделение</Button>
+                    <Button onClick={() => editorModel.deleteSelectedPolygons()} color="orange">
                         Удалить
                     </Button>
                 </div>
