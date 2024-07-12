@@ -9,5 +9,7 @@
         public Task<(bool, string)> DeleteGeoObject(Guid id);
         public Task UpdateAsync(GeoObject geoObject);
         public Task<GeoObject> GetByNameAsync(string name);
+        public Task<GeoClassifier> AddGeoClassifier(GeoClassifier geoClassifier);
+        public Task<GeoClassifier> GetGeoClassifier(Guid id);
     }
 }

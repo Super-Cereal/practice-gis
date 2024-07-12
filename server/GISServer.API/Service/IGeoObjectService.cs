@@ -9,5 +9,8 @@ namespace GISServer.API.Service
         public Task<GeoObjectDTO> UpdateGeoObject(GeoObjectDTO geoObjectDTO);
         public Task<GeoObjectDTO> AddGeoObject(GeoObjectDTO geoObjectDTO);
         public Task<(bool, string)> DeleteGeoObject(Guid id);
+        
+        public Task<GeoClassifierDTO> AddGeoClassifier(GeoClassifierDTO geoClassifierDTO);
+        public Task<GeoClassifierDTO> GetGeoClassifier(Guid id);
     }
 }

@@ -86,5 +86,24 @@ namespace GISServer.API.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("AddClassifier")]
+        [ActionName(nameof(PostGeoClassifier))]
+        public async Task<ActionResult<GeoClassifierDTO>> PostGeoClassifier(GeoClassifierDTO geoClassifierDTO)
+        {
+            try{
+            var dbGeoClassifier = await _service.AddGeoClassifier(geoClassifierDTO);
+            if (dbGeoClassifier == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"{geoClassifierDTO.Name} could not be added.");
+            }
+            return CreatedAtAction("GetGeoClassifier", new {id = geoClassifierDTO.Id}, geoClassifierDTO);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"{geoClassifierDTO.Name} could not be added.");
+            }
+        }
     }
 }

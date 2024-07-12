@@ -24,7 +24,6 @@ namespace GISServer.Infrastructure.Service
                 .Include(cgo => cgo.ChildGeoObjects)
                 .Include(itl => itl.InputTopologyLinks)
                 .Include(otl => otl.OutputTopologyLinks)
-                .Include(gc =>  gc.GeoClassifiers)
                 .ToListAsync();
         }
 
@@ -39,9 +38,7 @@ namespace GISServer.Infrastructure.Service
                 .Include(cgo => cgo.ChildGeoObjects)
                 .Include(itl => itl.InputTopologyLinks)
                 .Include(otl => otl.OutputTopologyLinks)
-                .Include(gc =>  gc.GeoClassifiers)
                 .FirstOrDefaultAsync();
-
         }
 
         public async Task<GeoObject> GetByNameAsync(string name)
@@ -55,7 +52,6 @@ namespace GISServer.Infrastructure.Service
 
         public void ChangeTrackerClear()
         {
-
             _context.ChangeTracker.Clear();
         }
 
@@ -148,5 +144,34 @@ namespace GISServer.Infrastructure.Service
             await _context.SaveChangesAsync();
             return (true, "GeoObject got deleted");
         }
+
+        public async Task<List<GeoClassifier>> GetGeoClassifiers()
+        {
+            return await _context.GeoClassifiers
+                .ToListAsync();
+        }
+
+        public async Task<GeoClassifier> GetGeoClassifier(Guid id)
+        {
+            try{
+            return await _context.GeoClassifiers
+                .Where(ci => ci.Id == id)
+                .FirstOrDefaultAsync();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<GeoClassifier> AddGeoClassifier(GeoClassifier geoClassifier)
+        {
+            await _context.GeoClassifiers.AddAsync(geoClassifier);
+            await _context.SaveChangesAsync();
+            return await GetGeoClassifier(geoClassifier.Id);
+        }
+    
+
     }
 }
