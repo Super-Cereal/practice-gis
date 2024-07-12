@@ -84,5 +84,32 @@ namespace GISServer.API.Service
                 return (false, $"An error occured. Error Message: {ex.Message}");
             }
         }
+
+        public async Task<GeoClassifierDTO> AddGeoClassifier(GeoClassifierDTO geoClassifierDTO)
+        {
+            try
+            {
+                GeoClassifier geoClassifier = await _geoObjectMapper.DTOToClassifier(geoClassifierDTO);
+                return await _geoObjectMapper.ClassifierToDTO(await _repository.AddGeoClassifier(geoClassifier));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. Error Message: {ex. Message}");
+                return null;
+            }
+        }
+        
+        public async Task<GeoClassifierDTO> GetGeoClassifier(Guid id)
+        {
+            try
+            {
+                GeoClassifierDTO geoClassifierDTO = await _geoObjectMapper.ClassifierToDTO(await _repository.GetGeoClassifier(id));
+                return geoClassifierDTO;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

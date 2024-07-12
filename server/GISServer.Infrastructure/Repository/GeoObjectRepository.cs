@@ -148,5 +148,23 @@ namespace GISServer.Infrastructure.Service
             await _context.SaveChangesAsync();
             return (true, "GeoObject got deleted");
         }
+
+        public async Task<GeoClassifier> AddGeoClassifier(GeoClassifier geoClassifier)
+        {
+            await _context.GeoClassifiers.AddAsync(geoClassifier);
+            await _context.SaveChangesAsync();
+            return await GetGeoClassifier(geoClassifier.Id);
+        }
+    
+        public async Task<GeoClassifier> GetGeoClassifier(Guid id)
+        {
+            return await _context.GeoClassifiers
+                .Where(gc => gc.Id == id)
+                .Include(n => n.Name)
+                .Include(c => c.Code)
+                .Include(ci=> ci.CommonInfo)
+                .FirstOrDefaultAsync();
+        }
+
     }
 }
