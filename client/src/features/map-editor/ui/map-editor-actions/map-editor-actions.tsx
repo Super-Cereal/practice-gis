@@ -62,6 +62,10 @@ export const MapEditorActions = () => {
                         ))}
                     </div>
                     <Button onClick={() => editorModel.removePolygonSelection()}>Снять выделение</Button>
+                   
+                    <Button /* onClick={() => editorModel.deleteSelectedPolygons()} */ >
+                        Создать геообъект
+                    </Button>
                     <Button onClick={() => editorModel.deleteSelectedPolygons()} color="orange">
                         Удалить
                     </Button>

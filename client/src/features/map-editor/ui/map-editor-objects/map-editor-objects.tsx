@@ -72,6 +72,7 @@ export const MapEditorObjects = () => {
                     eventHandlers={{
                         click: () => editorModel.togglePolygonSelect(id),
                         mouseover: (e) => e.target.openPopup(),
+                        mouseout: (e) => e.target.closePopup(),
                     }}
                 >
                     <MapEditorPopupForm title={`Полигон ${id}`} onDelete={() => editorModel.deletePolygon(id)} />

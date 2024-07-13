@@ -23,11 +23,11 @@ export const MapEditorPopupForm = ({ title, onDelete }: Props) => {
         <Popup>
             <h3>{title}</h3>
 
-            <div className={styles.btns}>
+           {/*  <div className={styles.btns}>
                 <Button onClick={handleDelete} color="orange">
                     Удалить
                 </Button>
-            </div>
+            </div> */}
         </Popup>
     );
 };
