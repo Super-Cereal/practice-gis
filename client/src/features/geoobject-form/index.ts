@@ -1,1 +1,1 @@
-export {};
+export {GeoobjectForm} from './geoobject-form';

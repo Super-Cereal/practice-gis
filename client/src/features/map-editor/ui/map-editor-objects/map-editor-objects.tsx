@@ -46,7 +46,7 @@ export const MapEditorObjects = () => {
                         mouseover: (e) => e.target.openPopup(),
                     }}
                 >
-                    <MapEditorPopupForm title={`Точка ${id}`} onDelete={() => editorModel.deletePoint(id)} />
+                    <MapEditorPopupForm title={`Точка ${id}`} type='point' onDelete={() => editorModel.deletePoint(id)} />
                 </Circle>
             ))}
 
@@ -60,7 +60,7 @@ export const MapEditorObjects = () => {
                         mouseover: (e) => e.target.openPopup(),
                     }}
                 >
-                    <MapEditorPopupForm title={`Линия ${id}`} onDelete={() => editorModel.deleteLine(id)} />
+                    <MapEditorPopupForm title={`Линия ${id}`} type='line' onDelete={() => editorModel.deleteLine(id)} />
                 </Polyline>
             ))}
 
@@ -72,10 +72,10 @@ export const MapEditorObjects = () => {
                     eventHandlers={{
                         click: () => editorModel.togglePolygonSelect(id),
                         mouseover: (e) => e.target.openPopup(),
-                        mouseout: (e) => e.target.closePopup(),
+                       /*  mouseout: (e) => e.target.closePopup(), */
                     }}
                 >
-                    <MapEditorPopupForm title={`Полигон ${id}`} onDelete={() => editorModel.deletePolygon(id)} />
+                    <MapEditorPopupForm title={`Полигон ${id}`}  type='polygon' /* polygonId={id} */ onDelete={() => editorModel.deletePolygon(id)} />
                 </Polygon>
             ))}
         </>
