@@ -145,6 +145,7 @@ namespace GISServer.Infrastructure.Service
             return (true, "GeoObject got deleted");
         }
 
+<<<<<<< HEAD
         public async Task<List<GeoClassifier>> GetGeoClassifiers()
         {
             return await _context.GeoClassifiers
