@@ -87,7 +87,20 @@ namespace GISServer.API.Controllers
             return NoContent();
         }
 
-        [HttpPost("AddClassifier")]
+        [HttpGet("GeoClassifier/{id}")]
+        public async Task<ActionResult> GetGeoClassifier(Guid id)
+        {
+            var geoClassifier = await _service.GetGeoClassifier(id);
+
+            if (geoClassifier == null)
+            {
+                return StatusCode(StatusCodes.Status204NoContent, $"No GeoObject found for id: {id}");
+            }
+
+            return StatusCode(StatusCodes.Status200OK, geoClassifier);
+        }
+
+        [HttpPost("GeoClassifier")]
         [ActionName(nameof(PostGeoClassifier))]
         public async Task<ActionResult<GeoClassifierDTO>> PostGeoClassifier(GeoClassifierDTO geoClassifierDTO)
         {
@@ -97,7 +110,7 @@ namespace GISServer.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"{geoClassifierDTO.Name} could not be added.");
             }
-            return CreatedAtAction("GetGeoClassifier", new {id = geoClassifierDTO.Id}, geoClassifierDTO);
+            return CreatedAtAction("GetGeoClassifier", new {id = geoClassifierDTO.Id}, new {geoClassifierDTO});
             }
             catch(Exception ex)
             {
@@ -105,5 +118,7 @@ namespace GISServer.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"{geoClassifierDTO.Name} could not be added.");
             }
         }
+
+        
     }
 }
