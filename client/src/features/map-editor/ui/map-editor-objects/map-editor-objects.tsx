@@ -46,7 +46,7 @@ export const MapEditorObjects = () => {
                         mouseover: (e) => e.target.openPopup(),
                     }}
                 >
-                    <MapEditorPopupForm title={`Точка ${id}`} type='point' onDelete={() => editorModel.deletePoint(id)} />
+                    <MapEditorPopupForm id={id} type='point' onDelete={() => editorModel.deletePoint(id)} />
                 </Circle>
             ))}
 
@@ -60,7 +60,7 @@ export const MapEditorObjects = () => {
                         mouseover: (e) => e.target.openPopup(),
                     }}
                 >
-                    <MapEditorPopupForm title={`Линия ${id}`} type='line' onDelete={() => editorModel.deleteLine(id)} />
+                    <MapEditorPopupForm id={id} type='line' onDelete={() => editorModel.deleteLine(id)} />
                 </Polyline>
             ))}
 
@@ -75,7 +75,7 @@ export const MapEditorObjects = () => {
                        /*  mouseout: (e) => e.target.closePopup(), */
                     }}
                 >
-                    <MapEditorPopupForm title={`Полигон ${id}`}  type='polygon' /* polygonId={id} */ onDelete={() => editorModel.deletePolygon(id)} />
+                    <MapEditorPopupForm id={id}  type='polygon' /* polygonId={id} */ onDelete={() => editorModel.deletePolygon(id)} />
                 </Polygon>
             ))}
         </>
