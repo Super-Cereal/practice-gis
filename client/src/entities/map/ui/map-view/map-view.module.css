@@ -1,0 +1,13 @@
+.map {
+    background: var(--block);
+    overflow: hidden;
+    height: 80vh;
+    max-height: 800px;
+
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.container {
+    height: 100%;
+}

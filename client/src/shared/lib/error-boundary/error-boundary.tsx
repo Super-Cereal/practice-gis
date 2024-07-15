@@ -28,7 +28,7 @@ export class ErrorBoundary extends React.Component<React.PropsWithChildren> {
                 <Page>
                     <h2>
                         Что-то поломалось! Попробуй обратиться в поддержку по{' '}
-                        <a href="https://vk.com/super-cereal" target="_blank">
+                        <a href="https://vk.com/supercereal" target="_blank">
                             ссылке
                         </a>
                     </h2>

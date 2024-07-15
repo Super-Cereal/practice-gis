@@ -1,17 +1,31 @@
 import React from 'react';
 import { useUnit } from 'effector-react';
 
-import { bem } from '../../shared/lib';
-import { mapModel } from '../../entities/map/lib/map.model';
+import { mapModel } from '../../entities/map';
+import type { MapMode } from '../../entities/map/lib/types';
 
-import './info-plate.scss';
+import styles from './info-plate.module.css';
 
-const b = bem('info-plate')
-
+/** Настройки страницы и карты (выбор режима просмотра) */
 export const InfoPlate = () => {
-    // const $map = useUnit(mapModel.$map);
+    const setMapMode = useUnit(mapModel.setMapMode);
 
-    // const center = $map?.getCenter();
+    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setMapMode(e.target.value as MapMode);
+    };
 
-    return <div className={b()}>InfoPlate</div>;
+    return (
+        <div className={styles.plate}>
+            <div className={styles.setting}>
+                <label htmlFor="map-mode-select">Режим работы с картой:</label>
+
+                <select name="map-mode" id="map-mode-select" onChange={handleChange}>
+                    <option value="view" defaultChecked={true}>
+                        Просмотр сохраненных геообьектов
+                    </option>
+                    <option value="edit">Создание новых геообьектов</option>
+                </select>
+            </div>
+        </div>
+    );
 };

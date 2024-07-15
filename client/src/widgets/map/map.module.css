@@ -1,0 +1,28 @@
+.map {
+    display: grid;
+
+    grid-template-columns: 1fr 4fr;
+
+    grid-template-areas:
+        'info info'
+        'act asp'
+        'act map';
+}
+
+.infoPlate {
+    grid-area: info;
+    margin-bottom: 8px;
+}
+
+.aspects {
+    grid-area: asp;
+}
+
+.view {
+    grid-area: map;
+}
+
+.actions {
+    grid-area: act;
+    margin-right: 12px;
+}

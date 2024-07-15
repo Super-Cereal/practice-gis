@@ -2,25 +2,22 @@ import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 
 import { mapModel } from '../../lib/map.model';
-import { bem } from '../../../../shared/lib';
 
-import './map-view.scss';
+import styles from './map-view.module.css';
 
-const b = bem('map-view');
-
-const position = [51.505, -0.09] as [number, number];
-
-/** Рендерит всю карту */
-export const MapView = () => {
+/** Рендерит саму карту */
+export const MapView = ({ children }: React.PropsWithChildren) => {
     return (
-        <div className={b()}>
-            <MapContainer className={b('container')} center={[59.939, 30.316]} zoom={15} scrollWheelZoom={true}>
-                {/* <_MapSetter /> */}
+        <div className={styles.map}>
+            <MapContainer className={styles.container} center={[59.957, 30.409]} zoom={16} scrollWheelZoom={true}>
+                <_MapSetter />
 
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+
+                {children}
             </MapContainer>
         </div>
     );
@@ -33,5 +30,6 @@ const _MapSetter = () => {
     useEffect(() => {
         mapModel.setMap(map);
     }, [map]);
+
     return null;
 };
