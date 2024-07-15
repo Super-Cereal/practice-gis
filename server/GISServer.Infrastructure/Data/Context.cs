@@ -73,24 +73,17 @@ namespace GISServer.Infrastructure.Data
                 .WithOne(e => e.GeographicalObjectOut)
                 .HasForeignKey(e => e.GeographicalObjectOutId);
 
-
-
-
             modelBuilder 
                 .Entity<GeoObjectsGeoClassifiers>()
                 .HasKey(e => new {e.GeoClassifierId, e.GeoObjectId});
-
             modelBuilder.Entity<GeoObjectsGeoClassifiers>()
-                .HasOne<GeoObject>(e => e.GeoObject)
+                .HasOne<GeoObjectInfo>(e => e.GeoObjectInfo)
                 .WithMany(e => e.GeoObjectsGeoClassifiers)
                 .HasForeignKey(e => e.GeoObjectId);
-
             modelBuilder.Entity<GeoObjectsGeoClassifiers>()
                 .HasOne<GeoClassifier>(e => e.GeoClassifier)
                 .WithMany(e => e.GeoObjectsGeoClassifiers)
                 .HasForeignKey(e => e.GeoClassifierId);
-
         }
-
     }
 }

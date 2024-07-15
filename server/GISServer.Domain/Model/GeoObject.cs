@@ -17,8 +17,7 @@
         public List<ParentChildObjectLink>? ChildGeoObjects { get; set; } = new List<ParentChildObjectLink>(); 
         public List<TopologyLink>? OutputTopologyLinks { get; set; } = new List<TopologyLink>();
         public List<TopologyLink>? InputTopologyLinks { get; set; } = new List<TopologyLink>();
-        public List<GeoClassifier>? GeoClassifiers { get; set; } = new List<GeoClassifier>();
-        public List<GeoObjectsGeoClassifiers> GeoObjectsGeoClassifiers { get; set; } = new List<GeoObjectsGeoClassifiers>();
+        
 
 
         public void Union(GeoObject geo1, GeoObject geo2)

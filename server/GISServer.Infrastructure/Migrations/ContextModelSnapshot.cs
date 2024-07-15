@@ -35,7 +35,7 @@ namespace GISServer.Infrastructure.Migrations
                     b.Property<string>("CommonInfo")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("GeoObjectId")
+                    b.Property<Guid?>("GeoObjectInfoId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -43,7 +43,7 @@ namespace GISServer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GeoObjectId");
+                    b.HasIndex("GeoObjectInfoId");
 
                     b.ToTable("GeoClassifiers");
                 });
@@ -302,9 +302,9 @@ namespace GISServer.Infrastructure.Migrations
 
             modelBuilder.Entity("GISServer.Domain.Model.GeoClassifier", b =>
                 {
-                    b.HasOne("GISServer.Domain.Model.GeoObject", null)
+                    b.HasOne("GISServer.Domain.Model.GeoObjectInfo", null)
                         .WithMany("GeoClassifiers")
-                        .HasForeignKey("GeoObjectId");
+                        .HasForeignKey("GeoObjectInfoId");
                 });
 
             modelBuilder.Entity("GISServer.Domain.Model.GeoObject", b =>
@@ -333,7 +333,7 @@ namespace GISServer.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GISServer.Domain.Model.GeoObject", "GeoObject")
+                    b.HasOne("GISServer.Domain.Model.GeoObjectInfo", "GeoObjectInfo")
                         .WithMany("GeoObjectsGeoClassifiers")
                         .HasForeignKey("GeoObjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -341,7 +341,7 @@ namespace GISServer.Infrastructure.Migrations
 
                     b.Navigation("GeoClassifier");
 
-                    b.Navigation("GeoObject");
+                    b.Navigation("GeoObjectInfo");
                 });
 
             modelBuilder.Entity("GISServer.Domain.Model.GeometryVersion", b =>
@@ -397,11 +397,7 @@ namespace GISServer.Infrastructure.Migrations
                 {
                     b.Navigation("ChildGeoObjects");
 
-                    b.Navigation("GeoClassifiers");
-
                     b.Navigation("GeoObjectInfo");
-
-                    b.Navigation("GeoObjectsGeoClassifiers");
 
                     b.Navigation("GeometryVersion");
 
@@ -410,6 +406,13 @@ namespace GISServer.Infrastructure.Migrations
                     b.Navigation("OutputTopologyLinks");
 
                     b.Navigation("ParentGeoObjects");
+                });
+
+            modelBuilder.Entity("GISServer.Domain.Model.GeoObjectInfo", b =>
+                {
+                    b.Navigation("GeoClassifiers");
+
+                    b.Navigation("GeoObjectsGeoClassifiers");
                 });
 #pragma warning restore 612, 618
         }

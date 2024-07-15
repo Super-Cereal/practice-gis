@@ -65,8 +65,22 @@ namespace GISServer.API.Service
                     ArchiveTime = geoObject.GeoObjectInfo.ArchiveTime,
                     UpdateTime = geoObject.GeoObjectInfo.UpdateTime,
                     CreationTime = geoObject.GeoObjectInfo.CreationTime,
-                    CommonInfo = geoObject.GeoObjectInfo.CommonInfo
+                    CommonInfo = geoObject.GeoObjectInfo.CommonInfo,
                 };
+                if (geoObject.GeoObjectInfo.GeoClassifiers != null)
+                {
+                    //geoObjectDTO.GeoObjectInfo.GeoClassifiers = new List<GeoClassifierDTO>();
+                    foreach (var geoClassifier in geoObject.GeoObjectInfo.GeoClassifiers)
+                    {
+                        geoObjectDTO.GeoObjectInfo.GeoClassifiers.Add(new GeoClassifierDTO
+                        {
+                            Id = geoClassifier.Id,
+                            Name = geoClassifier.Name,
+                            Code = geoClassifier.Code,
+                            CommonInfo = geoClassifier.CommonInfo
+                        });
+                    }
+                }
             }
             if (geoObject.ParentGeoObjects != null)
             {
@@ -130,19 +144,7 @@ namespace GISServer.API.Service
                     });
                 }
             }
-            if (geoObject.GeoClassifiers!= null)
-            {
-                foreach (var geoClassifier in geoObject.GeoClassifiers)
-                {
-                    geoObjectDTO.GeoClassifiers.Add(new GeoClassifierDTO
-                    {
-                        Id = geoClassifier.Id,
-                        Name = geoClassifier.Name,
-                        Code = geoClassifier.Code,
-                        CommonInfo = geoClassifier.CommonInfo
-                    });
-                }
-            }
+            
             return geoObjectDTO;
         }
 
@@ -209,6 +211,20 @@ namespace GISServer.API.Service
                     CreationTime = (DateTime)geoObjectDTO.GeoObjectInfo.CreationTime,
                     CommonInfo = geoObjectDTO.GeoObjectInfo.CommonInfo
                 };
+                if (geoObjectDTO.GeoObjectInfo.GeoClassifiers != null)
+                {
+                    //geoObject.GeoObjectInfo.GeoClassifiers = new List<GeoClassifier>();
+                    foreach (var geoClassifier in geoObjectDTO.GeoObjectInfo.GeoClassifiers)
+                    {
+                        geoObject.GeoObjectInfo.GeoClassifiers.Add(new GeoClassifier
+                        {
+                            Id = (Guid)geoClassifier.Id,
+                            Name = (String)geoClassifier.Name,
+                            Code = (int)geoClassifier.Code,
+                            CommonInfo = (String)geoClassifier.CommonInfo
+                        });
+                    }
+                }
             }
             if (geoObjectDTO.ParentGeoObjects != null)
             {
@@ -272,19 +288,7 @@ namespace GISServer.API.Service
                     });
                 }
             }
-            if (geoObjectDTO.GeoClassifiers != null)
-            {
-                foreach (var geoClassifier in geoObjectDTO.GeoClassifiers)
-                {
-                    geoObject.GeoClassifiers.Add(new GeoClassifier
-                    {
-                        Id = (Guid)geoClassifier.Id,
-                        Name = (String)geoClassifier.Name,
-                        Code = (int)geoClassifier.Code,
-                        CommonInfo = (String)geoClassifier.CommonInfo
-                    });
-                }
-            }
+            
             return geoObject;
         }
 
