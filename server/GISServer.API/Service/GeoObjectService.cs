@@ -112,5 +112,22 @@ namespace GISServer.API.Service
                 return null;
             }
         }
+        public async Task<List<GeoClassifierDTO>> GetGeoClassifiers()
+        {
+            try
+            {
+                List<GeoClassifier> geoClassifiersFromDB = new List<GeoClassifier>(await _repository.GetGeoClassifiers());
+                List<GeoClassifierDTO> geoClassifiers = new List<GeoClassifierDTO>();
+                foreach (var geoClassifier in geoClassifiersFromDB)
+                {
+                    geoClassifiers.Add(await _geoObjectMapper.ClassifierToDTO(geoClassifier));
+                }
+                return geoClassifiers;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using GISServer.API.Service;
 using GISServer.API.Model;
+using GISServer.Domain.Model;
 
 namespace GISServer.API.Controllers
 {
@@ -85,6 +86,18 @@ namespace GISServer.API.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("GeoClassifiers")]
+        public async Task<ActionResult> GetGeoClassifiers()
+        {
+            var getClassifiers = await _service.GetGeoClassifiers();
+            if (getClassifiers == null)
+            {
+                return StatusCode(StatusCodes.Status204NoContent, "No GeoClassifier in database");
+            }
+
+            return StatusCode(StatusCodes.Status200OK, getClassifiers);
         }
 
         [HttpGet("GeoClassifier/{id}")]

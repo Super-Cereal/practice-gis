@@ -11,5 +11,6 @@
         public Task<GeoObject> GetByNameAsync(string name);
         public Task<GeoClassifier> AddGeoClassifier(GeoClassifier geoClassifier);
         public Task<GeoClassifier> GetGeoClassifier(Guid id);
+        public Task<List<GeoClassifier>> GetGeoClassifiers();
     }
 }
