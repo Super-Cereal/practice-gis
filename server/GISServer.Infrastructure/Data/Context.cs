@@ -31,12 +31,11 @@ namespace GISServer.Infrastructure.Data
             }
         }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder
-                .Entity<GeoObject>()
-                .Ignore(e => e.Geometry);
+            //modelBuilder
+            //    .Entity<GeoObject>()
+            //    .Ignore(e => e.Geometry);
             modelBuilder
                 .Entity<GeoObject>()
                 .HasOne(e => e.GeoNameFeature)
