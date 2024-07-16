@@ -69,7 +69,7 @@ namespace GISServer.API.Service
                 };
                 if (geoObject.GeoObjectInfo.GeoClassifiers != null)
                 {
-                    //geoObjectDTO.GeoObjectInfo.GeoClassifiers = new List<GeoClassifierDTO>();
+                    geoObjectDTO.GeoObjectInfo.GeoClassifiers = new List<GeoClassifierDTO>();
                     foreach (var geoClassifier in geoObject.GeoObjectInfo.GeoClassifiers)
                     {
                         geoObjectDTO.GeoObjectInfo.GeoClassifiers.Add(new GeoClassifierDTO
@@ -78,6 +78,7 @@ namespace GISServer.API.Service
                             Name = geoClassifier.Name,
                             Code = geoClassifier.Code,
                             CommonInfo = geoClassifier.CommonInfo
+
                         });
                     }
                 }
@@ -210,18 +211,20 @@ namespace GISServer.API.Service
                     UpdateTime = (DateTime)geoObjectDTO.GeoObjectInfo.UpdateTime,
                     CreationTime = (DateTime)geoObjectDTO.GeoObjectInfo.CreationTime,
                     CommonInfo = geoObjectDTO.GeoObjectInfo.CommonInfo
+
                 };
+
                 if (geoObjectDTO.GeoObjectInfo.GeoClassifiers != null)
                 {
-                    //geoObject.GeoObjectInfo.GeoClassifiers = new List<GeoClassifier>();
+                    geoObject.GeoObjectInfo.GeoClassifiers = new List<GeoClassifier>();
                     foreach (var geoClassifier in geoObjectDTO.GeoObjectInfo.GeoClassifiers)
                     {
                         geoObject.GeoObjectInfo.GeoClassifiers.Add(new GeoClassifier
                         {
                             Id = (Guid)geoClassifier.Id,
-                            Name = (String)geoClassifier.Name,
-                            Code = (int)geoClassifier.Code,
-                            CommonInfo = (String)geoClassifier.CommonInfo
+                            Name = (String?)geoClassifier.Name,
+                            Code = (int?)geoClassifier.Code,
+                            CommonInfo = (String?)geoClassifier.CommonInfo
                         });
                     }
                 }

@@ -15,7 +15,6 @@ namespace GISServer.Infrastructure.Service
 
         public async Task<List<GeoObject>> GetGeoObjects()
         {
-
             return await _context.GeoObjects
                 .Include(gnf => gnf.GeoNameFeature)
                 .Include(gv => gv.GeometryVersion)
@@ -24,9 +23,11 @@ namespace GISServer.Infrastructure.Service
                 .Include(cgo => cgo.ChildGeoObjects)
                 .Include(itl => itl.InputTopologyLinks)
                 .Include(otl => otl.OutputTopologyLinks)
+                .Include(gc => gc.GeoObjectInfo.GeoClassifiers)
                 .ToListAsync();
         }
 
+        
         public async Task<GeoObject> GetGeoObject(Guid id)
         {
             return await _context.GeoObjects
@@ -40,7 +41,6 @@ namespace GISServer.Infrastructure.Service
                 .Include(otl => otl.OutputTopologyLinks)
                 .FirstOrDefaultAsync();
         }
-
         public async Task<GeoObject> GetByNameAsync(string name)
         {
             return await _context.GeoObjects
@@ -49,7 +49,27 @@ namespace GISServer.Infrastructure.Service
                 .Include(l2 => l2.OutputTopologyLinks)
                 .FirstOrDefaultAsync();
         }
-
+        public async Task<List<GeoObjectsGeoClassifiers>> GetGeoClassifiers(Guid geoObjectId)
+        {
+            return await _context.GeoObjectsGeoClassifiers
+                .Where(o => o.GeoObjectId == geoObjectId)
+                .ToListAsync();
+        }
+        public async Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers(Guid? geoObjectInfoId)
+        {
+            return await _context.GeoObjectsGeoClassifiers
+                .Where(o=>o.GeoObjectId == geoObjectInfoId)
+                .Include(gogc => gogc.GeoObjectInfo)
+                .Include(gogc => gogc.GeoClassifier)
+                .ToListAsync();
+        }
+        public async Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers()
+        {
+            return await _context.GeoObjectsGeoClassifiers
+                .Include(gogc => gogc.GeoObjectInfo)
+                .Include(gogc => gogc.GeoClassifier)
+                .ToListAsync();
+        }
         public void ChangeTrackerClear()
         {
             _context.ChangeTracker.Clear();
@@ -61,6 +81,13 @@ namespace GISServer.Infrastructure.Service
             await _context.GeoObjects.AddAsync(geoObject);
             await _context.SaveChangesAsync();
             return await GetGeoObject(geoObject.Id);
+        }
+
+        public async Task<List<GeoObjectsGeoClassifiers>> AddGeoObjectsGeoClassifiers(GeoObjectsGeoClassifiers geoObjectsGeoClassifiers)
+        {
+            await _context.GeoObjectsGeoClassifiers.AddAsync(geoObjectsGeoClassifiers);
+            await _context.SaveChangesAsync();
+            return await GetGeoObjectsGeoClassifiers(geoObjectsGeoClassifiers.GeoObjectId);
         }
 
         public async Task<GeoObject> UpdateGeoObject(GeoObject geoObject)
@@ -151,7 +178,7 @@ namespace GISServer.Infrastructure.Service
                 .ToListAsync();
         }
 
-        public async Task<GeoClassifier> GetGeoClassifier(Guid id)
+        public async Task<GeoClassifier> GetGeoClassifier(Guid? id)
         {
             try{
             return await _context.GeoClassifiers
@@ -164,6 +191,7 @@ namespace GISServer.Infrastructure.Service
                 return null;
             }
         }
+        
 
         public async Task<GeoClassifier> AddGeoClassifier(GeoClassifier geoClassifier)
         {
