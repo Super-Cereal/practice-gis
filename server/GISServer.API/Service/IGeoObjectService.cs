@@ -16,5 +16,9 @@ namespace GISServer.API.Service
 
         public Task<List<GeoClassifierDTO>> GetGeoClassifiers();
 
+        public Task<GeoObjectsGeoClassifiersDTO> AddGeoObjectsGeoClassifiers(GeoObjectsGeoClassifiersDTO geoObjectsGeoClassifiersDTO);
+        public Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers(Guid? geoObjectInfoId);
+        public Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers();
+
     }
 }

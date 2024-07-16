@@ -131,7 +131,44 @@ namespace GISServer.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"{geoClassifierDTO.Name} could not be added.");
             }
         }
+        [HttpPost("GeoObjectsClassifiers")]
+        public async Task<ActionResult<GeoObjectsGeoClassifiersDTO>> PostGeoObjectsGeoClassifiers(Guid geoObjectId, Guid geoClassifierId)
+        {
+            try
+            {
+                var geoObjectsGeoClassifiersDTO = new GeoObjectsGeoClassifiersDTO
+                {
+                    GeoObjectId = geoObjectId,
+                    GeoClassifierId = geoClassifierId
+                };
 
-        
+                var dbGeoObjectsGeoClassifiers = await _service.AddGeoObjectsGeoClassifiers(geoObjectsGeoClassifiersDTO);
+                if (dbGeoObjectsGeoClassifiers == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
+                }
+
+                return CreatedAtAction("GetGeoObjectsGeoClassifiers", new { geoObjectId = geoObjectId, geoClassifierId = geoClassifierId }, geoObjectsGeoClassifiersDTO);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
+            }
+        }
+        [HttpGet("GetGeoObjectsClassifiers")]
+        public async Task<ActionResult> GetGeoObjectsGeoClassifiers()
+        {
+            var getGeoObjectsGeoClassifiers = await _service.GetGeoObjectsGeoClassifiers();
+            if (getGeoObjectsGeoClassifiers == null)
+            {
+                return StatusCode(StatusCodes.Status204NoContent, "No GeoClassifier in database");
+            }
+
+            return StatusCode(StatusCodes.Status200OK, getGeoObjectsGeoClassifiers);
+        }
+
+
+
     }
 }
