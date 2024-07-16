@@ -1,5 +1,6 @@
 ﻿using GISServer.API.Model;
 using GISServer.Domain.Model;
+using Microsoft.Identity.Client;
 
 namespace GISServer.API.Service
 {
@@ -22,6 +23,12 @@ namespace GISServer.API.Service
                 List<GeoObjectDTO> geoObjects = new List<GeoObjectDTO>();
                 foreach (var geoObject in geoObjectsFromDB)
                 {
+                    List<GeoObjectsGeoClassifiers> geoObjectsGeoClassifiersFromDB = new List<GeoObjectsGeoClassifiers>(await _repository.GetGeoObjectsGeoClassifiers(geoObject.Id));
+                    foreach (var gogc in geoObjectsGeoClassifiersFromDB)
+                    {
+                        geoObject.GeoObjectInfo.GeoClassifiers.Add(await _repository.GetGeoClassifier(gogc.GeoClassifierId));
+
+                    }
                     geoObjects.Add(await _geoObjectMapper.ObjectToDTO(geoObject));
                 }
                 return geoObjects;
@@ -129,5 +136,52 @@ namespace GISServer.API.Service
                 return null;
             }
         }
+        public async Task<GeoObjectsGeoClassifiersDTO> AddGeoObjectsGeoClassifiers(GeoObjectsGeoClassifiersDTO geoObjectsGeoClassifiersDTO)
+        {
+            try
+            {
+                // Создаем объект сущности из DTO
+                var entity = new GeoObjectsGeoClassifiers
+                {
+                    GeoObjectId = geoObjectsGeoClassifiersDTO.GeoObjectId,
+                    GeoClassifierId = geoObjectsGeoClassifiersDTO.GeoClassifierId
+                };
+
+                // Добавляем объект в репозиторий и сохраняем изменения
+                await _repository.AddGeoObjectsGeoClassifiers(entity);
+
+                return geoObjectsGeoClassifiersDTO;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
+                return null;
+            }
+        }
+        public async Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers(Guid? geoObjectInfoId)
+        {
+            try
+            {
+                return await _repository.GetGeoObjectsGeoClassifiers(geoObjectInfoId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
+                return null;
+            }
+        }
+        public async Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers()
+        {
+            try
+            {
+                return await _repository.GetGeoObjectsGeoClassifiers();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
+                return null;
+            }
+        }
+
     }
 }
