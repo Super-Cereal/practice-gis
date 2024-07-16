@@ -26,7 +26,7 @@ namespace GISServer.Infrastructure.Data
         {
             if (!builder.IsConfigured)
             {
-                builder.UseNpgsql("Host=localhost;Port=5432;Database=gisserver;Username=postgres;Password=root;",
+                builder.UseNpgsql("Host=localhost;Port=5432;Database=gisserver;Username=postgres;Password=0000;",
                 o => o.UseNetTopologySuite());
             }
         }
@@ -34,9 +34,6 @@ namespace GISServer.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder
-                .Entity<GeoObject>()
-                .Ignore(e => e.Geometry);
             modelBuilder
                 .Entity<GeoObject>()
                 .HasOne(e => e.GeoNameFeature)
