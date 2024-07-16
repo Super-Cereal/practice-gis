@@ -30,14 +30,14 @@
 Запустить терминал\
 \
 Перейти в директорию server и сделать билд \
-`dotnet build .\GISServer.API\`\
+`dotnet build ./GISServer.API`\
 \
 Применить миграцию, то есть перейти в директорию server и ввести одну команду\
 `cd ..`\
-`dotnet ef database update -s .\GISServer.API\ -p .\GISServer.Infrastructure\`\
+`dotnet ef database update -s ./GISServer.API -p ./GISServer.Infrastructure`\
 \
 Сервер готов к запуску. из директории server\
-`dotnet run --project .\GISServer.API\`\
+`dotnet run --project ./GISServer.API`
 
 ## Шаблон объекта
 ```
@@ -101,6 +101,7 @@
     "creationTime": "2024-07-05T01:03:55.733Z",
     "commonInfo": "string"
   },
+  
   "parentGeoObjects": [
     {
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa4",
