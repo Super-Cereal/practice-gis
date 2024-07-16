@@ -1,2 +1,2 @@
-import { GeoModel } from './lib/geoobject.model'
+import { geoObjectModel } from './lib/geoobject.model'
 export type {GeoObject, GeoInfo}  from './lib/types'

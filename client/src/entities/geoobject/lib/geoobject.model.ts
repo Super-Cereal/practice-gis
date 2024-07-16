@@ -1,7 +1,7 @@
 import { createStore, createEvent, createEffect } from 'effector';
 import { status } from 'patronum/status';
 
-import { getGeoObjectsRequest } from '../api/getGeoObjectsRequest';
+import { getGeoObjectsRequest, saveGeoObjectRequest, updateGeoObjectRequest } from '../api/requests';
 import type { GeoInfo, GeoObject } from './types';
 
 // Создаем действия
@@ -13,6 +13,14 @@ const setSelectedObjectEvent = createEvent<{ type: string; id: string } | null>(
 // Запрос за всеми геообьектами
 const getGeoObjectsFx = createEffect(getGeoObjectsRequest);
 const $getGeoObjectsLoading = status({ effect: getGeoObjectsFx, defaultValue: 'pending' });
+
+// Сохранить геообьект в бэк
+const saveGeoObjectFx = createEffect(saveGeoObjectRequest);
+const $saveGeoObjectLoading = status(saveGeoObjectFx);
+
+// Обновить геообьект в бэк
+const updateGeoObjectFx = createEffect(updateGeoObjectRequest);
+const $updateGeoObjectLoading = status(updateGeoObjectFx);
 
 // Создаем стор
 const $geoObjectsStore = createStore<GeoObject[]>([])
@@ -37,9 +45,15 @@ const $selectedGeoInfoStore = $selectedGeoObjectStore.map((selectedGeoObject): G
     return selectedGeoObject?.geoInfo || null;
 });
 
-export const GeoModel = {
+export const geoObjectModel = {
     $getGeoObjectsLoading,
     getGeoObjectsFx,
+
+    $saveGeoObjectLoading,
+    saveGeoObjectFx,
+
+    $updateGeoObjectLoading,
+    updateGeoObjectFx,
 
     $selectedObjectStore,
     setSelectedObjectEvent,
