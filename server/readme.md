@@ -17,7 +17,7 @@
 
 ### dotnet
 Скачивается при установке asp.net. проверить можно так:
-`dotnet --version`
+> `dotnet --version`
 
 ### dotnet-ef
 `dotnet tool install --global dotnet-ef`
@@ -25,12 +25,12 @@
 ## Запуск сервера
 Запустить терминал\
 Перейти в директорию server и сделать билд \
-`dotnet build .\GISServer.API\`\
+> `dotnet build .\GISServer.API\`\
 Применить миграцию, то есть перейти в директорию server и ввести одну команду\
-`cd ..`\
-`dotnet ef database update -s .\GISServer.API\ -p .\GISServer.Infrastructure\`\
+> `cd ..`\
+> `dotnet ef database update -s .\GISServer.API\ -p .\GISServer.Infrastructure\`\
 Сервер готов к запуску. из директории server\
-`dotnet run --project .\GISServer.API\`\
+> `dotnet run --project .\GISServer.API\`\
 
 
 
