@@ -182,6 +182,16 @@ namespace GISServer.API.Service
                 return null;
             }
         }
+        public GeoObjectDTO CreateGuids(GeoObjectDTO geoObjectDTO)
+        {
+            Guid guid = Guid.NewGuid();
+            geoObjectDTO.Id = guid;
+            geoObjectDTO.GeoNameFeature.Id = guid;
+            geoObjectDTO.GeoObjectInfo.Id = guid;
+            geoObjectDTO.Geometry.Id = guid;
+
+            return geoObjectDTO;
+        }
 
     }
 }

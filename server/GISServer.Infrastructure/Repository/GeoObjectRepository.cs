@@ -18,6 +18,7 @@ namespace GISServer.Infrastructure.Service
             return await _context.GeoObjects
                 .Include(gnf => gnf.GeoNameFeature)
                 .Include(gv => gv.GeometryVersion)
+                .Include(g => g.Geometry)
                 .Include(goi => goi.GeoObjectInfo)
                 .Include(pgo => pgo.ParentGeoObjects)
                 .Include(cgo => cgo.ChildGeoObjects)

@@ -65,6 +65,8 @@ namespace GISServer.API.Controllers
         [HttpPost]
         public async Task<ActionResult<GeoObjectDTO>> PostGeoObject(GeoObjectDTO geoObjectDTO)
         {
+            geoObjectDTO = _service.CreateGuids(geoObjectDTO);
+
             var dbGeoObject = await _service.AddGeoObject(geoObjectDTO);
 
             if (dbGeoObject == null)

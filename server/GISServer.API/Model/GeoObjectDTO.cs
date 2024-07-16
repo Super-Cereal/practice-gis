@@ -4,7 +4,7 @@ namespace GISServer.API.Model
 {
     public class GeoObjectDTO
     {
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
         public string? Name { get; set; }
         public int? GeoNameId { get; set; }
         public Status? Status { get; set; }

@@ -1,5 +1,6 @@
 ﻿using GISServer.API.Model;
 using GISServer.Domain.Model;
+using NetTopologySuite.Geometries;
 
 
 namespace GISServer.API.Service
@@ -8,6 +9,7 @@ namespace GISServer.API.Service
     {
         public async Task<GeoObjectDTO> ObjectToDTO(GeoObject geoObject)
         {
+
             GeoObjectDTO geoObjectDTO = new GeoObjectDTO();
             geoObjectDTO.Id = geoObject.Id;
             geoObjectDTO.Name = geoObject.Name;
@@ -19,6 +21,7 @@ namespace GISServer.API.Service
             {
                 geoObjectDTO.GeoNameFeature = new GeoNamesFeatureDTO
                 {
+
                     Id = geoObject.GeoNameFeature.Id,
                     GeoNamesFeatureCode = geoObject.GeoNameFeature.GeoNamesFeatureCode,
                     GeoNamesFeatureKind = geoObject.GeoNameFeature.GeoNamesFeatureKind,
@@ -49,6 +52,23 @@ namespace GISServer.API.Service
                         NorthToSouthLength = geometryVersion.NorthToSouthLength
                     });
                 }
+            }
+            if (geoObject.Geometry != null)
+            {
+                geoObjectDTO.Geometry = new GeometryVersionDTO
+                {
+                    Id = geoObject.Geometry.Id,
+                    AuthoritativeKnowledgeSource = geoObject.Geometry.AuthoritativeKnowledgeSource,
+                    Version = geoObject.Geometry.Version,
+                    Status = geoObject.Geometry.Status,
+                    ArchiveTime = geoObject.Geometry.ArchiveTime,
+                    UpdateTime = geoObject.Geometry.UpdateTime,
+                    CreationTime = geoObject.Geometry.CreationTime,
+                    BorderGeocodes = geoObject.Geometry.BorderGeocodes,
+                    AreaValue = geoObject.Geometry.AreaValue,
+                    WestToEastLength = geoObject.Geometry.WestToEastLength,
+                    NorthToSouthLength = geoObject.Geometry.NorthToSouthLength
+                };
             }
             if (geoObject.GeoObjectInfo != null)
             {
@@ -155,11 +175,12 @@ namespace GISServer.API.Service
             if (geoObjectDTO.Id != null) {
                 geoObject.Id = (Guid) geoObjectDTO.Id;
             }
+
             geoObject.Name = geoObjectDTO.Name;
-            geoObject.GeoNameId = (int)geoObjectDTO.GeoNameId;
-            geoObject.Status = (Status)geoObjectDTO.Status;
-            geoObject.UpdateTime = (DateTime)geoObjectDTO.UpdateTime;
-            geoObject.CreationTime = (DateTime)geoObjectDTO.CreationTime;
+            geoObject.GeoNameId = (int?)geoObjectDTO.GeoNameId;
+            geoObject.Status = (Status?)geoObjectDTO.Status;
+            geoObject.UpdateTime = (DateTime?)geoObjectDTO.UpdateTime;
+            geoObject.CreationTime = (DateTime?)geoObjectDTO.CreationTime;
             if (geoObjectDTO.GeoNameFeature != null)
             {
                 geoObject.GeoNameFeature = new GeoNamesFeature
@@ -183,18 +204,36 @@ namespace GISServer.API.Service
                     {
                         Id = (Guid)geometryVersion.Id,
                         AuthoritativeKnowledgeSource = geometryVersion.AuthoritativeKnowledgeSource,
-                        Version = (int)geometryVersion.Version,
-                        Status = (Status)geometryVersion.Status,
-                        ArchiveTime = (DateTime)geometryVersion.ArchiveTime,
-                        UpdateTime = (DateTime)geometryVersion.UpdateTime,
-                        CreationTime = (DateTime)geometryVersion.CreationTime,
+                        Version = (int?)geometryVersion.Version,
+                        Status = (Status?)geometryVersion.Status,
+                        ArchiveTime = (DateTime?)geometryVersion.ArchiveTime,
+                        UpdateTime = (DateTime?)geometryVersion.UpdateTime,
+                        CreationTime = (DateTime?)geometryVersion.CreationTime,
                         BorderGeocodes = geometryVersion.BorderGeocodes,
-                        AreaValue = (double)geometryVersion.AreaValue,
-                        WestToEastLength = (double)geometryVersion.WestToEastLength,
-                        NorthToSouthLength = (double)geometryVersion.NorthToSouthLength
+                        AreaValue = (double?)geometryVersion.AreaValue,
+                        WestToEastLength = (double?)geometryVersion.WestToEastLength,
+                        NorthToSouthLength = (double?)geometryVersion.NorthToSouthLength
                     });
                 }
             }
+            if (geoObjectDTO.Geometry != null)
+            {
+                geoObject.Geometry = new GeometryVersion
+                {
+                    Id = (Guid)geoObjectDTO.Geometry.Id,
+                    AuthoritativeKnowledgeSource = geoObjectDTO.Geometry.AuthoritativeKnowledgeSource,
+                    Version = (int?)geoObjectDTO.Geometry.Version,
+                    Status = (Status?)geoObjectDTO.Geometry.Status,
+                    ArchiveTime = (DateTime?)geoObjectDTO.Geometry.ArchiveTime,
+                    UpdateTime = (DateTime?)geoObjectDTO.Geometry.UpdateTime,
+                    CreationTime = (DateTime?)geoObjectDTO.Geometry.CreationTime,
+                    BorderGeocodes = geoObjectDTO.Geometry.BorderGeocodes,
+                    AreaValue = (double?)geoObjectDTO.Geometry.AreaValue,
+                    WestToEastLength = (double?)geoObjectDTO.Geometry.WestToEastLength,
+                    NorthToSouthLength = (double?)geoObjectDTO.Geometry.NorthToSouthLength
+                };
+            }
+
             if (geoObjectDTO.GeoObjectInfo != null)
             {
                 geoObject.GeoObjectInfo = new GeoObjectInfo
@@ -203,14 +242,14 @@ namespace GISServer.API.Service
                     FullName = geoObjectDTO.GeoObjectInfo.FullName,
                     ShortName = geoObjectDTO.GeoObjectInfo.ShortName,
                     AuthoritativeKnowledgeSource = geoObjectDTO.GeoObjectInfo.AuthoritativeKnowledgeSource,
-                    Version = (int)geoObjectDTO.GeoObjectInfo.Version,
+                    Version = (int?)geoObjectDTO.GeoObjectInfo.Version,
                     LanguageCode = geoObjectDTO.GeoObjectInfo.LanguageCode,
                     Language = geoObjectDTO.GeoObjectInfo.Language,
-                    Status = (Status)geoObjectDTO.GeoObjectInfo.Status,
-                    ArchiveTime = (DateTime)geoObjectDTO.GeoObjectInfo.ArchiveTime,
-                    UpdateTime = (DateTime)geoObjectDTO.GeoObjectInfo.UpdateTime,
-                    CreationTime = (DateTime)geoObjectDTO.GeoObjectInfo.CreationTime,
-                    CommonInfo = geoObjectDTO.GeoObjectInfo.CommonInfo
+                    Status = (Status?)geoObjectDTO.GeoObjectInfo.Status,
+                    ArchiveTime = (DateTime?)geoObjectDTO.GeoObjectInfo.ArchiveTime,
+                    UpdateTime = (DateTime?)geoObjectDTO.GeoObjectInfo.UpdateTime,
+                    CreationTime = (DateTime?)geoObjectDTO.GeoObjectInfo.CreationTime,
+                    CommonInfo = (String?)geoObjectDTO.GeoObjectInfo.CommonInfo
 
                 };
 
@@ -238,10 +277,10 @@ namespace GISServer.API.Service
                         Id = (Guid)parentGeoObject.Id,
                         ParentGeographicalObjectName = parentGeoObject.ParentGeographicalObjectName,
                         ChildGeographicalObjectName = parentGeoObject.ChildGeographicalObjectName,
-                        CompletelyIncludedFlag = (bool)parentGeoObject.CompletelyIncludedFlag,
-                        IncludedPercent = (double)parentGeoObject.IncludedPercent,
-                        CreationDateTime = (DateTime)parentGeoObject.CreationDateTime,
-                        LastUpdatedDateTime = (DateTime)parentGeoObject.LastUpdatedDateTime
+                        CompletelyIncludedFlag = (bool?)parentGeoObject.CompletelyIncludedFlag,
+                        IncludedPercent = (double?)parentGeoObject.IncludedPercent,
+                        CreationDateTime = (DateTime?)parentGeoObject.CreationDateTime,
+                        LastUpdatedDateTime = (DateTime?)parentGeoObject.LastUpdatedDateTime
                     });
                 }
             }
@@ -254,10 +293,10 @@ namespace GISServer.API.Service
                         Id = (Guid)childGeoObject.Id,
                         ParentGeographicalObjectName = childGeoObject.ParentGeographicalObjectName,
                         ChildGeographicalObjectName = childGeoObject.ChildGeographicalObjectName,
-                        CompletelyIncludedFlag = (bool)childGeoObject.CompletelyIncludedFlag,
-                        IncludedPercent = (double)childGeoObject.IncludedPercent,
-                        CreationDateTime = (DateTime)childGeoObject.CreationDateTime,
-                        LastUpdatedDateTime = (DateTime)childGeoObject.LastUpdatedDateTime
+                        CompletelyIncludedFlag = (bool?)childGeoObject.CompletelyIncludedFlag,
+                        IncludedPercent = (double?)childGeoObject.IncludedPercent,
+                        CreationDateTime = (DateTime?)childGeoObject.CreationDateTime,
+                        LastUpdatedDateTime = (DateTime?)childGeoObject.LastUpdatedDateTime
                     });
                 }
             }
@@ -269,9 +308,9 @@ namespace GISServer.API.Service
                     {
                         Id = (Guid)outputTopologyLink.Id,
                         Predicate = outputTopologyLink.Predicate,
-                        Status = (Status)outputTopologyLink.Status,
-                        CreationDateTime = (DateTime)outputTopologyLink.CreationDateTime,
-                        LastUpdatedDateTime = (DateTime)outputTopologyLink.LastUpdatedDateTime,
+                        Status = (Status?)outputTopologyLink.Status,
+                        CreationDateTime = (DateTime?)outputTopologyLink.CreationDateTime,
+                        LastUpdatedDateTime = (DateTime?)outputTopologyLink.LastUpdatedDateTime,
                         CommonBorder = outputTopologyLink.CommonBorder
                     });
                 }
@@ -284,9 +323,9 @@ namespace GISServer.API.Service
                     {
                         Id = (Guid)inputTopologyLink.Id,
                         Predicate = inputTopologyLink.Predicate,
-                        Status = (Status)inputTopologyLink.Status,
-                        CreationDateTime = (DateTime)inputTopologyLink.CreationDateTime,
-                        LastUpdatedDateTime = (DateTime)inputTopologyLink.LastUpdatedDateTime,
+                        Status = (Status?)inputTopologyLink.Status,
+                        CreationDateTime = (DateTime?)inputTopologyLink.CreationDateTime,
+                        LastUpdatedDateTime = (DateTime?)inputTopologyLink.LastUpdatedDateTime,
                         CommonBorder = inputTopologyLink.CommonBorder
                     });
                 }
