@@ -39,5 +39,110 @@
 Сервер готов к запуску. из директории server\
 `dotnet run --project .\GISServer.API\`\
 
-
+## Шаблон объекта
+```
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "geoNameId": 0,
+  "status": 0,
+  "updateTime": "2024-07-05T01:03:55.733Z",
+  "creationTime": "2024-07-05T01:03:55.733Z",
+  "geoNameFeature": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "geoNamesFeatureCode": "string",
+    "geoNamesFeatureKind": "string",
+    "featureKindNameEn": "string",
+    "featureNameEn": "string",
+    "featureKindNameRu": "string",
+    "featureNameRu": "string",
+    "commentsEn": "string",
+    "commentsRu": "string"
+  },
+  "geometry": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "authoritativeKnowledgeSource": "string",
+    "version": 0,
+    "status": 0,
+    "archiveTime": "2024-07-05T01:03:55.733Z",
+    "updateTime": "2024-07-05T01:03:55.733Z",
+    "creationTime": "2024-07-05T01:03:55.733Z",
+    "borderGeocodes": "string",
+    "areaValue": 0,
+    "westToEastLength": 0,
+    "northToSouthLength": 0
+  },
+  "geometryVersion": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "authoritativeKnowledgeSource": "string",
+      "version": 0,
+      "status": 0,
+      "archiveTime": "2024-07-05T01:03:55.733Z",
+      "updateTime": "2024-07-05T01:03:55.733Z",
+      "creationTime": "2024-07-05T01:03:55.733Z",
+      "borderGeocodes": "string",
+      "areaValue": 0,
+      "westToEastLength": 0,
+      "northToSouthLength": 0
+    }
+  ],
+  "geoObjectInfo": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "fullName": "string",
+    "shortName": "string",
+    "authoritativeKnowledgeSource": "string",
+    "version": 0,
+    "languageCode": "string",
+    "language": "string",
+    "status": 0,
+    "archiveTime": "2024-07-05T01:03:55.733Z",
+    "updateTime": "2024-07-05T01:03:55.733Z",
+    "creationTime": "2024-07-05T01:03:55.733Z",
+    "commonInfo": "string"
+  },
+  "parentGeoObjects": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa4",
+      "parentGeographicalObjectName": "string",
+      "childGeographicalObjectName": "string",
+      "completelyIncludedFlag": true,
+      "includedPercent": 0,
+      "creationDateTime": "2024-07-05T01:03:55.733Z",
+      "lastUpdatedDateTime": "2024-07-05T01:03:55.733Z"
+    }
+  ],
+  "childGeoObjects": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa5",
+      "parentGeographicalObjectName": "string",
+      "childGeographicalObjectName": "string",
+      "completelyIncludedFlag": true,
+      "includedPercent": 0,
+      "creationDateTime": "2024-07-05T01:03:55.734Z",
+      "lastUpdatedDateTime": "2024-07-05T01:03:55.734Z"
+    }
+  ],
+  "outputTopologyLinks": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa5",
+      "predicate": "string",
+      "status": 0,
+      "creationDateTime": "2024-07-05T01:03:55.734Z",
+      "lastUpdatedDateTime": "2024-07-05T01:03:55.734Z",
+      "commonBorder": "string"
+    }
+  ],
+  "inputTopologyLinks": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa4",
+      "predicate": "string",
+      "status": 0,
+      "creationDateTime": "2024-07-05T01:03:55.734Z",
+      "lastUpdatedDateTime": "2024-07-05T01:03:55.734Z",
+      "commonBorder": "string"
+    }
+  ]
+}
+```
 
