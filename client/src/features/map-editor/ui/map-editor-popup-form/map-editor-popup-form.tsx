@@ -20,9 +20,9 @@ interface Props {
 /** Рендерит универсальную форму в попапе для геообьектов на карте */
 export const MapEditorPopupForm = ({ onDelete, type, id }: Props) => {
     const selectAspect = useUnit(mapModel.$mapAspect);
-    const geoObjects = useUnit(geoObjectModel.$geoObjectsStore);
+    const geoObjects = useUnit(geoObjectModel.$geoObjects);
 
-    const isObjectExists = !!geoObjects.find((obj) => obj.geometryObject.id === id);
+    const isObjectExists = !!geoObjects.find((obj) => obj.geometryObject._id === id);
 
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
