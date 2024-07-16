@@ -17,10 +17,10 @@ const updateGeoObjectFx = createEffect(updateGeoObjectRequest);
 const $updateGeoObjectLoading = status(updateGeoObjectFx);
 
 // Создаем стор
-const $geoObjectsStore = createStore<GeoObject[]>([]).on(getGeoObjectsFx.doneData, (_, geoObjects) => geoObjects);
+const $geoObjects = createStore<GeoObject[]>([]).on(getGeoObjectsFx.doneData, (_, geoObjects) => geoObjects);
 
 export const geoObjectModel = {
-    $geoObjectsStore,
+    $geoObjects,
 
     $getGeoObjectsLoading,
     getGeoObjectsFx,

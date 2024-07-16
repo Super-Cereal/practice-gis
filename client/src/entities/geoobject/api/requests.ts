@@ -1,8 +1,8 @@
-import { get, post, patch } from '../../../shared/lib/fetch';
+import { get, post, put } from '../../../shared/lib/fetch';
 import { GeoObject } from '../lib/types';
 
 export const getGeoObjectsRequest = async () => {
-    const data = await get<GeoObject[]>('/api/GeoObjects');
+    const data = await get<GeoObject[]>('/api/GeoObject');
     return data
 };
 
@@ -13,6 +13,6 @@ export const saveGeoObjectRequest = async (object: GeoObject) => {
 };
 
 export const updateGeoObjectRequest = async (object: GeoObject) => {
-    const data = await patch<GeoObject[], GeoObject>('/api/GeoObject', object);
+    const data = await put<GeoObject[], GeoObject>(`/api/GeoObject/${object.id}`, object);
     return data
 };

@@ -13,8 +13,6 @@ import { MapEditorPopupForm } from '../map-editor-popup-form/map-editor-popup-fo
 export const MapEditorObjects = () => {
     const $map = useUnit(mapModel.$map);
 
-    
-
     const $points = useUnit(editorModel.$points);
     const $lines = useUnit(editorModel.$lines);
     const $polygons = useUnit(editorModel.$polygons);
@@ -37,48 +35,52 @@ export const MapEditorObjects = () => {
 
     return (
         <>
-            {Object.values($points).map(({ id, coordinates, selected }) => (
+            {Object.values($points).map(({ _id, coordinates, selected }) => (
                 <Circle
-                    key={id}
+                    key={_id}
                     center={coordinates}
                     pathOptions={selected ? selectedOptions : defaultOptions}
                     radius={20}
                     eventHandlers={{
-                        click: () => editorModel.togglePointSelect(id),
+                        click: () => editorModel.togglePointSelect(_id),
                         mouseover: (e) => e.target.openPopup(),
                     }}
                 >
-                    <MapEditorPopupForm id={id} type='point' onDelete={() => editorModel.deletePoint(id)} />
+                    <MapEditorPopupForm id={_id} type="point" onDelete={() => editorModel.deletePoint(_id)} />
                 </Circle>
             ))}
 
-            {Object.values($lines).map(({ id, points, selected }) => (
+            {Object.values($lines).map(({ _id, points, selected }) => (
                 <Polyline
                     weight={7}
-                    key={id}
+                    key={_id}
                     positions={points.map(({ coordinates }) => coordinates)}
                     pathOptions={selected ? selectedOptions : defaultOptions}
                     eventHandlers={{
-                        click: () => editorModel.toggleLineSelect(id),
+                        click: () => editorModel.toggleLineSelect(_id),
                         mouseover: (e) => e.target.openPopup(),
                     }}
                 >
-                    <MapEditorPopupForm id={id} type='line' onDelete={() => editorModel.deleteLine(id)} />
+                    <MapEditorPopupForm id={_id} type="line" onDelete={() => editorModel.deleteLine(_id)} />
                 </Polyline>
             ))}
 
-            {Object.values($polygons).map(({ id, points, selected }) => (
+            {Object.values($polygons).map(({ _id, points, selected }) => (
                 <Polygon
-                    key={id}
+                    key={_id}
                     positions={points.map(({ coordinates }) => coordinates)}
                     pathOptions={selected ? selectedOptions : defaultOptions}
                     eventHandlers={{
-                        click: () => editorModel.togglePolygonSelect(id),
+                        click: () => editorModel.togglePolygonSelect(_id),
                         mouseover: (e) => e.target.openPopup(),
-                       /*  mouseout: (e) => e.target.closePopup(), */
+                        /*  mouseout: (e) => e.target.closePopup(), */
                     }}
                 >
-                    <MapEditorPopupForm id={id}  type='polygon' /* polygonId={id} */ onDelete={() => editorModel.deletePolygon(id)} />
+                    <MapEditorPopupForm
+                        id={_id}
+                        type="polygon"
+                        /* polygonId={id} */ onDelete={() => editorModel.deletePolygon(_id)}
+                    />
                 </Polygon>
             ))}
         </>

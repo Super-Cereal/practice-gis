@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { editorPointsModel } from './editor-points.model';
 import type { EditorLine } from './types';
 
-const $lines = createStore<Record<EditorLine['id'], EditorLine>>({});
+const $lines = createStore<Record<EditorLine['_id'], EditorLine>>({});
 const $selectedLines = sample({
     clock: $lines,
     fn: (lines) => Object.values(lines).filter(({ selected }) => selected),
@@ -19,25 +19,25 @@ sample({
         const selectedPoints = Object.values(points).filter((point) => point.selected);
 
         const newLine: EditorLine = {
-            id: nanoid(),
+            _id: nanoid(),
             points: selectedPoints,
             selected: true,
         };
 
-        return { ...lines, [newLine.id]: newLine };
+        return { ...lines, [newLine._id]: newLine };
     },
     target: $lines,
 });
 
-/** Добавить/убрать выделение линии по id */
-const toggleLineSelect = createEvent<EditorLine['id']>();
+/** Добавить/убрать выделение линии по _id */
+const toggleLineSelect = createEvent<EditorLine['_id']>();
 sample({
     clock: toggleLineSelect,
     source: $lines,
     fn: (lines, LineId) => {
         const Line = lines[LineId];
 
-        return { ...lines, [Line.id]: { ...Line, selected: !Line.selected } };
+        return { ...lines, [Line._id]: { ...Line, selected: !Line.selected } };
     },
     target: $lines,
 });
@@ -47,11 +47,11 @@ const removeLinesSelection = createEvent();
 sample({
     clock: removeLinesSelection,
     source: $selectedLines,
-    fn: (lines) => lines.forEach(({ id }) => toggleLineSelect(id)),
+    fn: (lines) => lines.forEach(({ _id }) => toggleLineSelect(_id)),
 });
 
 /** Удалить линию */
-const deleteLine = createEvent<EditorLine['id']>();
+const deleteLine = createEvent<EditorLine['_id']>();
 sample({
     clock: deleteLine,
     source: $lines,
@@ -69,7 +69,7 @@ const deleteSelectedLines = createEvent();
 sample({
     clock: deleteSelectedLines,
     source: $selectedLines,
-    fn: (lines) => lines.forEach(({ id }) => deleteLine(id)),
+    fn: (lines) => lines.forEach(({ _id }) => deleteLine(_id)),
 });
 
 export const editorLinesModel = {
