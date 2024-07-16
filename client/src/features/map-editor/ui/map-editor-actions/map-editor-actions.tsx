@@ -6,13 +6,15 @@ import styles from './map-editor-actions.module.scss';
 import { editorModel } from '../../lib/editor.model';
 import { editorModal } from '../../lib/editor-modal.model';
 import { GeoobjectForm } from '../../../geoobject-form';
+import { GeoaspectsList } from '../../../geoaspects-list';
 
 /** Рендерит список действий в черновиковом режиме (обьединение/удаление кнопок/полигонов) */
 export const MapEditorActions = () => {
     const selectedPoints = useUnit(editorModel.$selectedPoints);
     const selectedLines = useUnit(editorModel.$selectedLines);
     const selectedPolygons = useUnit(editorModel.$selectedPolygons);
-    const isModalOpen = useUnit(editorModal.$isGeoObjectModalOpen);
+    const isModalFormOpen = useUnit(editorModal.$isGeoObjectModalOpen);
+    const isModalAspectsOpen = useUnit(editorModal.$isAspectsModalOpen);
 
     return (
         <div className={styles.editor}>
@@ -72,7 +74,8 @@ export const MapEditorActions = () => {
                 </div>
             )}
 
-            {isModalOpen && <GeoobjectForm />}
+            {isModalFormOpen && <GeoobjectForm />}
+            {isModalAspectsOpen && <GeoaspectsList />}
         </div>
     );
 };

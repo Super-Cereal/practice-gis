@@ -1,5 +1,5 @@
 export const aspects = [
-    { id: 1, title: 'aspect 1123123123' },
+    { id: 1, title: 'aspect 1' },
     { id: 2, title: 'aspect 2' },
     { id: 3, title: 'aspect 3' },
     { id: 4, title: 'aspect 4' },

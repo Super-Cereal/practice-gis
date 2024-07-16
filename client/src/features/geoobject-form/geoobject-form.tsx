@@ -53,6 +53,11 @@ export const GeoobjectForm = () => {
     const [selectedAspect, setSelectedAspect] = useState('');
     const [description, setDescription] = useState('');
 
+
+
+
+
+    
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     };
@@ -71,19 +76,6 @@ export const GeoobjectForm = () => {
             return;
         }
 
-        /* if(ObjectforGeoCreate.object != null){
-      const existingGeoObject = geoObjectModel.$geoObjectsStore.getState().find(
-        (geoObject) =>
-          geoObject.geometryObject.id === ObjectforGeoCreate.object.id &&
-          geoObject.geoInfo.type === selectedAspect
-      );
-    }
-  
-  
-    if (existingGeoObject) {
-      alert(`Геообъект с аспектом "${selectedAspect}" на этой геометрии уже существует`);
-      return;
-    } */
         const GeoObjId = nanoid();
 
         const newGeoInfo: GeoInfo = {
@@ -139,6 +131,7 @@ export const GeoobjectForm = () => {
                 </div>
                 {/* Аспекты -> GeoInfo.type */}
                 <select className={styles.aspectSelect} value={selectedAspect} onChange={handleSelect}>
+                    <option>выберете аспект</option>
                     {aspects.map((aspect) => (
                         <option className={styles.aspectOption} key={aspect.id} value={aspect.title}>
                             {aspect.title}

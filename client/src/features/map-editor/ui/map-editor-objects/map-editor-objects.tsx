@@ -36,6 +36,7 @@ export const MapEditorObjects = () => {
     }, [$map]);
 
     return (
+      
         <>
             {Object.values($points).map(({ id, coordinates, selected }) => (
                 <Circle

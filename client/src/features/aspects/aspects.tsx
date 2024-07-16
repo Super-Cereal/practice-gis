@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import cx from 'classnames';
 import { useUnit } from 'effector-react';
 
@@ -13,8 +13,23 @@ interface Props {
 export const Aspects = ({ aspects }: Props) => {
     const $mapAspect = useUnit(mapModel.$mapAspect);
 
+    const [AllSelect, setAllSelect] = useState(true)
+    const HandleAll = () => {
+        mapModel.setMapAspect(null)
+        setAllSelect(true)
+
+    }
     return (
         <div aria-label="Аспекты" role="radiogroup" className={cx(styles.list, 'a11y')}>
+            <button
+                role="radio"
+                aria-checked={AllSelect}
+                className={cx(styles.aspect, { [styles.selected!]: AllSelect })}
+
+                onClick={() => HandleAll()}
+            >
+                Не выбран
+            </button>
             {aspects.map((aspect) => {
                 const { id, title } = aspect;
 
@@ -26,7 +41,7 @@ export const Aspects = ({ aspects }: Props) => {
                         aria-checked={isSelected}
                         className={cx(styles.aspect, { [styles.selected!]: isSelected })}
                         key={id}
-                        onClick={() => mapModel.setMapAspect(isSelected ? null : aspect)}
+                        onClick={() => {mapModel.setMapAspect(isSelected ? null : aspect); setAllSelect(false)}}
                     >
                         {title}
                     </button>
