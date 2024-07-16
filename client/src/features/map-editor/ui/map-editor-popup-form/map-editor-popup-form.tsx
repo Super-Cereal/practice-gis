@@ -3,9 +3,10 @@ import { Popup } from 'react-leaflet';
 
 import { Button } from '../../../../shared/ui/button';
 
-import styles from './map-editor-popup-form.module.css';
+import { geoObjectFormModel } from '../../../geoobject-form/';
 import { editorModal } from '../../lib/editor-modal.model';
-import { geoObjectModel } from '../../../../entities/geoobject/lib/geoobject.model';
+
+import styles from './map-editor-popup-form.module.css';
 
 interface Props {
     type: string;
@@ -21,7 +22,7 @@ export const MapEditorPopupForm = ({ onDelete, type, id }: Props) => {
     };
 
     const handleModalOpen = () => {
-        geoObjectModel.setSelectedObjectEvent({ type, id });
+        geoObjectFormModel.setSelectedObjectEvent({ type, id });
         editorModal.setIsGeoObjectModalOpenTrue();
     };
 
