@@ -52,6 +52,7 @@ export const MapEditorObjects = () => {
 
             {Object.values($lines).map(({ id, points, selected }) => (
                 <Polyline
+                    weight={7}
                     key={id}
                     positions={points.map(({ coordinates }) => coordinates)}
                     pathOptions={selected ? selectedOptions : defaultOptions}
