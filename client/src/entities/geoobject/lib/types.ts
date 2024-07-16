@@ -1,7 +1,7 @@
 import { EditorLine, EditorPoint, EditorPolygon } from "../../../features/map-editor/lib/types";
 
 export interface GeoObject {
-	type: string; // код  ADM, BLDG и т. д. возможно не нужно
+	type: string; // полигон линия точка
 	name: string;
 	geoInfo?: GeoInfo;
 	id: string;

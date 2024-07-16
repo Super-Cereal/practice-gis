@@ -10,6 +10,7 @@ import { GeoobjectEditor } from '../../features/geoobject-editor';
 import { aspects } from './lib/mocks';
 import styles from './map.module.css';
 import { GeoobjectForm } from '../../features/geoobject-form';
+import { MapRender } from '../../entities/map/ui/map-render/map-render';
 
 /** Рендерит карту и все ее настройки и действия */
 export const Map = () => {
@@ -27,7 +28,14 @@ export const Map = () => {
             </div>
 
             <div className={styles.view}>
-                <MapView>{mapEditable && <MapEditorObjects />}</MapView>
+                <MapView>
+                    {mapEditable ? 
+                    <>
+                    <MapRender/>
+                    <MapEditorObjects /> 
+                    </>
+                 :   <MapRender/> }
+                </MapView>
             </div>
           
             <aside className={styles.actions}>{mapEditable ? <MapEditorActions /> : <GeoobjectEditor />}</aside>

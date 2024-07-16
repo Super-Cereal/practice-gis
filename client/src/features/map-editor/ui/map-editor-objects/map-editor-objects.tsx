@@ -13,6 +13,8 @@ import { MapEditorPopupForm } from '../map-editor-popup-form/map-editor-popup-fo
 export const MapEditorObjects = () => {
     const $map = useUnit(mapModel.$map);
 
+    
+
     const $points = useUnit(editorModel.$points);
     const $lines = useUnit(editorModel.$lines);
     const $polygons = useUnit(editorModel.$polygons);
