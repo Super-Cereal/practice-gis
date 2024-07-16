@@ -4,12 +4,15 @@ import { useUnit } from 'effector-react';
 import { Button } from '../../../../shared/ui/button';
 import styles from './map-editor-actions.module.scss';
 import { editorModel } from '../../lib/editor.model';
+import { editorModal } from '../../lib/editor-modal.model';
+import { GeoobjectForm } from '../../../geoobject-form';
 
 /** Рендерит список действий в черновиковом режиме (обьединение/удаление кнопок/полигонов) */
 export const MapEditorActions = () => {
     const selectedPoints = useUnit(editorModel.$selectedPoints);
     const selectedLines = useUnit(editorModel.$selectedLines);
     const selectedPolygons = useUnit(editorModel.$selectedPolygons);
+    const isModalOpen = useUnit(editorModal.$isGeoObjectModalOpen)
 
     return (
         <div className={styles.editor}>
@@ -62,11 +65,17 @@ export const MapEditorActions = () => {
                         ))}
                     </div>
                     <Button onClick={() => editorModel.removePolygonSelection()}>Снять выделение</Button>
+                   
+                 
                     <Button onClick={() => editorModel.deleteSelectedPolygons()} color="orange">
                         Удалить
                     </Button>
                 </div>
             )}
+            {isModalOpen && (
+                <GeoobjectForm/>
+            )}
+
         </div>
     );
 };
