@@ -134,6 +134,7 @@ export const GeoobjectForm = () => {
         </div>
         {/* Аспекты -> GeoInfo.type */}
         <select className={styles.aspectSelect}  value={selectedAspect} onChange={handleSelect}>
+        <option value="">выберете аспект</option>
           {aspects.map((aspect) => (
             <option className={styles.aspectOption}  key={aspect.id} value={aspect.title}>
               {aspect.title}
@@ -142,11 +143,8 @@ export const GeoobjectForm = () => {
         </select>
         {/* Описание GeoInfo.info */}
         <div className={styles.formGroup}>
-       
           <textarea placeholder='Описание' value={description} onChange={handleDescriptionChange} id="text" className={styles.textarea} /* value={text} onChange={handleTextChange} */ />
         </div>
-
-
         <div className={styles.buttonGroup} role="group">
           <Button
             disabled={!name || !selectedAspect || !description}

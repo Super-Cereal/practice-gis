@@ -1,0 +1,27 @@
+.editor {
+    background-color: var(--block);
+    padding: 12px;
+
+    border-radius: 12px;
+
+    max-height: calc(80vh + 28px);
+    box-sizing: border-box;
+
+    overflow-y: scroll;
+}
+.table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .table th {
+    text-align: left;
+    padding: 8px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }

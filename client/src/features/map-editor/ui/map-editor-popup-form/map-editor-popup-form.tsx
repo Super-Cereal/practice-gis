@@ -31,8 +31,7 @@ export const MapEditorPopupForm = ({ onDelete, type, id }: Props) => {
 
     return (
         <Popup>
-            <h3>{type} : {id}</h3>
-
+            <h4>{type} : {id}</h4>
             <Button onClick={() => handleModalOpen() } >
                         Создать геообъект
             </Button>

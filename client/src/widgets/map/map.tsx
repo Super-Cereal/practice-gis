@@ -5,7 +5,7 @@ import { MapView, mapModel } from '../../entities/map';
 import { InfoPlate } from '../../features/info-plate';
 import { Aspects } from '../../features/aspects';
 import { MapEditorActions, MapEditorObjects } from '../../features/map-editor';
-import { GeoobjectEditor } from '../../features/geoobject-editor';
+import { GeoobjectSideInfo } from '../../features/geoobject-sideInfo';
 
 import { aspects } from './lib/mocks';
 import styles from './map.module.css';
@@ -30,7 +30,7 @@ export const Map = () => {
                 <MapView>{mapEditable && <MapEditorObjects />}</MapView>
             </div>
           
-            <aside className={styles.actions}>{mapEditable ? <MapEditorActions /> : <GeoobjectEditor />}</aside>
+            <aside className={styles.actions}>{mapEditable ? <MapEditorActions /> : <GeoobjectSideInfo />}</aside>
         </div>
     );
 };
