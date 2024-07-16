@@ -1,20 +1,20 @@
 import React, { ChangeEvent, useState } from 'react';
-
-import styles from './geoobject-form.module.css';
-import { editorModal } from '../map-editor/lib/editor-modal.model';
-import { Button } from '../../shared/ui/button';
-import { bem } from '../../shared/lib';
 import { useUnit } from 'effector-react';
+import { nanoid } from 'nanoid';
+
+import { aspects } from '../../widgets/map/lib/mocks';
 import { geoObjectModel } from '../../entities/geoobject/lib/geoobject.model';
-import { point } from 'leaflet';
+import { Button } from '../../shared/ui/button';
+
+import { editorModal } from '../map-editor/lib/editor-modal.model';
 import { editorPointsModel } from '../map-editor/lib/editor-points.model';
 import { editorPolygonsModel } from '../map-editor/lib/editor-polygons.model';
 import { editorLinesModel } from '../map-editor/lib/editor-lines.model';
-import { EditorLine, EditorPoint, EditorPolygon } from '../map-editor/lib/types';
-const b = bem('editor-modal');
-import { aspects } from '../../widgets/map/lib/mocks';
+import { geoObjectFormModel } from './lib/geoobject-form.model';
+import type { EditorLine, EditorPoint, EditorPolygon } from '../map-editor/lib/types';
+
 import { GeoInfo, GeoObject } from '../../entities/geoobject';
-import { nanoid } from 'nanoid';
+import styles from './geoobject-form.module.css';
 
 interface IObjectforGeoCreate {
     object: EditorPoint | EditorPolygon | EditorLine | null;
@@ -22,7 +22,7 @@ interface IObjectforGeoCreate {
 }
 
 export const GeoobjectForm = () => {
-    const selectedObjectStore = useUnit(geoObjectModel.$selectedObjectStore);
+    const selectedObjectStore = useUnit(geoObjectFormModel.$selectedObjectStore);
     const points = useUnit(editorPointsModel.$points);
     const polygons = useUnit(editorPolygonsModel.$polygons);
     const lines = useUnit(editorLinesModel.$lines);
@@ -100,9 +100,9 @@ export const GeoobjectForm = () => {
             geometryObject: ObjectforGeoCreate.object,
             geoInfo: newGeoInfo,
         };
-        geoObjectModel.addGeoObjectEvent(newGeoObject);
+        // geoObjectFormModel.addGeoObjectEvent(newGeoObject);
         editorModal.setIsGeoObjectModalOpenFalse();
-        console.log(geoObjectModel.$geoObjectsStore.getState());
+        // console.log(geoObjectModel.$geoObjectsStore.getState());
     };
 
     return (
