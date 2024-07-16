@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { editorPointsModel } from './editor-points.model';
 import type { EditorPolygon } from './types';
 
-const $polygons = createStore<Record<EditorPolygon['id'], EditorPolygon>>({});
+const $polygons = createStore<Record<EditorPolygon['_id'], EditorPolygon>>({});
 const $selectedPolygons = sample({
     clock: $polygons,
     fn: (polygons) => Object.values(polygons).filter(({ selected }) => selected),
@@ -19,25 +19,25 @@ sample({
         const selectedPoints = Object.values(points).filter((point) => point.selected);
 
         const newPolygon: EditorPolygon = {
-            id: nanoid(),
+            _id: nanoid(),
             points: selectedPoints,
             selected: true,
         };
 
-        return { ...polygons, [newPolygon.id]: newPolygon };
+        return { ...polygons, [newPolygon._id]: newPolygon };
     },
     target: $polygons,
 });
 
-/** Добавить/убрать выделение полигону по id */
-const togglePolygonSelect = createEvent<EditorPolygon['id']>();
+/** Добавить/убрать выделение полигону по _id */
+const togglePolygonSelect = createEvent<EditorPolygon['_id']>();
 sample({
     clock: togglePolygonSelect,
     source: $polygons,
     fn: (polygons, polygonId) => {
         const polygon = polygons[polygonId];
 
-        return { ...polygons, [polygon.id]: { ...polygon, selected: !polygon.selected } };
+        return { ...polygons, [polygon._id]: { ...polygon, selected: !polygon.selected } };
     },
     target: $polygons,
 });
@@ -47,11 +47,11 @@ const removePolygonSelection = createEvent();
 sample({
     clock: removePolygonSelection,
     source: $selectedPolygons,
-    fn: (polygons) => polygons.forEach(({ id }) => togglePolygonSelect(id)),
+    fn: (polygons) => polygons.forEach(({ _id }) => togglePolygonSelect(_id)),
 });
 
 /** Удалить полигон */
-const deletePolygon = createEvent<EditorPolygon['id']>();
+const deletePolygon = createEvent<EditorPolygon['_id']>();
 sample({
     clock: deletePolygon,
     source: $polygons,
@@ -69,7 +69,7 @@ const deleteSelectedPolygons = createEvent();
 sample({
     clock: deleteSelectedPolygons,
     source: $selectedPolygons,
-    fn: (polygons) => polygons.forEach(({ id }) => deletePolygon(id)),
+    fn: (polygons) => polygons.forEach(({ _id }) => deletePolygon(_id)),
 });
 
 export const editorPolygonsModel = {

@@ -1,1 +1,0 @@
-export {MapRender} from './map-render'

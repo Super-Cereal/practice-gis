@@ -33,14 +33,14 @@ export const GeoobjectForm = () => {
         ObjectforGeoCreate = (() => {
             switch (selectedObjectStore.type) {
                 case 'point':
-                    const foundPoint = Object.values(points).find((point) => point.id === selectedObjectStore?.id);
+                    const foundPoint = Object.values(points).find((point) => point._id === selectedObjectStore?.id);
                     return { object: foundPoint ?? null, type: 'point' };
                 case 'line':
-                    const foundLine = Object.values(lines).find((line) => line.id === selectedObjectStore.id);
+                    const foundLine = Object.values(lines).find((line) => line._id === selectedObjectStore.id);
                     return { object: foundLine ?? null, type: 'line' };
                 case 'polygon':
                     const foundPolygon = Object.values(polygons).find(
-                        (polygon) => polygon.id === selectedObjectStore.id,
+                        (polygon) => polygon._id === selectedObjectStore.id,
                     );
                     return { object: foundPolygon ?? null, type: 'polygon' };
                 default:
@@ -116,7 +116,7 @@ export const GeoobjectForm = () => {
                                 : null
                             : null}
                     </label>
-                    <label>ID: {ObjectforGeoCreate.object != null && ObjectforGeoCreate?.object.id}</label>
+                    <label>ID: {ObjectforGeoCreate.object != null && ObjectforGeoCreate?.object._id}</label>
                 </div>
                 {/* Название -> GeoObject.name */}
                 <div className={styles.formGroup}>

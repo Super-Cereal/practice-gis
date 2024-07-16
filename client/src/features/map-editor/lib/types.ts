@@ -1,19 +1,22 @@
 import type { LatLngTuple } from 'leaflet';
 
+// _id - только фронтовый, бэк создает свои
+// в сохраненных геообьектах работаем с их id
+
 export interface EditorPoint {
-    id: string;
+    _id: string;
     coordinates: LatLngTuple;
     selected?: boolean | undefined;
 }
 
 export interface EditorPolygon {
-    id: string;
+    _id: string;
     points: EditorPoint[];
     selected?: boolean | undefined;
 }
 
 export interface EditorLine {
-    id: string;
+    _id: string;
     points: EditorPoint[];
     selected?: boolean | undefined;
 }

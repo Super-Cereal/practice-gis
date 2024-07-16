@@ -25,8 +25,8 @@ export const MapEditorActions = () => {
                     <h3>Точки ({selectedPoints.length})</h3>
 
                     <div>
-                        {selectedPoints.map(({ id, coordinates }) => (
-                            <div>id: {id}</div>
+                        {selectedPoints.map(({ _id, coordinates }) => (
+                            <div>id: {_id}</div>
                         ))}
                     </div>
                     <Button onClick={() => editorModel.removePointsSelection()}>Снять выделение</Button>
@@ -47,8 +47,8 @@ export const MapEditorActions = () => {
                     <h3>Линии ({selectedLines.length})</h3>
 
                     <div>
-                        {selectedLines.map(({ id, points }) => (
-                            <div>id: {id}</div>
+                        {selectedLines.map(({ _id, points }) => (
+                            <div>id: {_id}</div>
                         ))}
                     </div>
                     <Button onClick={() => editorModel.removeLinesSelection()}>Снять выделение</Button>
@@ -62,8 +62,8 @@ export const MapEditorActions = () => {
                 <div className={styles.container}>
                     <h3>Полигоны ({selectedPolygons.length})</h3>
                     <div>
-                        {selectedPolygons.map(({ id, points }) => (
-                            <div>id: {id}</div>
+                        {selectedPolygons.map(({ _id, points }) => (
+                            <div>id: {_id}</div>
                         ))}
                     </div>
                     <Button onClick={() => editorModel.removePolygonSelection()}>Снять выделение</Button>

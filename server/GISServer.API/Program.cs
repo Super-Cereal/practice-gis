@@ -16,7 +16,14 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
+app.Use(async (context, next) =>
+{
+   context.Response.Headers.Add("Access-Control-Allow-Origin", "*");   
+   await next.Invoke();
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
