@@ -3,7 +3,7 @@
 - Postgres (16)
 - [PostGis](https://download.osgeo.org/postgis/windows/pg16/)
 - [asp.net 6.0](https://dotnet.microsoft.com/ru-ru/download/dotnet/6.0)
-- еще что-то связанное с сервером MS или runtime сервера MS. я не помню, решит по ходу дела.
+- еще что-то связанное с сервером MS или runtime сервера MS. я не помню, решим по ходу дела.
 - dotnet; dotnet-ef
  
 ### Postgres
