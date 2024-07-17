@@ -11,8 +11,10 @@ import { aspects } from '../../../../widgets/map/lib/mocks';
 import { mapEditorModel } from '../../../map-editor';
 import { geoObjectFormModel } from '../../lib/geoobject-form.model';
 import { usePreparedEditorObject } from '../../lib/use-prepared-editor-object';
-
+import {Classifiers} from '../../lib/classifiers'
 import styles from './geoobject-form.module.css';
+
+//нужно получить с бэка список классификаторов
 
 const typeToLabel = {
     Point: 'точки',
@@ -30,10 +32,14 @@ type Fields = {
 
 /** Пока что только сохраняет черновики */
 export const GeoobjectForm = () => {
+    //нужно получить с бэка список классификаторов
+    const geoClassifiers = Classifiers 
+     //нужно получить с бэка список классификаторов
     const {
         register,
         handleSubmit,
         formState: { isValid },
+        reset
     } = useForm<Fields>();
 
     const editorObject = usePreparedEditorObject();
@@ -65,10 +71,18 @@ export const GeoobjectForm = () => {
 
         geoObjectModel.saveGeoObjectFx(geobjectToSave);
 
+     
         geoObjectFormModel.setIsGeoObjectModalOpen(false);
+        reset();
+
     };
 
-    const handleClose = () => geoObjectFormModel.setIsGeoObjectModalOpen(false);
+    const handleClose = () =>{
+       
+        geoObjectFormModel.setIsGeoObjectModalOpen(false);
+        reset();
+        
+    } 
 
     return (
         <Modal onClose={handleClose}>
@@ -105,14 +119,17 @@ export const GeoobjectForm = () => {
                     placeholder="Описание"
                     {...register('description', { required: true })}
                 />
-
-                <input
-                    className={styles.input}
-                    type="number"
-                    placeholder="Код классификатора"
-                    {...register('classCode', { required: true })}
-                />
-
+            
+                <div className={styles.classifierGroup}>
+                    <label>Код классификатора: </label>
+                    <select className={styles.classifierSelect} {...register('classCode', { required: true })}>
+                        {geoClassifiers.map((cl) => (
+                            <option className={styles.aspectOption} key={cl.code} value={cl.code}>
+                                {cl.code} - {cl.commonInfo}
+                            </option>
+                        ))}
+                    </select>
+                </div>
                 <div>
                     <label>Статус: </label>
                     <select className={styles.aspectSelect} {...register('status', { required: true })}>

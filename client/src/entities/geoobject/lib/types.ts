@@ -16,10 +16,12 @@ export interface DraftGeoObject {
 
     geoObjectInfo?: GeoObjectInfo;
 
-    geoClassifiers?: Classifier[];
+    geoClassifier?: Classifier;
 }
 
 interface GeoNameFeature {
+    /** гео код*/
+    GeoNameFeature:string;
     /** Любой комментарий */
     commentsRu?: string;
 }
@@ -53,7 +55,7 @@ export interface Classifier {
     name?: string;
 
     /** Код классификатора */
-    code: number;
+    code: string;
 
     /** О чем этот классификатор */
     commonInfo?: string;
