@@ -51,14 +51,22 @@ export const GeoobjectForm = () => {
     const handleSave = ({ name, aspect, status, classCode, description }: Fields) => {
         const geobjectToSave: DraftGeoObject = {
             name,
-            status: status as DraftGeoObject['status'],
+            // status: status as DraftGeoObject['status'],
             geometry: {
+                authoritativeKnowledgeSource: '?авторитетный источник инфы?',
+
                 borderGeocodes: JSON.stringify({
                     type: editorObject.type,
                     coordinates: editorObject.object.coordinates,
                 }),
+
+                areaValue: 0,
+                westToEastLength: 0,
+                northToSouthLength: 0,
             },
             geoObjectInfo: {
+                languageCode: 'видимо код языка',
+                language: 'видимо название языка',
                 commonInfo: description,
             },
             // классифаер на данный момент сперва надо создать

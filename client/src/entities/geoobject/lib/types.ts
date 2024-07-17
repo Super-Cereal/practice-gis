@@ -7,7 +7,7 @@ export interface DraftGeoObject {
     name: string;
 
     /** Статус обьекта */
-    status: 'actual' | 'expired';
+    status?: 'actual' | 'expired';
 
     /** Предлагаю это не использовать в пользу geoObjectInfo */
     geoNameFeature?: GeoNameFeature;
