@@ -1,20 +1,67 @@
-import { EditorLine, EditorPoint, EditorPolygon } from "../../../features/map-editor/lib/types";
-
 export interface GeoObject {
-	type: string; // полигон линия точка
-	name: string;
-	geoInfo?: GeoInfo;
-	id: string;
-	geometryObject: EditorPoint | EditorPolygon | EditorLine;
-	GeoObjects?: GeoObject[];
+    id: string;
+
+    /** Любое имя */
+    name: string;
+
+    /** Статус обьекта */
+    status: 'actual' | 'expired';
+
+    geoNameFeature?: GeoNameFeature;
+
+    geometry: Geometry;
+
+    geoObjectInfo?: GeoObjectInfo;
+
+    geoClassifiers?: Classifier[];
 }
 
-export interface GeoInfo  {
-	type: string; // информация по типу (со стороны экологии, популяции и т д)
-	relevance: boolean;
-	info: string;
-	id: string;
-	GeoobjectId: string;
-	properties?: object;
-
+interface GeoNameFeature {
+    /** Любой комментарий */
+    commentsRu?: string;
 }
+
+interface Geometry {
+    /** ?Авторитетный источник инфы? */
+    authoritativeKnowledgeSource?: string;
+
+    /** Geojson geometry */
+    borderGeocodes: string;
+
+    westToEastLength?: number;
+    northToSouthLength?: number;
+
+    areaValue?: number;
+}
+
+interface GeoObjectInfo {
+    /** Код языка */
+    languageCode?: string;
+
+    /** Название языка */
+    language?: string;
+
+    /** Всякая доп инфа */
+    commonInfo?: string;
+}
+
+export interface Classifier {
+    /** Имя классификатора */
+    name: string;
+
+    /** Код классификатора */
+    code: number;
+
+    /** О чем этот классификатор */
+    commonInfo: string;
+}
+
+export type GeometryGeoJSON =
+    | {
+          type: 'Point';
+          coordinates: [number, number];
+      }
+    | {
+          type: 'PolyLine' | 'Polygon';
+          coordinates: [number, number][];
+      };

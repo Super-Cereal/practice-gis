@@ -4,17 +4,41 @@ import { useUnit } from 'effector-react';
 import { Button } from '../../../../shared/ui/button';
 import styles from './map-editor-actions.module.scss';
 import { editorModel } from '../../lib/editor.model';
-import { editorModal } from '../../lib/editor-modal.model';
-import { GeoobjectForm } from '../../../geoobject-form';
-import { GeoaspectsList } from '../../../geoaspects-list';
+import { EditorObjectType } from '../../lib/types';
 
 /** Рендерит список действий в черновиковом режиме (обьединение/удаление кнопок/полигонов) */
 export const MapEditorActions = () => {
     const selectedPoints = useUnit(editorModel.$selectedPoints);
     const selectedLines = useUnit(editorModel.$selectedLines);
     const selectedPolygons = useUnit(editorModel.$selectedPolygons);
-    const isModalFormOpen = useUnit(editorModal.$isGeoObjectModalOpen);
-    const isModalAspectsOpen = useUnit(editorModal.$isAspectsModalOpen);
+
+    const typeToSettings = {
+        Point: {
+            list: selectedPoints,
+            onDelete: editorModel.deletePoint,
+            onToggleSelect: editorModel.togglePointSelect,
+        },
+        PolyLine: {
+            list: selectedLines,
+            onDelete: editorModel.deleteLine,
+            onToggleSelect: editorModel.toggleLineSelect,
+        },
+        Polygon: {
+            list: selectedPolygons,
+            onDelete: editorModel.deletePolygon,
+            onToggleSelect: editorModel.togglePolygonSelect,
+        },
+    };
+
+    const deleteObjects = (objectType: EditorObjectType) => {
+        const { list, onDelete } = typeToSettings[objectType];
+        list.map(({ _id }) => onDelete(_id));
+    };
+
+    const removeObjectsSelection = (objectType: EditorObjectType) => {
+        const { list, onToggleSelect } = typeToSettings[objectType];
+        list.map(({ _id }) => onToggleSelect(_id));
+    };
 
     return (
         <div className={styles.editor}>
@@ -26,17 +50,19 @@ export const MapEditorActions = () => {
 
                     <div>
                         {selectedPoints.map(({ _id, coordinates }) => (
-                            <div>id: {_id}</div>
+                            <div key={_id}>id: {_id}</div>
                         ))}
                     </div>
-                    <Button onClick={() => editorModel.removePointsSelection()}>Снять выделение</Button>
+
                     {selectedPoints.length > 1 && (
                         <Button onClick={() => editorModel.createLine()}>Обьединить в линию</Button>
                     )}
                     {selectedPoints.length > 2 && (
                         <Button onClick={() => editorModel.createPolygon()}>Обьединить в полигон</Button>
                     )}
-                    <Button onClick={() => editorModel.deleteSelectedPoints()} color="orange">
+
+                    <Button onClick={() => removeObjectsSelection('Point')}>Снять выделение</Button>
+                    <Button onClick={() => deleteObjects('Point')} color="orange">
                         Удалить
                     </Button>
                 </div>
@@ -48,11 +74,12 @@ export const MapEditorActions = () => {
 
                     <div>
                         {selectedLines.map(({ _id, points }) => (
-                            <div>id: {_id}</div>
+                            <div key={_id}>id: {_id}</div>
                         ))}
                     </div>
-                    <Button onClick={() => editorModel.removeLinesSelection()}>Снять выделение</Button>
-                    <Button onClick={() => editorModel.deleteSelectedLines()} color="orange">
+
+                    <Button onClick={() => removeObjectsSelection('PolyLine')}>Снять выделение</Button>
+                    <Button onClick={() => deleteObjects('PolyLine')} color="orange">
                         Удалить
                     </Button>
                 </div>
@@ -61,21 +88,19 @@ export const MapEditorActions = () => {
             {selectedPolygons.length !== 0 && (
                 <div className={styles.container}>
                     <h3>Полигоны ({selectedPolygons.length})</h3>
+
                     <div>
                         {selectedPolygons.map(({ _id, points }) => (
-                            <div>id: {_id}</div>
+                            <div key={_id}>id: {_id}</div>
                         ))}
                     </div>
-                    <Button onClick={() => editorModel.removePolygonSelection()}>Снять выделение</Button>
 
-                    <Button onClick={() => editorModel.deleteSelectedPolygons()} color="orange">
+                    <Button onClick={() => removeObjectsSelection('Polygon')}>Снять выделение</Button>
+                    <Button onClick={() => deleteObjects('Polygon')} color="orange">
                         Удалить
                     </Button>
                 </div>
             )}
-
-            {isModalFormOpen && <GeoobjectForm />}
-            {isModalAspectsOpen && <GeoaspectsList />}
         </div>
     );
 };

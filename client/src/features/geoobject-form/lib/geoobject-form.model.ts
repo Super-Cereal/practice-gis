@@ -1,27 +1,38 @@
-import { createStore, createEvent } from 'effector';
+import { createStore, createEvent, sample } from 'effector';
 
 import type { GeoObject } from '../../../entities/geoobject';
+import type { EditorObjectType } from '../../map-editor';
 
-// Создаем действия
-const setSelectedGeoObjectEvent = createEvent<GeoObject | null>();
-const setSelectedObjectEvent = createEvent<{ type: string; id: string } | null>();
-
-// Создаем стор для выбранного объекта для создания геообъекта ( точка. линия или полигон)
-const $selectedObjectStore = createStore<{ type: string; id: string } | null>(null).on(
-    setSelectedObjectEvent,
-    (_, selectedObject) => selectedObject,
-);
+// Создаем стор для выбранного черновика
+const $selectedEditorObject = createStore<{ type: EditorObjectType; _id: string } | null>(null);
+const setSelectedEditorObject = createEvent<{ type: EditorObjectType; _id: string } | null>();
+sample({ clock: setSelectedEditorObject, target: $selectedEditorObject });
 
 // Создаем стор для выбранного геообъекта
-const $selectedGeoObjectStore = createStore<GeoObject | null>(null).on(
-    setSelectedGeoObjectEvent,
-    (_, selectedGeoObject) => selectedGeoObject,
-);
+const $selectedGeoObject = createStore<GeoObject | null>(null);
+const setSelectedGeoObject = createEvent<GeoObject | null>();
+sample({ clock: setSelectedGeoObject, target: $selectedGeoObject });
+
+//form
+const $isGeoObjectModalOpen = createStore(false);
+const setIsGeoObjectModalOpen = createEvent<boolean>();
+sample({ clock: setIsGeoObjectModalOpen, target: $isGeoObjectModalOpen });
+
+//aspects list
+const $isAspectsModalOpen = createStore(false);
+const setIsAspectsModalOpen = createEvent<boolean>();
+sample({ clock: setIsAspectsModalOpen, target: $isAspectsModalOpen });
 
 export const geoObjectFormModel = {
-    $selectedGeoObjectStore,
-    setSelectedGeoObjectEvent,
+    $selectedEditorObject,
+    setSelectedEditorObject,
 
-    setSelectedObjectEvent,
-    $selectedObjectStore,
+    $selectedGeoObject,
+    setSelectedGeoObject,
+
+    $isGeoObjectModalOpen,
+    setIsGeoObjectModalOpen,
+
+    $isAspectsModalOpen,
+    setIsAspectsModalOpen,
 };

@@ -34,7 +34,6 @@ export const MapEditorObjects = () => {
     }, [$map]);
 
     return (
-      
         <>
             {Object.values($points).map(({ _id, coordinates, selected }) => (
                 <Circle
@@ -47,7 +46,7 @@ export const MapEditorObjects = () => {
                         mouseover: (e) => e.target.openPopup(),
                     }}
                 >
-                    <MapEditorPopupForm id={_id} type="point" onDelete={() => editorModel.deletePoint(_id)} />
+                    <MapEditorPopupForm _id={_id} type="Point" onDelete={() => editorModel.deletePoint(_id)} />
                 </Circle>
             ))}
 
@@ -62,7 +61,7 @@ export const MapEditorObjects = () => {
                         mouseover: (e) => e.target.openPopup(),
                     }}
                 >
-                    <MapEditorPopupForm id={_id} type="line" onDelete={() => editorModel.deleteLine(_id)} />
+                    <MapEditorPopupForm _id={_id} type="PolyLine" onDelete={() => editorModel.deleteLine(_id)} />
                 </Polyline>
             ))}
 
@@ -74,12 +73,11 @@ export const MapEditorObjects = () => {
                     eventHandlers={{
                         click: () => editorModel.togglePolygonSelect(_id),
                         mouseover: (e) => e.target.openPopup(),
-                        /*  mouseout: (e) => e.target.closePopup(), */
                     }}
                 >
                     <MapEditorPopupForm
-                        id={_id}
-                        type="polygon"
+                        _id={_id}
+                        type="Polygon"
                         /* polygonId={id} */ onDelete={() => editorModel.deletePolygon(_id)}
                     />
                 </Polygon>

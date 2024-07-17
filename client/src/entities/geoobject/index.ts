@@ -1,2 +1,3 @@
 export { geoObjectModel } from './lib/geoobject.model';
-export type { GeoObject, GeoInfo } from './lib/types';
+export type { GeoObject, GeometryGeoJSON } from './lib/types';
+export { getGeometry } from './lib/getGeometry';
