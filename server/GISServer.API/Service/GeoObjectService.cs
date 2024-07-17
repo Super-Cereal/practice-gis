@@ -44,6 +44,15 @@ namespace GISServer.API.Service
             try
             {
                 GeoObjectDTO geoObject = await _geoObjectMapper.ObjectToDTO(await _repository.GetGeoObject(id));
+                
+                List<GeoObjectsGeoClassifiers> geoObjectsGeoClassifiersFromDB = new List<GeoObjectsGeoClassifiers>(await _repository.GetGeoObjectsGeoClassifiers(id));
+                foreach (var gogc in geoObjectsGeoClassifiersFromDB)
+                {
+                   geoObject.GeoObjectInfo.GeoClassifiers.Add(
+                       await _geoObjectMapper.ClassifierToDTO(
+                           await _repository.GetGeoClassifier(gogc.GeoClassifierId)));
+
+                }
                 return geoObject;
             }
             catch (Exception ex)

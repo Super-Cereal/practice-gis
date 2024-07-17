@@ -35,11 +35,13 @@ namespace GISServer.Infrastructure.Service
                 .Where(go => go.Id == id)
                 .Include(gnf => gnf.GeoNameFeature)
                 .Include(gv => gv.GeometryVersion)
+                .Include(g => g.Geometry)
                 .Include(goi => goi.GeoObjectInfo)
                 .Include(pgo => pgo.ParentGeoObjects)
                 .Include(cgo => cgo.ChildGeoObjects)
                 .Include(itl => itl.InputTopologyLinks)
                 .Include(otl => otl.OutputTopologyLinks)
+                .Include(gc => gc.GeoObjectInfo.GeoClassifiers)
                 .FirstOrDefaultAsync();
         }
         public async Task<GeoObject> GetByNameAsync(string name)
