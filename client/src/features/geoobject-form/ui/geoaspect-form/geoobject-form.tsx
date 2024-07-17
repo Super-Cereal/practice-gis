@@ -70,10 +70,12 @@ export const GeoobjectForm = () => {
                 commonInfo: description,
             },
             // классифаер на данный момент сперва надо создать
-            geoClassifier:
-            {
-                code: getClassifierCodeWithType(editorObject.type, classCode)
-            },
+            geoClassifiers:[
+                {
+                    code: getClassifierCodeWithType(editorObject.type, classCode)
+                },
+            ]
+           
 
         };
 

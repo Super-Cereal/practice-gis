@@ -16,7 +16,7 @@ export interface DraftGeoObject {
 
     geoObjectInfo?: GeoObjectInfo;
 
-    geoClassifier?: Classifier;
+    geoClassifiers?: Classifier[];
 }
 
 interface GeoNameFeature {
