@@ -2,7 +2,7 @@
     width: 100%;
     outline: none;
     border: none;
-padding: 0 5px 0 5px;
+    padding: 0 5px 0 5px;
     cursor: pointer;
 
     font-family: SFProRounded, sans-serif;
@@ -19,9 +19,9 @@ padding: 0 5px 0 5px;
     }
 
     &_color_orange {
-        background: #F28B53;
+        background: #f28b53;
 
-        color: #853D16;
+        color: #853d16;
     }
 
     &_size_m {
@@ -53,5 +53,9 @@ padding: 0 5px 0 5px;
 
     &:active {
         transform: scale(0.97);
+    }
+
+    &:hover:not(:disabled) {
+        background-color: #d3d4d5;
     }
 }

@@ -20,7 +20,7 @@ sample({
 
         const newPolygon: EditorPolygon = {
             _id: nanoid(),
-            points: selectedPoints,
+            coordinates: selectedPoints.map(({ coordinates }) => coordinates),
             selected: true,
         };
 
