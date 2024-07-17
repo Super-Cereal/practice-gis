@@ -30,6 +30,13 @@ namespace GISServer.API.Service
                         geoObject.GeoObjectInfo.GeoClassifiers.Add(await _repository.GetGeoClassifier(gogc.GeoClassifierId));
 
                     }
+                
+                    List<Aspect> geoObjectAspectsFromDB = new List<Aspect>(await _repository.GetGeoObjectAspects(geoObject.Id));
+                    foreach(var aspect in geoObjectAspectsFromDB)
+                    {
+                        geoObject.Aspects.Add(await _repository.GetAspect(aspect.Id));
+                    }
+
                     geoObjects.Add(await _geoObjectMapper.ObjectToDTO(geoObject));
                 }
                 return geoObjects;
@@ -54,6 +61,15 @@ namespace GISServer.API.Service
                            await _repository.GetGeoClassifier(gogc.GeoClassifierId)));
 
                 }
+
+                List<Aspect> geoObjectAspectsFromDB = new List<Aspect>(await _repository.GetGeoObjectAspects(id));
+                foreach(var aspect in geoObjectAspectsFromDB)
+                {
+                    geoObject.Aspects.Add(
+                        await _geoObjectMapper.AspectToDTO(
+                            await _repository.GetAspect(aspect.Id)));
+                }
+
                 return geoObject;
             }
             catch (Exception ex)
@@ -236,5 +252,68 @@ namespace GISServer.API.Service
             }
         }
 
+        public async Task<AspectDTO> AddAspect(AspectDTO aspectDTO)
+        {
+            try 
+            {
+                Aspect aspect = await _geoObjectMapper.DTOToAspect(aspectDTO);
+                return await _geoObjectMapper.AspectToDTO(await _repository.AddAspect(aspect));
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<AspectDTO> GetAspect(Guid id)
+        {
+            Aspect aspect = await _repository.GetAspect(id);
+            return await _geoObjectMapper.AspectToDTO(aspect);
+        }
+
+        public async Task<List<AspectDTO>> GetAspects()
+        {
+            List<AspectDTO> aspectsDTO = new List<AspectDTO>();
+            List<Aspect> aspects = await _repository.GetAspects();
+            foreach(var aspect in aspects)
+            {
+                aspectsDTO.Add(await _geoObjectMapper.AspectToDTO(aspect));
+            }
+            return aspectsDTO;
+        }
+
+        public async Task<GeoObjectDTO> AddGeoObjectAspect(Guid geoObjectId, Guid aspectId)
+        {
+            try
+            {
+                return await _geoObjectMapper.ObjectToDTO(
+                    await _repository.AddGeoObjectAspect(geoObjectId, aspectId)
+                    );
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<List<AspectDTO>> GetGeoObjectAspects(Guid geoObjectId)
+        {
+            try
+            {
+                List<AspectDTO> aspectsDTO = new List<AspectDTO>();
+                List<Aspect> aspects = await _repository.GetGeoObjectAspects(geoObjectId);
+                foreach(var aspect in aspects)
+                {
+                    aspectsDTO.Add(await _geoObjectMapper.AspectToDTO(aspect));
+                }
+                return aspectsDTO;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

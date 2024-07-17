@@ -199,7 +199,62 @@ namespace GISServer.API.Controllers
             return StatusCode(StatusCodes.Status200OK, dbTopologyLinks);
         }
 
+        [HttpPost("Aspect")]
+        public async Task<ActionResult> PostAspect(AspectDTO aspectDTO)
+        {
+            aspectDTO.Id = Guid.NewGuid();
+            var dbAspect = await _service.AddAspect(aspectDTO);
 
+            if (dbAspect == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "The Aspect could not be added.");
+            }
 
+            return CreatedAtAction("GetAspect", new { aspectDTO });
+        }
+
+        [HttpGet("Aspect")]
+        public async Task<ActionResult> GetAspect(Guid id)
+        {
+            var dbAspect = await _service.GetAspect(id);
+            if (dbAspect == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "No Aspect in database.");
+            }
+            return StatusCode(StatusCodes.Status200OK, dbAspect);
+        }
+        [HttpGet("Aspects")]
+        public async Task<ActionResult> GetAspects()
+        {
+            var dbAspects = await _service.GetAspects();
+            if (dbAspects == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "No Aspects in database.");
+            }
+            return StatusCode(StatusCodes.Status200OK, dbAspects);
+        }
+
+        [HttpPost("GeoObjectAspect")]
+        public async Task<ActionResult> PostGeoObjectAspect(Guid geoObjectId, Guid aspectId)
+        {
+            var dbgeoObject = await _service.AddGeoObjectAspect(geoObjectId, aspectId);
+            if (dbgeoObject == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "No Aspect or GeoObject in database.");
+            }
+            return StatusCode(StatusCodes.Status200OK, dbgeoObject);
+        }
+
+        [HttpGet("GeoObjectAspects")]
+        public async Task<ActionResult> GetGeoObjectAspects(Guid geoObjectId)
+        {
+            var dbAspects = await _service.GetGeoObjectAspects(geoObjectId);
+            if (dbAspects == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "No Aspects of GeoObject in database.");
+            }
+            return StatusCode(StatusCodes.Status200OK, dbAspects);
+            
+        }
     }
 }

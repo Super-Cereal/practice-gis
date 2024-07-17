@@ -238,5 +238,41 @@ namespace GISServer.Infrastructure.Service
             return await GetTopologyLink(topologyLink.Id);
         }
 
+        public async Task<Aspect> GetAspect(Guid? id)
+        {
+            return await _context.Aspects
+                .Where(a => a.Id == id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Aspect>> GetAspects()
+        {
+            return await _context.Aspects
+                .ToListAsync();
+        }
+
+        public async Task<Aspect> AddAspect(Aspect aspect)
+        {
+            await _context.AddAsync(aspect);
+            await _context.SaveChangesAsync();
+            return await GetAspect(aspect.Id);
+        }
+   
+        public async Task<GeoObject> AddGeoObjectAspect(Guid geoObjectId, Guid aspectId)
+        {
+            _context.Aspects
+                .Where(a => a.Id == aspectId)
+                .ExecuteUpdate(b =>
+                    b.SetProperty(a => a.GeographicalObjectId, geoObjectId)
+                );
+            return await GetGeoObject(geoObjectId);
+        }
+
+        public async Task<List<Aspect>> GetGeoObjectAspects(Guid geoObjectId)
+        {
+            return await _context.Aspects
+                .Where(a => a.GeographicalObjectId == geoObjectId)
+                .ToListAsync();
+        }
     }
 }

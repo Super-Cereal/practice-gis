@@ -3,6 +3,7 @@ using System;
 using GISServer.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GISServer.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240717151805_migr1701A")]
+    partial class migr1701A
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,7 +26,7 @@ namespace GISServer.Infrastructure.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("GISServer.Domain.Model.Aspect", b =>
+            modelBuilder.Entity("GISServer.Domain.Model.GeoAspect", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,7 +41,7 @@ namespace GISServer.Infrastructure.Migrations
                     b.Property<string>("EndPoint")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("GeographicalObjectId")
+                    b.Property<Guid?>("GeoObjectId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Type")
@@ -46,9 +49,9 @@ namespace GISServer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GeographicalObjectId");
+                    b.HasIndex("GeoObjectId");
 
-                    b.ToTable("Aspects");
+                    b.ToTable("GeoAspect");
                 });
 
             modelBuilder.Entity("GISServer.Domain.Model.GeoClassifier", b =>
@@ -333,13 +336,11 @@ namespace GISServer.Infrastructure.Migrations
                     b.ToTable("TopologyLinks");
                 });
 
-            modelBuilder.Entity("GISServer.Domain.Model.Aspect", b =>
+            modelBuilder.Entity("GISServer.Domain.Model.GeoAspect", b =>
                 {
-                    b.HasOne("GISServer.Domain.Model.GeoObject", "GeographicalObject")
-                        .WithMany("Aspects")
-                        .HasForeignKey("GeographicalObjectId");
-
-                    b.Navigation("GeographicalObject");
+                    b.HasOne("GISServer.Domain.Model.GeoObject", null)
+                        .WithMany("GeoAspects")
+                        .HasForeignKey("GeoObjectId");
                 });
 
             modelBuilder.Entity("GISServer.Domain.Model.GeoClassifier", b =>
@@ -443,9 +444,9 @@ namespace GISServer.Infrastructure.Migrations
 
             modelBuilder.Entity("GISServer.Domain.Model.GeoObject", b =>
                 {
-                    b.Navigation("Aspects");
-
                     b.Navigation("ChildGeoObjects");
+
+                    b.Navigation("GeoAspects");
 
                     b.Navigation("GeoObjectInfo");
 

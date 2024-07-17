@@ -20,9 +20,13 @@ namespace GISServer.API.Service
         public Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers();
 
         public Task<TopologyLinkDTO> AddTopologyLink(TopologyLinkDTO topologyLinkDTO);
-
         public Task<List<TopologyLinkDTO>> GetTopologyLinks();
 
+        public Task<AspectDTO> AddAspect(AspectDTO AspectDTO);
+        public Task<AspectDTO> GetAspect(Guid id);
+        public Task<List<AspectDTO>> GetAspects();
+        public Task<GeoObjectDTO> AddGeoObjectAspect(Guid geoObjectId, Guid aspectId);
+        public Task<List<AspectDTO>> GetGeoObjectAspects(Guid geoObjectId);
 
     }
 }

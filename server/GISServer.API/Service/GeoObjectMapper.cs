@@ -170,6 +170,21 @@ namespace GISServer.API.Service
                 }
             }
 
+            if (geoObject.Aspects != null)
+            {
+                foreach(var aspect in geoObject.Aspects)
+                {
+                    geoObjectDTO.Aspects.Add(new AspectDTO
+                            {
+                            Id = aspect.Id,
+                            Type = aspect.Type,
+                            Code = aspect.Code,
+                            EndPoint = aspect.EndPoint,
+                            CommonInfo = aspect.CommonInfo,
+                            GeographicalObjectId = aspect.GeographicalObjectId
+                            });
+                }
+            }
             
             return geoObjectDTO;
         }
@@ -336,6 +351,21 @@ namespace GISServer.API.Service
                 }
             }
             
+            if (geoObjectDTO.Aspects != null)
+            {
+                foreach(var aspect in geoObjectDTO.Aspects)
+                {
+                    geoObject.Aspects.Add(new Aspect 
+                            {
+                            Id = (Guid)aspect.Id,
+                            Type = aspect.Type,
+                            Code = aspect.Code,
+                            EndPoint = aspect.EndPoint,
+                            CommonInfo = aspect.CommonInfo,
+                            GeographicalObjectId = aspect.GeographicalObjectId
+                            });
+                }
+            }
             return geoObject;
         }
 
@@ -384,6 +414,26 @@ namespace GISServer.API.Service
             return topologyLinkDTO;
         }
 
+        public async Task<Aspect> DTOToAspect(AspectDTO aspectDTO)
+        {
+            Aspect aspect = new Aspect();
+            aspect.Id = (Guid)aspectDTO.Id;
+            aspect.Type = aspectDTO.Type;
+            aspect.Code = aspectDTO.Code;
+            aspect.EndPoint = aspectDTO.EndPoint;
+            aspect.CommonInfo = aspectDTO.CommonInfo;
+            return aspect;
+        }
+        public async Task<AspectDTO> AspectToDTO(Aspect aspect)
+        {
+            AspectDTO aspectDTO = new AspectDTO();
+            aspectDTO.Id = (Guid)aspect.Id;
+            aspectDTO.Type = aspect.Type;
+            aspectDTO.Code = aspect.Code;
+            aspectDTO.EndPoint = aspect.EndPoint;
+            aspectDTO.CommonInfo = aspect.CommonInfo;
+            return aspectDTO;
+        }
 
     }
 }

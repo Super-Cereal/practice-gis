@@ -18,6 +18,6 @@ namespace GISServer.API.Model
         public List<ParentChildObjectLinkDTO>? ChildGeoObjects { get; set; } = new List<ParentChildObjectLinkDTO>(); 
         public List<TopologyLinkDTO>? OutputTopologyLinks { get; set; } = new List<TopologyLinkDTO>();
         public List<TopologyLinkDTO>? InputTopologyLinks { get; set; } = new List<TopologyLinkDTO>();
-        
+        public List<AspectDTO>? Aspects { get; set; } = new List<AspectDTO>();        
     }
 }

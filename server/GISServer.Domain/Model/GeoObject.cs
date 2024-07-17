@@ -17,7 +17,7 @@
         public List<ParentChildObjectLink>? ChildGeoObjects { get; set; } = new List<ParentChildObjectLink>(); 
         public List<TopologyLink>? OutputTopologyLinks { get; set; } = new List<TopologyLink>();
         public List<TopologyLink>? InputTopologyLinks { get; set; } = new List<TopologyLink>();
-        
+        public List<Aspect>? Aspects { get; set; } = new List<Aspect>();        
 
 
         public void Union(GeoObject geo1, GeoObject geo2)

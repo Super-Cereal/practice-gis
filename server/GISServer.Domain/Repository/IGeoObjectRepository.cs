@@ -18,5 +18,11 @@
 
         public Task<TopologyLink> AddTopologyLink(TopologyLink topologyLink);
         public Task<List<TopologyLink>> GetTopologyLinks();
+
+        public Task<Aspect> AddAspect(Aspect aspect);
+        public Task<Aspect> GetAspect(Guid? id);
+        public Task<List<Aspect>> GetAspects();
+        public Task<GeoObject> AddGeoObjectAspect(Guid geoObjectId, Guid aspectId);
+        public Task<List<Aspect>> GetGeoObjectAspects(Guid geoObjectId);
     }
 }

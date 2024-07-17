@@ -21,12 +21,13 @@ namespace GISServer.Infrastructure.Data
         public DbSet<ParentChildObjectLink> ParentChildObjectLinks { get; set; }
         public DbSet<TopologyLink> TopologyLinks { get; set; }  
         public DbSet<GeoObjectsGeoClassifiers> GeoObjectsGeoClassifiers { get; set; }
+        public DbSet<Aspect> Aspects { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             if (!builder.IsConfigured)
             {
-                builder.UseNpgsql("Host=localhost;Port=5432;Database=gisserver;Username=postgres;Password=root;",
+                builder.UseNpgsql("Host=localhost;Port=5432;Database=gisserver;Username=postgres;Password=0000;",
                 o => o.UseNetTopologySuite());
             }
         }
@@ -82,7 +83,11 @@ namespace GISServer.Infrastructure.Data
                 .WithMany(e => e.GeoObjectsGeoClassifiers)
                 .HasForeignKey(e => e.GeoClassifierId);
 
-
+            modelBuilder
+                .Entity<GeoObject>()
+                .HasMany(e => e.Aspects)
+                .WithOne(e => e.GeographicalObject)
+                .HasForeignKey(e => e.GeographicalObjectId);
         }
     }
 }
