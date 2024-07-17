@@ -196,7 +196,6 @@ namespace GISServer.API.Service
         {
             Guid guid = Guid.NewGuid();
             geoObjectDTO.Id = guid;
-            geoObjectDTO.GeoNameFeature.Id = guid;
             geoObjectDTO.GeoObjectInfo.Id = guid;
             geoObjectDTO.Geometry.Id = guid;
 
