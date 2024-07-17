@@ -1,12 +1,15 @@
-export interface GeoObject {
+export interface GeoObject extends DraftGeoObject {
     id: string;
+}
 
+export interface DraftGeoObject {
     /** Любое имя */
     name: string;
 
     /** Статус обьекта */
     status: 'actual' | 'expired';
 
+    /** Предлагаю это не использовать в пользу geoObjectInfo */
     geoNameFeature?: GeoNameFeature;
 
     geometry: Geometry;
@@ -47,13 +50,13 @@ interface GeoObjectInfo {
 
 export interface Classifier {
     /** Имя классификатора */
-    name: string;
+    name?: string;
 
     /** Код классификатора */
     code: number;
 
     /** О чем этот классификатор */
-    commonInfo: string;
+    commonInfo?: string;
 }
 
 export type GeometryGeoJSON =

@@ -1,13 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { LeafletMouseEvent } from 'leaflet';
 import { useUnit } from 'effector-react';
 
 import { Button } from '../../../../shared/ui/button';
-import styles from './map-editor-actions.module.scss';
+import { mapModel } from '../../../../entities/map';
+
 import { editorModel } from '../../lib/editor.model';
 import { EditorObjectType } from '../../lib/types';
 
+import styles from './map-editor-actions.module.scss';
+
 /** Рендерит список действий в черновиковом режиме (обьединение/удаление кнопок/полигонов) */
 export const MapEditorActions = () => {
+    const $map = useUnit(mapModel.$map);
+
+    useEffect(() => {
+        if (!$map) {
+            return;
+        }
+
+        const handleMapClick = (e: LeafletMouseEvent) => {
+            editorModel.addPoint([e.latlng.lat, e.latlng.lng]);
+        };
+
+        $map.addEventListener('click', handleMapClick);
+
+        return () => {
+            $map.removeEventListener('click', handleMapClick);
+        };
+    }, [$map]);
+
     const selectedPoints = useUnit(editorModel.$selectedPoints);
     const selectedLines = useUnit(editorModel.$selectedLines);
     const selectedPolygons = useUnit(editorModel.$selectedPolygons);
@@ -73,7 +95,7 @@ export const MapEditorActions = () => {
                     <h3>Линии ({selectedLines.length})</h3>
 
                     <div>
-                        {selectedLines.map(({ _id, points }) => (
+                        {selectedLines.map(({ _id }) => (
                             <div key={_id}>id: {_id}</div>
                         ))}
                     </div>
@@ -90,7 +112,7 @@ export const MapEditorActions = () => {
                     <h3>Полигоны ({selectedPolygons.length})</h3>
 
                     <div>
-                        {selectedPolygons.map(({ _id, points }) => (
+                        {selectedPolygons.map(({ _id }) => (
                             <div key={_id}>id: {_id}</div>
                         ))}
                     </div>

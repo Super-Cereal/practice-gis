@@ -20,7 +20,7 @@ sample({
 
         const newLine: EditorLine = {
             _id: nanoid(),
-            points: selectedPoints,
+            coordinates: selectedPoints.map(({ coordinates }) => coordinates),
             selected: true,
         };
 

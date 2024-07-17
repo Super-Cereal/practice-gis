@@ -1,9 +1,11 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useUnit } from 'effector-react';
 import { nanoid } from 'nanoid';
+import { useForm } from 'react-hook-form';
 
+import { Modal } from '../../../../shared/ui/modal';
 import { Button } from '../../../../shared/ui/button';
-import { geoObjectModel, type GeoObject } from '../../../../entities/geoobject';
+import { geoObjectModel, type DraftGeoObject } from '../../../../entities/geoobject';
 import { aspects } from '../../../../widgets/map/lib/mocks';
 
 import { mapEditorModel } from '../../../map-editor';
@@ -18,100 +20,124 @@ const typeToLabel = {
     Polygon: 'полигона',
 };
 
-export const GeoobjectForm = () => {
-    const editorObject = usePreparedEditorObject();
+type Fields = {
+    name: string;
+    aspect: string;
+    description: string;
+    classCode: number;
+    status: DraftGeoObject['status'];
+};
 
-    const [name, setName] = useState('');
-    const [selectedAspect, setSelectedAspect] = useState('');
-    const [description, setDescription] = useState('');
+/** Пока что только сохраняет черновики */
+export const GeoobjectForm = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { isValid },
+    } = useForm<Fields>();
+
+    const editorObject = usePreparedEditorObject();
 
     if (!editorObject) {
         return null;
     }
 
-    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
-    };
+    const handleSave = ({ name, aspect, status, classCode, description }: Fields) => {
+        const geobjectToSave: DraftGeoObject = {
+            name,
+            status: status as DraftGeoObject['status'],
+            geometry: {
+                borderGeocodes: JSON.stringify({
+                    type: editorObject.type,
+                    coordinates: editorObject.object.coordinates,
+                }),
+            },
+            geoObjectInfo: {
+                commonInfo: description,
+            },
+            // классифаер на данный момент сперва надо создать
+            // geoClassifiers: [
+            //     {
+            //         code: classCode,
+            //     },
+            // ],
+        };
 
-    const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedAspect(event.target.value);
-    };
-
-    const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setDescription(event.target.value);
-    };
-
-    const handleSaveClick = () => {
-        const geobjectToSave = {};
+        geoObjectModel.saveGeoObjectFx(geobjectToSave);
 
         geoObjectFormModel.setIsGeoObjectModalOpen(false);
-        // geoObjectFormModel.addGeoObjectEvent(newGeoObject);
     };
 
+    const handleClose = () => geoObjectFormModel.setIsGeoObjectModalOpen(false);
+
     return (
-        <div className={styles.container}>
-            <div className={styles.overlay} onClick={() => geoObjectFormModel.setIsGeoObjectModalOpen(false)} />
+        <Modal onClose={handleClose}>
+            {/* Описание + id полигона */}
+            <div className={styles.formGroup}>
+                <label>
+                    Создание геообъекта на основе &nbsp;
+                    {editorObject && typeToLabel[editorObject.type]}
+                </label>
+                <label>ID: {editorObject.object != null && editorObject?.object._id}</label>
+            </div>
 
-            <div className={styles.form}>
-                {/* Описание + id полигона */}
-                <div className={styles.formGroup}>
-                    <label>
-                        Создание геообъекта на основе &nbsp;
-                        {editorObject && typeToLabel[editorObject.type]}
-                    </label>
-                    <label>ID: {editorObject.object != null && editorObject?.object._id}</label>
+            <form className={styles.form} onSubmit={handleSubmit(handleSave)}>
+                <input
+                    className={styles.input}
+                    type="text"
+                    placeholder="Название"
+                    {...register('name', { required: true })}
+                />
+
+                <div>
+                    <label>Аспект: </label>
+                    <select className={styles.aspectSelect} {...register('aspect', { required: true })}>
+                        {aspects.map((aspect) => (
+                            <option className={styles.aspectOption} key={aspect.id} value={aspect.title}>
+                                {aspect.title}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
-                {/* Название -> GeoObject.name */}
-                <div className={styles.formGroup}>
-                    <input
-                        placeholder="Название"
-                        value={name}
-                        onChange={handleNameChange}
-                        type="text"
-                        id="name"
-                        className={styles.input}
-                    />
+                <textarea
+                    className={styles.textarea}
+                    placeholder="Описание"
+                    {...register('description', { required: true })}
+                />
+
+                <input
+                    className={styles.input}
+                    type="number"
+                    placeholder="Код классификатора"
+                    {...register('classCode', { required: true })}
+                />
+
+                <div>
+                    <label>Статус: </label>
+                    <select className={styles.aspectSelect} {...register('status', { required: true })}>
+                        <option value="Актуален">Актуален</option>
+                        <option value="Устарел">Устарел</option>
+                    </select>
                 </div>
 
-                {/* Аспекты -> GeoInfo.type */}
-                <select className={styles.aspectSelect} value={selectedAspect} onChange={handleSelect}>
-                    <option>выберете аспект</option>
-                    {aspects.map((aspect) => (
-                        <option className={styles.aspectOption} key={aspect.id} value={aspect.title}>
-                            {aspect.title}
-                        </option>
-                    ))}
-                </select>
-
-                {/* Описание GeoInfo.info */}
-                <div className={styles.formGroup}>
-                    <textarea
-                        placeholder="Описание"
-                        value={description}
-                        onChange={handleDescriptionChange}
-                        id="text"
-                        className={styles.textarea} /* value={text} onChange={handleTextChange} */
-                    />
-                </div>
-
-                <div className={styles.buttonGroup} role="group">
-                    <Button
-                        disabled={!name || !selectedAspect || !description}
-                        mix={styles.editorModal__button}
-                        onClick={handleSaveClick}
-                    >
+                <div className={styles.btns} role="group">
+                    <Button disabled={!isValid} mix={styles.btn}>
                         Сохранить
                     </Button>
+
                     <Button
-                        mix={styles.editorModal__button}
-                        onClick={() => geoObjectFormModel.setIsGeoObjectModalOpen(false)}
+                        mix={styles.btn}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            handleClose();
+                        }}
                         color="orange"
                     >
                         Закрыть форму
                     </Button>
                 </div>
-            </div>
-        </div>
+            </form>
+        </Modal>
     );
 };

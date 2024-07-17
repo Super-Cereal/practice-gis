@@ -13,12 +13,12 @@ export interface EditorPoint {
 
 export interface EditorPolygon {
     _id: string;
-    points: EditorPoint[];
+    coordinates: LatLngTuple[];
     selected?: boolean | undefined;
 }
 
 export interface EditorLine {
     _id: string;
-    points: EditorPoint[];
+    coordinates: LatLngTuple[];
     selected?: boolean | undefined;
 }
