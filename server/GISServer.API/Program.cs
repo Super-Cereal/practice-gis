@@ -18,10 +18,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-app.Use(async (context, next) =>
-{
-   context.Response.Headers.Add("Access-Control-Allow-Origin", "*");   
-   await next.Invoke();
+
+app.UseCors((options) => {
+    options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
 });
 
 if (app.Environment.IsDevelopment())
