@@ -81,6 +81,8 @@ namespace GISServer.Infrastructure.Data
                 .HasOne<GeoClassifier>(e => e.GeoClassifier)
                 .WithMany(e => e.GeoObjectsGeoClassifiers)
                 .HasForeignKey(e => e.GeoClassifierId);
+
+
         }
     }
 }

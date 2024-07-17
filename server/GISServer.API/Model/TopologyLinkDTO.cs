@@ -10,5 +10,8 @@ namespace GISServer.API.Model
         public DateTime? CreationDateTime { get; set; }
         public DateTime? LastUpdatedDateTime { get; set; }
         public String? CommonBorder { get; set; }
+        public Guid? GeographicalObjectInId { get; set; }
+        public Guid? GeographicalObjectOutId { get; set; }
+
     }
 }

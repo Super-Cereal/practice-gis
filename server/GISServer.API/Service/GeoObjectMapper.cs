@@ -146,7 +146,9 @@ namespace GISServer.API.Service
                         Status = outputTopologyLink.Status,
                         CreationDateTime = outputTopologyLink.CreationDateTime,
                         LastUpdatedDateTime = outputTopologyLink.LastUpdatedDateTime,
-                        CommonBorder = outputTopologyLink.CommonBorder
+                        CommonBorder = outputTopologyLink.CommonBorder,
+                        GeographicalObjectInId = outputTopologyLink.GeographicalObjectInId,
+                        GeographicalObjectOutId = outputTopologyLink.GeographicalObjectOutId
                     });
                 }
             }
@@ -161,10 +163,13 @@ namespace GISServer.API.Service
                         Status = inputTopologyLink.Status,
                         CreationDateTime = inputTopologyLink.CreationDateTime,
                         LastUpdatedDateTime = inputTopologyLink.LastUpdatedDateTime,
-                        CommonBorder = inputTopologyLink.CommonBorder
+                        CommonBorder = inputTopologyLink.CommonBorder,
+                        GeographicalObjectInId = inputTopologyLink.GeographicalObjectInId,
+                        GeographicalObjectOutId = inputTopologyLink.GeographicalObjectOutId
                     });
                 }
             }
+
             
             return geoObjectDTO;
         }
@@ -262,7 +267,7 @@ namespace GISServer.API.Service
                         {
                             Id = (Guid)geoClassifier.Id,
                             Name = (String?)geoClassifier.Name,
-                            Code = (int?)geoClassifier.Code,
+                            Code = (String?)geoClassifier.Code,
                             CommonInfo = (String?)geoClassifier.CommonInfo
                         });
                     }
@@ -353,5 +358,32 @@ namespace GISServer.API.Service
             geoClassifierDTO.CommonInfo = geoClassifier.CommonInfo;
             return geoClassifierDTO;
         }
+
+        public async Task<TopologyLink> DTOToTopologyLink(TopologyLinkDTO topologyLinkDTO)
+        {
+            TopologyLink topologyLink = new TopologyLink();
+            topologyLink.Id = (Guid)topologyLinkDTO.Id;
+            topologyLink.Predicate = topologyLinkDTO.Predicate;
+            topologyLink.LastUpdatedDateTime = topologyLinkDTO.LastUpdatedDateTime;
+            topologyLink.CreationDateTime = topologyLinkDTO.CreationDateTime;
+            topologyLink.CommonBorder = topologyLinkDTO.CommonBorder;
+            topologyLink.GeographicalObjectInId = topologyLinkDTO.GeographicalObjectInId;
+            topologyLink.GeographicalObjectOutId = topologyLinkDTO.GeographicalObjectOutId;
+            return topologyLink;
+        }
+        public async Task<TopologyLinkDTO> TopologyLinkToDTO(TopologyLink topologyLink)
+        {
+            TopologyLinkDTO topologyLinkDTO = new TopologyLinkDTO();
+            topologyLinkDTO.Id = topologyLink.Id;
+            topologyLinkDTO.Predicate = topologyLink.Predicate;
+            topologyLinkDTO.LastUpdatedDateTime = topologyLink.LastUpdatedDateTime;
+            topologyLinkDTO.CreationDateTime = topologyLink.CreationDateTime;
+            topologyLinkDTO.CommonBorder = topologyLink.CommonBorder;
+            topologyLinkDTO.GeographicalObjectInId = topologyLink.GeographicalObjectInId;
+            topologyLinkDTO.GeographicalObjectOutId = topologyLink.GeographicalObjectOutId;
+            return topologyLinkDTO;
+        }
+
+
     }
 }

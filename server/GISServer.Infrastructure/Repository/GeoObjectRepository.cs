@@ -28,7 +28,6 @@ namespace GISServer.Infrastructure.Service
                 .ToListAsync();
         }
 
-        
         public async Task<GeoObject> GetGeoObject(Guid id)
         {
             return await _context.GeoObjects
@@ -194,7 +193,6 @@ namespace GISServer.Infrastructure.Service
                 return null;
             }
         }
-        
 
         public async Task<GeoClassifier> AddGeoClassifier(GeoClassifier geoClassifier)
         {
@@ -202,7 +200,43 @@ namespace GISServer.Infrastructure.Service
             await _context.SaveChangesAsync();
             return await GetGeoClassifier(geoClassifier.Id);
         }
-    
+
+
+        public async Task<TopologyLink> GetTopologyLink(Guid? id)
+        {
+            try
+            {
+                return await _context.TopologyLinks
+                    .Where(tl => tl.Id == id)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                return null;
+            }
+        }
+        public async Task<List<TopologyLink>> GetTopologyLinks()
+        {
+            try
+            {
+                return await _context.TopologyLinks
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<TopologyLink> AddTopologyLink(TopologyLink topologyLink)
+        {
+
+            await _context.TopologyLinks.AddAsync(topologyLink);
+            await _context.SaveChangesAsync();
+            return await GetTopologyLink(topologyLink.Id);
+        }
 
     }
 }

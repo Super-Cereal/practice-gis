@@ -158,7 +158,7 @@ namespace GISServer.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
             }
         }
-        [HttpGet("GetGeoObjectsClassifiers")]
+        [HttpGet("GetObjectsClassifiers")]
         public async Task<ActionResult> GetGeoObjectsGeoClassifiers()
         {
             var getGeoObjectsGeoClassifiers = await _service.GetGeoObjectsGeoClassifiers();
@@ -168,6 +168,35 @@ namespace GISServer.API.Controllers
             }
 
             return StatusCode(StatusCodes.Status200OK, getGeoObjectsGeoClassifiers);
+        }
+
+
+        [HttpPost("TopologyLink")]
+        public async Task<ActionResult> PostTopologyLink(TopologyLinkDTO topologyLinkDTO)
+        {
+            Guid guid = Guid.NewGuid();
+            topologyLinkDTO.Id = guid;
+
+            var dbTopologyLink = await _service.AddTopologyLink(topologyLinkDTO);
+
+            if (dbTopologyLink == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
+            }
+
+            return CreatedAtAction("GetTopologyLinks", new { topologyLinkDTO });
+        }
+
+        [HttpGet("TopologyLinks")]
+        public async Task<ActionResult> GetTopologyLinks()
+        {
+            var dbTopologyLinks = await _service.GetTopologyLinks();
+            if (dbTopologyLinks == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "No TopologyLinks in database.");
+            }
+            
+            return StatusCode(StatusCodes.Status200OK, dbTopologyLinks);
         }
 
 

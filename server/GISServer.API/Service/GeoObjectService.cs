@@ -1,5 +1,6 @@
 ﻿using GISServer.API.Model;
 using GISServer.Domain.Model;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 
 namespace GISServer.API.Service
@@ -200,6 +201,40 @@ namespace GISServer.API.Service
             geoObjectDTO.Geometry.Id = guid;
 
             return geoObjectDTO;
+        }
+
+
+        public async Task<TopologyLinkDTO> AddTopologyLink(TopologyLinkDTO topologyLinkDTO)
+        {
+            try
+            {
+                TopologyLink topologyLink = await _geoObjectMapper.DTOToTopologyLink(topologyLinkDTO);
+                return await _geoObjectMapper.TopologyLinkToDTO(await _repository.AddTopologyLink(topologyLink));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<List<TopologyLinkDTO>> GetTopologyLinks()
+        {
+            try
+            {
+                List<TopologyLinkDTO> topologyLinksDTO = new List<TopologyLinkDTO>();
+                List<TopologyLink> topologyLinks = await _repository.GetTopologyLinks();
+                foreach (var topologyLink in topologyLinks)
+                {
+                    topologyLinksDTO.Add(await _geoObjectMapper.TopologyLinkToDTO(topologyLink));
+                }
+                return topologyLinksDTO;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
+                return null;
+            }
         }
 
     }

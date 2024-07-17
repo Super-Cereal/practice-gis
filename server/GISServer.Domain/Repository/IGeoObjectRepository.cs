@@ -16,5 +16,7 @@
         public Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers(Guid? geoObjectInfoId);
         public Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers();
 
+        public Task<TopologyLink> AddTopologyLink(TopologyLink topologyLink);
+        public Task<List<TopologyLink>> GetTopologyLinks();
     }
 }
