@@ -29,8 +29,8 @@ namespace GISServer.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int?>("Code")
-                        .HasColumnType("integer");
+                    b.Property<string>("Code")
+                        .HasColumnType("text");
 
                     b.Property<string>("CommonInfo")
                         .HasColumnType("text");
