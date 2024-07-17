@@ -11,7 +11,7 @@ import { aspects } from '../../../../widgets/map/lib/mocks';
 import { mapEditorModel } from '../../../map-editor';
 import { geoObjectFormModel } from '../../lib/geoobject-form.model';
 import { usePreparedEditorObject } from '../../lib/use-prepared-editor-object';
-import {Classifiers} from '../../lib/classifiers'
+import { Classifiers, getClassifierCodeWithType } from '../../lib/classifiers'
 import styles from './geoobject-form.module.css';
 
 //нужно получить с бэка список классификаторов
@@ -26,15 +26,15 @@ type Fields = {
     name: string;
     aspect: string;
     description: string;
-    classCode: number;
+    classCode: string;
     status: DraftGeoObject['status'];
 };
 
 /** Пока что только сохраняет черновики */
 export const GeoobjectForm = () => {
     //нужно получить с бэка список классификаторов
-    const geoClassifiers = Classifiers 
-     //нужно получить с бэка список классификаторов
+    const geoClassifiers = Classifiers
+    //нужно получить с бэка список классификаторов
     const {
         register,
         handleSubmit,
@@ -62,27 +62,27 @@ export const GeoobjectForm = () => {
                 commonInfo: description,
             },
             // классифаер на данный момент сперва надо создать
-            // geoClassifiers: [
-            //     {
-            //         code: classCode,
-            //     },
-            // ],
+            geoClassifier:
+            {
+                code: getClassifierCodeWithType(editorObject.type, classCode)
+            },
+
         };
 
         geoObjectModel.saveGeoObjectFx(geobjectToSave);
 
-     
+
         geoObjectFormModel.setIsGeoObjectModalOpen(false);
         reset();
 
     };
 
-    const handleClose = () =>{
-       
+    const handleClose = () => {
+
         geoObjectFormModel.setIsGeoObjectModalOpen(false);
         reset();
-        
-    } 
+
+    }
 
     return (
         <Modal onClose={handleClose}>
@@ -119,7 +119,7 @@ export const GeoobjectForm = () => {
                     placeholder="Описание"
                     {...register('description', { required: true })}
                 />
-            
+
                 <div className={styles.classifierGroup}>
                     <label>Код классификатора: </label>
                     <select className={styles.classifierSelect} {...register('classCode', { required: true })}>

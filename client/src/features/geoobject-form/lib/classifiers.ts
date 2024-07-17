@@ -26,3 +26,24 @@ export const Classifiers = [
     },
 
 ]
+
+export const getClassifierCodeWithType = (type: string, code: string) => {
+    let typeCode = '';
+  
+    switch (type) {
+      case 'Point':
+        typeCode = 'P';
+        break;
+      case 'PolyLine':
+        typeCode = 'L';
+        break;
+      case 'Polygon':
+        typeCode = 'A';
+        break;
+      default:
+        typeCode = '';
+    }
+  
+    return code + typeCode;
+  };
+  
