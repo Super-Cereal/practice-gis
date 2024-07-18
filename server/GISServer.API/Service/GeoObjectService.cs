@@ -31,12 +31,6 @@ namespace GISServer.API.Service
 
                     }
                 
-                    List<Aspect> geoObjectAspectsFromDB = new List<Aspect>(await _repository.GetGeoObjectAspects(geoObject.Id));
-
-                    if (geoObjectAspectsFromDB == null)
-                        foreach(var aspect in geoObjectAspectsFromDB)
-                            geoObject.Aspects.Add(await _repository.GetAspect(aspect.Id));
-
                     geoObjects.Add(await _geoObjectMapper.ObjectToDTO(geoObject));
                 }
                 return geoObjects;
@@ -63,13 +57,6 @@ namespace GISServer.API.Service
                            await _repository.GetGeoClassifier(gogc.GeoClassifierId)));
 
                 }
-
-                List<Aspect> geoObjectAspectsFromDB = new List<Aspect>(await _repository.GetGeoObjectAspects(id));
-                if (geoObjectAspectsFromDB == null)
-                    foreach(var aspect in geoObjectAspectsFromDB)
-                        geoObject.Aspects.Add(
-                            await _geoObjectMapper.AspectToDTO(
-                                await _repository.GetAspect(aspect.Id)));
 
                 return geoObject;
             }
