@@ -16,6 +16,6 @@ namespace GISServer.Domain.Model
         public DateTime? UpdateTime { get; set; }
         public DateTime? CreationTime { get; set; }
         public String? CommonInfo { get; set; }
-        public List<GeoClassifierDTO>? GeoClassifiers { get; set; } = new List<GeoClassifierDTO>();
+        public List<ClassifierDTO>? Classifiers { get; set; } = new List<ClassifierDTO>();
     }
 }

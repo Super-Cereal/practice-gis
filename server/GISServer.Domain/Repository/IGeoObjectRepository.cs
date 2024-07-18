@@ -9,12 +9,14 @@
         public Task<(bool, string)> DeleteGeoObject(Guid id);
         public Task UpdateAsync(GeoObject geoObject);
         public Task<GeoObject> GetByNameAsync(string name);
-        public Task<GeoClassifier> AddGeoClassifier(GeoClassifier geoClassifier);
-        public Task<GeoClassifier> GetGeoClassifier(Guid? id);
-        public Task<List<GeoClassifier>> GetGeoClassifiers();
-        public Task<List<GeoObjectsGeoClassifiers>> AddGeoObjectsGeoClassifiers (GeoObjectsGeoClassifiers geoObjectsGeoClassifiers);
-        public Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers(Guid? geoObjectInfoId);
-        public Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers();
+
+        public Task<Classifier> AddClassifier(Classifier classifier);
+        public Task<Classifier> GetClassifier(Guid? id);
+        public Task<List<Classifier>> GetClassifiers();
+
+        public Task<List<GeoObjectsClassifiers>> AddGeoObjectsClassifiers (GeoObjectsClassifiers geoObjectsClassifiers);
+        public Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers(Guid? geoObjectInfoId);
+        public Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers();
 
         public Task<TopologyLink> AddTopologyLink(TopologyLink topologyLink);
         public Task<List<TopologyLink>> GetTopologyLinks();

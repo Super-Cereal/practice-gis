@@ -2,11 +2,11 @@
 
 namespace GISServer.API.Model
 {
-    public class GeoObjectsGeoClassifiersDTO
+    public class GeoObjectsClassifiersDTO
     {
-        public GeoClassifier? GeoClassifier { get; set; }
+        public Classifier? Classifier { get; set; }
         public GeoObjectInfo? GeoObjectInfo { get; set; }
         public Guid? GeoObjectId { get; set; }
-        public Guid? GeoClassifierId { get; set; }
+        public Guid? ClassifierId { get; set; }
     }
 }

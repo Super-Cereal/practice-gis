@@ -13,7 +13,6 @@ namespace GISServer.API.Controllers
 
         private readonly IGeoObjectService _geoObjectService;
         private readonly IClassifierService _classifierService;
-        private readonly ITopologyService _topologyService;
         private readonly IAspectService _aspectService;
         private readonly IGeoObjectClassifierService _geoObjectClassifierService;
 
@@ -93,79 +92,36 @@ namespace GISServer.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("GeoClassifier")]
-        public async Task<ActionResult> GetGeoClassifier()
-        {
-            var getClassifiers = await _geoObjectService.GetGeoClassifiers();
-            if (getClassifiers == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "No GeoClassifiers in database");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, getClassifiers);
-        }
-
-        [HttpGet("GeoClassifier/{id}")]
-        public async Task<ActionResult> GetGeoClassifier(Guid id)
-        {
-            var geoClassifier = await _geoObjectService.GetGeoClassifier(id);
-
-            if (geoClassifier == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, $"No GeoObject found for id: {id}");
-            }
-
-            return StatusCode(StatusCodes.Status200OK, geoClassifier);
-        }
-
-        [HttpPost("GeoClassifier")]
-        public async Task<ActionResult<GeoClassifierDTO>> PostGeoClassifier(GeoClassifierDTO geoClassifierDTO)
-        {
-            try{
-            var dbGeoClassifier = await _geoObjectService.AddGeoClassifier(geoClassifierDTO);
-            if (dbGeoClassifier == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"{geoClassifierDTO.Name} could not be added.");
-            }
-            return CreatedAtAction("GetGeoClassifier", new {id = geoClassifierDTO.Id}, new {geoClassifierDTO});
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"{ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"{geoClassifierDTO.Name} could not be added.");
-            }
-        }
-
         [HttpGet("GeoObjectsClassifiers")]
-        public async Task<ActionResult> GetGeoObjectsGeoClassifiers()
+        public async Task<ActionResult> GetGeoObjectsClassifiers()
         {
-            var getGeoObjectsGeoClassifiers = await _geoObjectService.GetGeoObjectsGeoClassifiers();
-            if (getGeoObjectsGeoClassifiers == null)
+            var getGeoObjectsClassifiers = await _geoObjectService.GetGeoObjectsClassifiers();
+            if (getGeoObjectsClassifiers == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, "No GeoClassifier in database");
+                return StatusCode(StatusCodes.Status204NoContent, "No Classifier in database");
             }
 
-            return StatusCode(StatusCodes.Status200OK, getGeoObjectsGeoClassifiers);
+            return StatusCode(StatusCodes.Status200OK, getGeoObjectsClassifiers);
         }
 
         [HttpPost("GeoObjectsClassifiers")]
-        public async Task<ActionResult<GeoObjectsGeoClassifiersDTO>> PostGeoObjectsGeoClassifiers(Guid geoObjectId, Guid geoClassifierId)
+        public async Task<ActionResult<GeoObjectsClassifiersDTO>> PostGeoObjectsClassifiers(Guid geoObjectId, Guid classifierId)
         {
             try
             {
-                var geoObjectsGeoClassifiersDTO = new GeoObjectsGeoClassifiersDTO
+                var geoObjectsClassifiersDTO = new GeoObjectsClassifiersDTO
                 {
                     GeoObjectId = geoObjectId,
-                    GeoClassifierId = geoClassifierId
+                    ClassifierId = classifierId
                 };
 
-                var dbGeoObjectsGeoClassifiers = await _geoObjectService.AddGeoObjectsGeoClassifiers(geoObjectsGeoClassifiersDTO);
-                if (dbGeoObjectsGeoClassifiers == null)
+                var dbGeoObjectsClassifiers = await _geoObjectService.AddGeoObjectsClassifiers(geoObjectsClassifiersDTO);
+                if (dbGeoObjectsClassifiers == null)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
                 }
 
-                return CreatedAtAction("GetGeoObjectsGeoClassifiers", new { geoObjectId = geoObjectId, geoClassifierId = geoClassifierId }, geoObjectsGeoClassifiersDTO);
+                return CreatedAtAction("GetGeoObjectsClassifiers", new { geoObjectId = geoObjectId, classifierId = classifierId }, geoObjectsClassifiersDTO);
             }
             catch (Exception ex)
             {
@@ -173,71 +129,7 @@ namespace GISServer.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
             }
         }
-
-        [HttpGet("TopologyLink")]
-        public async Task<ActionResult> GetTopologyLinks()
-        {
-            var dbTopologyLinks = await _geoObjectService.GetTopologyLinks();
-            if (dbTopologyLinks == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "No TopologyLinks in database.");
-            }
-            
-            return StatusCode(StatusCodes.Status200OK, dbTopologyLinks);
-        }
-
-        [HttpPost("TopologyLink")]
-        public async Task<ActionResult> PostTopologyLink(TopologyLinkDTO topologyLinkDTO)
-        {
-            Guid guid = Guid.NewGuid();
-            topologyLinkDTO.Id = guid;
-
-            var dbTopologyLink = await _geoObjectService.AddTopologyLink(topologyLinkDTO);
-
-            if (dbTopologyLink == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
-            }
-
-            return CreatedAtAction("GetTopologyLinks", new { topologyLinkDTO });
-        }
-
-        [HttpGet("Aspect")]
-        public async Task<ActionResult> GetAspect()
-        {
-            var dbAspects = await _geoObjectService.GetAspects();
-            if (dbAspects == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "No Aspects in database.");
-            }
-            return StatusCode(StatusCodes.Status200OK, dbAspects);
-        }
-
-        [HttpPost("Aspect")]
-        public async Task<ActionResult> PostAspect(AspectDTO aspectDTO)
-        {
-            aspectDTO.Id = Guid.NewGuid();
-            var dbAspect = await _geoObjectService.AddAspect(aspectDTO);
-
-            if (dbAspect == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "The Aspect could not be added.");
-            }
-
-            return CreatedAtAction("GetAspect", new { aspectDTO });
-        }
-
-        [HttpGet("Aspect/{id}")]
-        public async Task<ActionResult> GetAspect(Guid id)
-        {
-            var dbAspect = await _geoObjectService.GetAspect(id);
-            if (dbAspect == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "No Aspect in database.");
-            }
-            return StatusCode(StatusCodes.Status200OK, dbAspect);
-        }
-
+      
         [HttpGet("GeoObjectAspect/{geoObjectId}")]
         public async Task<ActionResult> GetGeoObjectAspects(Guid geoObjectId)
         {
@@ -259,16 +151,6 @@ namespace GISServer.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "No Aspect or GeoObject in database.");
             }
             return StatusCode(StatusCodes.Status200OK, dbgeoObject);
-        }
-
-
-        [HttpGet("CallAspect")]
-        public async Task<ActionResult> CallAspect(String endPoint)
-        {
-            // something
-            //
-            String reportAspect = _geoObjectService.CallAspect(endPoint);
-            return StatusCode(StatusCodes.Status200OK, reportAspect);
         }
     }
 }

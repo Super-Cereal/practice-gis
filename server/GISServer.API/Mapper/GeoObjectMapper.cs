@@ -87,17 +87,17 @@ namespace GISServer.API.Mapper
                     CreationTime = geoObject.GeoObjectInfo.CreationTime,
                     CommonInfo = geoObject.GeoObjectInfo.CommonInfo,
                 };
-                if (geoObject.GeoObjectInfo.GeoClassifiers != null)
+                if (geoObject.GeoObjectInfo.Classifiers != null)
                 {
-                    geoObjectDTO.GeoObjectInfo.GeoClassifiers = new List<GeoClassifierDTO>();
-                    foreach (var geoClassifier in geoObject.GeoObjectInfo.GeoClassifiers)
+                    geoObjectDTO.GeoObjectInfo.Classifiers = new List<ClassifierDTO>();
+                    foreach (var classifier in geoObject.GeoObjectInfo.Classifiers)
                     {
-                        geoObjectDTO.GeoObjectInfo.GeoClassifiers.Add(new GeoClassifierDTO
+                        geoObjectDTO.GeoObjectInfo.Classifiers.Add(new ClassifierDTO
                         {
-                            Id = geoClassifier.Id,
-                            Name = geoClassifier.Name,
-                            Code = geoClassifier.Code,
-                            CommonInfo = geoClassifier.CommonInfo
+                            Id = classifier.Id,
+                            Name = classifier.Name,
+                            Code = classifier.Code,
+                            CommonInfo = classifier.CommonInfo
 
                         });
                     }
@@ -273,17 +273,17 @@ namespace GISServer.API.Mapper
 
                 };
 
-                if (geoObjectDTO.GeoObjectInfo.GeoClassifiers != null)
+                if (geoObjectDTO.GeoObjectInfo.Classifiers != null)
                 {
-                    geoObject.GeoObjectInfo.GeoClassifiers = new List<GeoClassifier>();
-                    foreach (var geoClassifier in geoObjectDTO.GeoObjectInfo.GeoClassifiers)
+                    geoObject.GeoObjectInfo.Classifiers = new List<Classifier>();
+                    foreach (var classifier in geoObjectDTO.GeoObjectInfo.Classifiers)
                     {
-                        geoObject.GeoObjectInfo.GeoClassifiers.Add(new GeoClassifier
+                        geoObject.GeoObjectInfo.Classifiers.Add(new Classifier
                         {
-                            Id = (Guid)geoClassifier.Id,
-                            Name = (String?)geoClassifier.Name,
-                            Code = (String?)geoClassifier.Code,
-                            CommonInfo = (String?)geoClassifier.CommonInfo
+                            Id = (Guid)classifier.Id,
+                            Name = (String?)classifier.Name,
+                            Code = (String?)classifier.Code,
+                            CommonInfo = (String?)classifier.CommonInfo
                         });
                     }
                 }

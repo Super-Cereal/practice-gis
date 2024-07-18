@@ -5,8 +5,8 @@ namespace GISServer.API.Service
 {
     public interface IGeoObjectClassifierService
     {
-        public Task<GeoObjectsGeoClassifiersDTO> AddGeoObjectsGeoClassifiers(GeoObjectsGeoClassifiersDTO geoObjectsGeoClassifiersDTO);
-        public Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers(Guid? geoObjectInfoId);
-        public Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers();
+        public Task<GeoObjectsClassifiersDTO> AddGeoObjectsClassifiers(GeoObjectsClassifiersDTO geoObjectsClassifiersDTO);
+        public Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers(Guid? geoObjectInfoId);
+        public Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers();
     }
 }

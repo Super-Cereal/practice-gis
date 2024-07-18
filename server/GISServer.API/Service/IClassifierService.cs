@@ -5,9 +5,9 @@ namespace GISServer.API.Service
 {
     public interface IClassifierService
     {
-        public GeoClassifierDTO CreateGuid(GeoClassifierDTO classifierDTO);
-        public Task<GeoClassifierDTO> AddGeoClassifier(GeoClassifierDTO geoClassifierDTO);
-        public Task<GeoClassifierDTO> GetGeoClassifier(Guid id);
-        public Task<List<GeoClassifierDTO>> GetGeoClassifiers();
+        public ClassifierDTO CreateGuid(ClassifierDTO classifierDTO);
+        public Task<ClassifierDTO> AddClassifier(ClassifierDTO classifierDTO);
+        public Task<ClassifierDTO> GetClassifier(Guid id);
+        public Task<List<ClassifierDTO>> GetClassifiers();
     }
 }

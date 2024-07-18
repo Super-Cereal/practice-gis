@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace GISServer.Domain.Model
 {
-    public class GeoObjectsGeoClassifiers
+    public class GeoObjectsClassifiers
     {
-        public GeoClassifier? GeoClassifier { get; set; }
+        public Classifier? Classifier { get; set; }
         public GeoObjectInfo? GeoObjectInfo { get; set; }
         public Guid? GeoObjectId { get; set; }
-        public Guid? GeoClassifierId { get; set; }
+        public Guid? ClassifierId { get; set; }
     }
 }
  

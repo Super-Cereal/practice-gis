@@ -18,18 +18,18 @@ namespace GISServer.API.Service
             _classifierMapper = classifierMapper;
         }
 
-        public GeoClassifierDTO CreateGuid(GeoClassifierDTO classifierDTO)
+        public ClassifierDTO CreateGuid(ClassifierDTO classifierDTO)
         {
             classifierDTO.Id = Guid.NewGuid();
             return classifierDTO;
         }
 
-        public async Task<GeoClassifierDTO> AddGeoClassifier(GeoClassifierDTO geoClassifierDTO)
+        public async Task<ClassifierDTO> AddClassifier(ClassifierDTO classifierDTO)
         {
             try
             {
-                GeoClassifier geoClassifier = await _classifierMapper.DTOToClassifier(geoClassifierDTO);
-                return await _classifierMapper.ClassifierToDTO(await _repository.AddGeoClassifier(geoClassifier));
+                Classifier classifier = await _classifierMapper.DTOToClassifier(classifierDTO);
+                return await _classifierMapper.ClassifierToDTO(await _repository.AddClassifier(classifier));
             }
             catch (Exception ex)
             {
@@ -38,12 +38,12 @@ namespace GISServer.API.Service
             }
         }
         
-        public async Task<GeoClassifierDTO> GetGeoClassifier(Guid id)
+        public async Task<ClassifierDTO> GetClassifier(Guid id)
         {
             try
             {
-                GeoClassifierDTO geoClassifierDTO = await _classifierMapper.ClassifierToDTO(await _repository.GetGeoClassifier(id));
-                return geoClassifierDTO;
+                ClassifierDTO classifierDTO = await _classifierMapper.ClassifierToDTO(await _repository.GetClassifier(id));
+                return classifierDTO;
             }
             catch (Exception ex)
             {
@@ -52,17 +52,17 @@ namespace GISServer.API.Service
             }
         }
 
-        public async Task<List<GeoClassifierDTO>> GetGeoClassifiers()
+        public async Task<List<ClassifierDTO>> GetClassifiers()
         {
             try
             {
-                List<GeoClassifier> geoClassifiersFromDB = new List<GeoClassifier>(await _repository.GetGeoClassifiers());
-                List<GeoClassifierDTO> geoClassifiers = new List<GeoClassifierDTO>();
-                foreach (var geoClassifier in geoClassifiersFromDB)
+                List<Classifier> classifiersFromDB = new List<Classifier>(await _repository.GetClassifiers());
+                List<ClassifierDTO> classifiers = new List<ClassifierDTO>();
+                foreach (var classifier in classifiersFromDB)
                 {
-                    geoClassifiers.Add(await _classifierMapper.ClassifierToDTO(geoClassifier));
+                    classifiers.Add(await _classifierMapper.ClassifierToDTO(classifier));
                 }
-                return geoClassifiers;
+                return classifiers;
             }
             catch (Exception ex)
             {

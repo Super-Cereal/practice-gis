@@ -1,6 +1,6 @@
 ﻿namespace GISServer.API.Model
 {
-    public class GeoClassifierDTO
+    public class ClassifierDTO
     {
         public Guid Id { get; set; }
         public String? Name { get; set; }

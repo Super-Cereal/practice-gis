@@ -7,28 +7,28 @@ using GISServer.API.Mapper;
 
 namespace GISServer.API.Service
 {
-    public class GeoObjectClassifierService : IGeoObjectClassifierService
+    public class GeoObjectClassifiersService : IGeoObjectClassifiersService
     {
         private readonly IGeoObjectRepository _repository;
 
-        public GeoObjectClassifierService(IGeoObjectRepository repository)
+        public GeoObjectClassifiersService(IGeoObjectRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<GeoObjectsGeoClassifiersDTO> AddGeoObjectsGeoClassifiers(GeoObjectsGeoClassifiersDTO geoObjectsGeoClassifiersDTO)
+        public async Task<GeoObjectsClassifiersDTO> AddGeoObjectsClassifiers(GeoObjectsClassifiersDTO geoObjectsClassifiersDTO)
         {
             try
             {
-                var geoObjectClassifiers = new GeoObjectsGeoClassifiers
+                var geoObjectClassifiers = new GeoObjectsClassifiers
                 {
-                    GeoObjectId = geoObjectsGeoClassifiersDTO.GeoObjectId,
-                    GeoClassifierId = geoObjectsGeoClassifiersDTO.GeoClassifierId
+                    GeoObjectId = geoObjectsClassifiersDTO.GeoObjectId,
+                    ClassifierId = geoObjectsClassifiersDTO.ClassifierId
                 };
 
-                await _repository.AddGeoObjectsGeoClassifiers(geoObjectClassifiers);
+                await _repository.AddGeoObjectsClassifiers(geoObjectClassifiers);
 
-                return geoObjectsGeoClassifiersDTO;
+                return geoObjectsClassifiersDTO;
             }
             catch (Exception ex)
             {
@@ -37,11 +37,11 @@ namespace GISServer.API.Service
             }
         }
 
-        public async Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers(Guid? geoObjectInfoId)
+        public async Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers(Guid? geoObjectInfoId)
         {
             try
             {
-                return await _repository.GetGeoObjectsGeoClassifiers(geoObjectInfoId);
+                return await _repository.GetGeoObjectsClassifiers(geoObjectInfoId);
             }
             catch (Exception ex)
             {
@@ -50,11 +50,11 @@ namespace GISServer.API.Service
             }
         }
 
-        public async Task<List<GeoObjectsGeoClassifiers>> GetGeoObjectsGeoClassifiers()
+        public async Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers()
         {
             try
             {
-                return await _repository.GetGeoObjectsGeoClassifiers();
+                return await _repository.GetGeoObjectsClassifiers();
             }
             catch (Exception ex)
             {

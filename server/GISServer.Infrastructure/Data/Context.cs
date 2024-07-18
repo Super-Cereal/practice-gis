@@ -14,13 +14,13 @@ namespace GISServer.Infrastructure.Data
         }
 
         public DbSet<GeoObject> GeoObjects { get; set; }
-        public DbSet<GeoClassifier> GeoClassifiers { get; set; }
+        public DbSet<Classifier> Classifiers { get; set; }
         public DbSet<GeoNamesFeature> GeoNamesFeatures { get; set; }
         public DbSet<GeometryVersion> GeometryVersions { get; set; }
         public DbSet<GeoObjectInfo> GeoObjectInfos { get; set; }
         public DbSet<ParentChildObjectLink> ParentChildObjectLinks { get; set; }
         public DbSet<TopologyLink> TopologyLinks { get; set; }  
-        public DbSet<GeoObjectsGeoClassifiers> GeoObjectsGeoClassifiers { get; set; }
+        public DbSet<GeoObjectsClassifiers> GeoObjectsClassifiers { get; set; }
         public DbSet<Aspect> Aspects { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
@@ -72,16 +72,16 @@ namespace GISServer.Infrastructure.Data
                 .HasForeignKey(e => e.GeographicalObjectOutId);
 
             modelBuilder 
-                .Entity<GeoObjectsGeoClassifiers>()
-                .HasKey(e => new {e.GeoClassifierId, e.GeoObjectId});
-            modelBuilder.Entity<GeoObjectsGeoClassifiers>()
+                .Entity<GeoObjectsClassifiers>()
+                .HasKey(e => new {e.ClassifierId, e.GeoObjectId});
+            modelBuilder.Entity<GeoObjectsClassifiers>()
                 .HasOne<GeoObjectInfo>(e => e.GeoObjectInfo)
-                .WithMany(e => e.GeoObjectsGeoClassifiers)
+                .WithMany(e => e.GeoObjectsClassifiers)
                 .HasForeignKey(e => e.GeoObjectId);
-            modelBuilder.Entity<GeoObjectsGeoClassifiers>()
-                .HasOne<GeoClassifier>(e => e.GeoClassifier)
-                .WithMany(e => e.GeoObjectsGeoClassifiers)
-                .HasForeignKey(e => e.GeoClassifierId);
+            modelBuilder.Entity<GeoObjectsClassifiers>()
+                .HasOne<Classifier>(e => e.Classifier)
+                .WithMany(e => e.GeoObjectsClassifiers)
+                .HasForeignKey(e => e.ClassifierId);
 
             modelBuilder
                 .Entity<GeoObject>()

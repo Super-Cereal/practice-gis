@@ -13,51 +13,51 @@ namespace GISServer.API.Controllers
 
         private readonly IClassifierService _classifierService;
 
-        public GeoObjectController(IClassifierService classifierService)
+        public ClassifierController(IClassifierService classifierService)
         {
             _classifierService = classifierService;
         }
 
-        [HttpGet("GeoClassifier")]
-        public async Task<ActionResult> GetGeoClassifier()
+        [HttpGet("Classifier")]
+        public async Task<ActionResult> GetClassifier()
         {
-            var getClassifiers = await _classifierService.GetGeoClassifiers();
+            var getClassifiers = await _classifierService.GetClassifiers();
             if (getClassifiers == null)
             {
-                return StatusCode(StatusCodes.Status204NoContent, "No GeoClassifiers in database");
+                return StatusCode(StatusCodes.Status204NoContent, "No Classifiers in database");
             }
 
             return StatusCode(StatusCodes.Status200OK, getClassifiers);
         }
 
-        [HttpGet("GeoClassifier/{id}")]
-        public async Task<ActionResult> GetGeoClassifier(Guid id)
+        [HttpGet("Classifier/{id}")]
+        public async Task<ActionResult> GetClassifier(Guid id)
         {
-            var geoClassifier = await _classifierService.GetGeoClassifier(id);
+            var classifier = await _classifierService.GetClassifier(id);
 
-            if (geoClassifier == null)
+            if (classifier == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, $"No GeoObject found for id: {id}");
             }
 
-            return StatusCode(StatusCodes.Status200OK, geoClassifier);
+            return StatusCode(StatusCodes.Status200OK, classifier);
         }
 
-        [HttpPost("GeoClassifier")]
-        public async Task<ActionResult<GeoClassifierDTO>> PostGeoClassifier(GeoClassifierDTO geoClassifierDTO)
+        [HttpPost("Classifier")]
+        public async Task<ActionResult<ClassifierDTO>> PostClassifier(ClassifierDTO classifierDTO)
         {
             try{
-            var dbGeoClassifier = await _classifierService.AddGeoClassifier(geoClassifierDTO);
-            if (dbGeoClassifier == null)
+            var dbClassifier = await _classifierService.AddClassifier(classifierDTO);
+            if (dbClassifier == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"{geoClassifierDTO.Name} could not be added.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"{classifierDTO.Name} could not be added.");
             }
-            return CreatedAtAction("GetGeoClassifier", new {id = geoClassifierDTO.Id}, new {geoClassifierDTO});
+            return CreatedAtAction("GetClassifier", new {id = classifierDTO.Id}, new {classifierDTO});
             }
             catch(Exception ex)
             {
                 Console.WriteLine($"{ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"{geoClassifierDTO.Name} could not be added.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"{classifierDTO.Name} could not be added.");
             }
         }
     }

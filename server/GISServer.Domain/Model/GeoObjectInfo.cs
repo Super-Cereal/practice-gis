@@ -16,7 +16,7 @@ namespace GISServer.Domain.Model
         public String? CommonInfo { get; set; }
         public Guid? GeographicalObjectId { get; set; }
         public GeoObject? GeographicalObject { get; set; }
-        public List<GeoClassifier>? GeoClassifiers { get; set; } = new List<GeoClassifier>();
-        public List<GeoObjectsGeoClassifiers> GeoObjectsGeoClassifiers { get; set; } = new List<GeoObjectsGeoClassifiers>();
+        public List<Classifier>? Classifiers { get; set; } = new List<Classifier>();
+        public List<GeoObjectsClassifiers> GeoObjectsClassifiers { get; set; } = new List<GeoObjectsClassifiers>();
     }
 }

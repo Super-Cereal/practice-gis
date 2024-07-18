@@ -8,15 +8,13 @@ namespace GISServer.API.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class GeoObjectController : ControllerBase
+    public class AspectController : ControllerBase
     {
 
-        private readonly IGeoObjectService _geoObjectService;
         private readonly IAspectService _aspectService;
 
-        public GeoObjectController(IGeoObjectService service, IAspectService aspectService)
+        public AspectController(IGeoObjectService service, IAspectService aspectService)
         {
-            _geoObjectService = service;
             _aspectService = aspectService;
         }
 
@@ -71,7 +69,7 @@ namespace GISServer.API.Controllers
         [HttpPost("GeoObjectAspect")]
         public async Task<ActionResult> PostGeoObjectAspect(Guid geoObjectId, Guid aspectId)
         {
-            var dbgeoObject = await _geoObjectService.AddGeoObjectAspect(geoObjectId, aspectId);
+            var dbgeoObject = await _aspectService.AddGeoObjectAspect(geoObjectId, aspectId);
             if (dbgeoObject == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "No Aspect or GeoObject in database.");
@@ -85,7 +83,7 @@ namespace GISServer.API.Controllers
         {
             // something
             //
-            String reportAspect = _geoObjectService.CallAspect(endPoint);
+            String reportAspect = _aspectService.CallAspect(endPoint);
             return StatusCode(StatusCodes.Status200OK, reportAspect);
         }
     }

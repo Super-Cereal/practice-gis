@@ -8,24 +8,24 @@ namespace GISServer.API.Mapper
     public class ClassifierMapper
     {
      
-        public async Task<GeoClassifier> DTOToClassifier(GeoClassifierDTO geoClassifierDTO)
+        public async Task<Classifier> DTOToClassifier(ClassifierDTO classifierDTO)
         {
-            GeoClassifier geoClassifier = new GeoClassifier();
-            geoClassifier.Id = geoClassifierDTO.Id;
-            geoClassifier.Name = geoClassifierDTO.Name;
-            geoClassifier.Code = geoClassifierDTO.Code;
-            geoClassifier.CommonInfo = geoClassifierDTO.CommonInfo;
-            return geoClassifier;
+            Classifier classifier = new Classifier();
+            classifier.Id = classifierDTO.Id;
+            classifier.Name = classifierDTO.Name;
+            classifier.Code = classifierDTO.Code;
+            classifier.CommonInfo = classifierDTO.CommonInfo;
+            return classifier;
         }
 
-        public async Task<GeoClassifierDTO> ClassifierToDTO(GeoClassifier geoClassifier)
+        public async Task<ClassifierDTO> ClassifierToDTO(Classifier classifier)
         {
-            GeoClassifierDTO geoClassifierDTO = new GeoClassifierDTO();
-            geoClassifierDTO.Id = geoClassifier.Id;
-            geoClassifierDTO.Name = geoClassifier.Name;
-            geoClassifierDTO.Code = geoClassifier.Code;
-            geoClassifierDTO.CommonInfo = geoClassifier.CommonInfo;
-            return geoClassifierDTO;
+            ClassifierDTO classifierDTO = new ClassifierDTO();
+            classifierDTO.Id = classifier.Id;
+            classifierDTO.Name = classifier.Name;
+            classifierDTO.Code = classifier.Code;
+            classifierDTO.CommonInfo = classifier.CommonInfo;
+            return classifierDTO;
         }
 
        
