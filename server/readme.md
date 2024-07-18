@@ -32,9 +32,11 @@
 
 `dotnet tool install --global dotnet-ef`
 
-## Запуск сервера
+## Подготовка к запуску сервера
 
-Запустить терминал
+> Ее следует выполнять каждый раз после новых коммитов.
+
+Запустить терминал.
 
 Перейти в директорию server и сделать билд  
 `dotnet build ./GISServer.API`
@@ -42,21 +44,23 @@
 Применить миграцию, то есть перейти в директорию server и ввести команду:  
 `dotnet ef database update -s ./GISServer.API -p ./GISServer.Infrastructure`
 
-Сервер готов к запуску. из директории server:  
+## Запуск сервера
+
+Если при подготовке сервера не было ошибок, то все готово к запуску. из директории server:  
 `dotnet run --project ./GISServer.API`
 
-## Если сервер не запускается
+## Если сервер не запускается или была ошибка при подготовке к запуску
 
-### Проверьте в файле GISServer.Infrastructure/Data/Context.cs строку подключения, возможно там записан некорректный пароль
+### Проверьте строку подключения в файле GISServer.Infrastructure/Data/Context
+Возможно там записаны данные не вашего пользователя. По умолчанию port=5432, password=12345.
 
-Если не помогло - перейдите в директорию server
+### Если не помогло - перейдите в директорию server
 
 Выполните очистку базы данных
-`dotnet ef database drop -s ./GISServer.API -p ./GISServer.Infrastructure`
+`dotnet ef database drop -s ./GISServer.API -p ./GISServer.Infrastructure`.
 
 И заново создайте ее
-`dotnet ef database update -s ./GISServer.API -p ./GISServer.Infrastructure`
-
+`dotnet ef database update -s ./GISServer.API -p ./GISServer.Infrastructure`.
 
 ## Пример структуры объекта
 Минимальный набор информации требуемый для создания объекта
