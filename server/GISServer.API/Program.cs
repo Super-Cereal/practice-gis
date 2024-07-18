@@ -19,11 +19,10 @@ builder.Services.AddScoped<IGeoObjectRepository, GeoObjectRepository>();
 //builder.Services.AddScoped<IClassifierRepository, ClassifierRepository>();
 //builder.Services.AddScoped<ITopologyRepository, TopologyRepository>();
 //builder.Services.AddScoped<IAspectRepository, AspectRepository>();
-//builder.Services.AddScoped<IGeoObjectClassifiersRepository, GeoObjectClassifiersRepository>();
 
 builder.Services.AddSingleton<GeoObjectMapper>();
 builder.Services.AddSingleton<ClassifierMapper>();
-builder.Services.AddSingleton<TopologyService>();
+builder.Services.AddSingleton<TopologyMapper>();
 builder.Services.AddSingleton<AspectMapper>();
 
 
