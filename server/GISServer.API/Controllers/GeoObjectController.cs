@@ -255,5 +255,14 @@ namespace GISServer.API.Controllers
             return StatusCode(StatusCodes.Status200OK, dbAspects);
             
         }
+
+        [HttpGet("CallAspect")]
+        public async Task<ActionResult> CallAspect(String endPoint)
+        {
+            // something
+            //
+            String reportAspect = _service.CallAspect(endPoint);
+            return StatusCode(StatusCodes.Status200OK, reportAspect);
+        }
     }
 }

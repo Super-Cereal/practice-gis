@@ -316,5 +316,11 @@ namespace GISServer.API.Service
                 return null;
             }
         }
+
+        public String CallAspect(String endPoint)
+        {
+            String report = "some information";
+            return report;
+        }
     }
 }

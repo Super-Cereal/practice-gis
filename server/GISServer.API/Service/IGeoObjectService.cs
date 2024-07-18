@@ -27,6 +27,6 @@ namespace GISServer.API.Service
         public Task<List<AspectDTO>> GetAspects();
         public Task<GeoObjectDTO> AddGeoObjectAspect(Guid geoObjectId, Guid aspectId);
         public Task<List<AspectDTO>> GetGeoObjectAspects(Guid geoObjectId);
-
+        public String CallAspect(String endPoint);
     }
 }
