@@ -9,6 +9,8 @@ namespace GISServer.API.Service
     {
         private readonly IGeoObjectRepository _repository;
         private readonly GeoObjectMapper _geoObjectMapper;
+        private readonly AspectMapper _aspectMapper;
+        private readonly ClassifierMapper _classifierMapper;
 
         public GeoObjectService(IGeoObjectRepository repository, GeoObjectMapper geoObjectMapper)
         {
@@ -106,50 +108,6 @@ namespace GISServer.API.Service
             }
         }
 
-        public async Task<GeoClassifierDTO> AddGeoClassifier(GeoClassifierDTO geoClassifierDTO)
-        {
-            try
-            {
-                GeoClassifier geoClassifier = await _geoObjectMapper.DTOToClassifier(geoClassifierDTO);
-                return await _geoObjectMapper.ClassifierToDTO(await _repository.AddGeoClassifier(geoClassifier));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occured. Error Message: {ex. Message}");
-                return null;
-            }
-        }
-        
-        public async Task<GeoClassifierDTO> GetGeoClassifier(Guid id)
-        {
-            try
-            {
-                GeoClassifierDTO geoClassifierDTO = await _geoObjectMapper.ClassifierToDTO(await _repository.GetGeoClassifier(id));
-                return geoClassifierDTO;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-        }
-        public async Task<List<GeoClassifierDTO>> GetGeoClassifiers()
-        {
-            try
-            {
-                List<GeoClassifier> geoClassifiersFromDB = new List<GeoClassifier>(await _repository.GetGeoClassifiers());
-                List<GeoClassifierDTO> geoClassifiers = new List<GeoClassifierDTO>();
-                foreach (var geoClassifier in geoClassifiersFromDB)
-                {
-                    geoClassifiers.Add(await _geoObjectMapper.ClassifierToDTO(geoClassifier));
-                }
-                return geoClassifiers;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
         public async Task<GeoObjectsGeoClassifiersDTO> AddGeoObjectsGeoClassifiers(GeoObjectsGeoClassifiersDTO geoObjectsGeoClassifiersDTO)
         {
             try
@@ -207,70 +165,8 @@ namespace GISServer.API.Service
         }
 
 
-        public async Task<TopologyLinkDTO> AddTopologyLink(TopologyLinkDTO topologyLinkDTO)
-        {
-            try
-            {
-                TopologyLink topologyLink = await _geoObjectMapper.DTOToTopologyLink(topologyLinkDTO);
-                return await _geoObjectMapper.TopologyLinkToDTO(await _repository.AddTopologyLink(topologyLink));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<List<TopologyLinkDTO>> GetTopologyLinks()
-        {
-            try
-            {
-                List<TopologyLinkDTO> topologyLinksDTO = new List<TopologyLinkDTO>();
-                List<TopologyLink> topologyLinks = await _repository.GetTopologyLinks();
-                foreach (var topologyLink in topologyLinks)
-                {
-                    topologyLinksDTO.Add(await _geoObjectMapper.TopologyLinkToDTO(topologyLink));
-                }
-                return topologyLinksDTO;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<AspectDTO> AddAspect(AspectDTO aspectDTO)
-        {
-            try 
-            {
-                Aspect aspect = await _geoObjectMapper.DTOToAspect(aspectDTO);
-                return await _geoObjectMapper.AspectToDTO(await _repository.AddAspect(aspect));
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<AspectDTO> GetAspect(Guid id)
-        {
-            Aspect aspect = await _repository.GetAspect(id);
-            return await _geoObjectMapper.AspectToDTO(aspect);
-        }
-
-        public async Task<List<AspectDTO>> GetAspects()
-        {
-            List<AspectDTO> aspectsDTO = new List<AspectDTO>();
-            List<Aspect> aspects = await _repository.GetAspects();
-            foreach(var aspect in aspects)
-            {
-                aspectsDTO.Add(await _geoObjectMapper.AspectToDTO(aspect));
-            }
-            return aspectsDTO;
-        }
-
+       
+       
         public async Task<GeoObjectDTO> AddGeoObjectAspect(Guid geoObjectId, Guid aspectId)
         {
             try
@@ -302,12 +198,6 @@ namespace GISServer.API.Service
             {
                 return null;
             }
-        }
-
-        public String CallAspect(String endPoint)
-        {
-            String report = "some information";
-            return report;
         }
     }
 }

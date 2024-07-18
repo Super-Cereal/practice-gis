@@ -3,7 +3,7 @@ using GISServer.Domain.Model;
 using NetTopologySuite.Geometries;
 
 
-namespace GISServer.API.Service
+namespace GISServer.API.Mapper
 {
     public class GeoObjectMapper
     {
@@ -368,74 +368,5 @@ namespace GISServer.API.Service
             }
             return geoObject;
         }
-
-        public async Task<GeoClassifier> DTOToClassifier(GeoClassifierDTO geoClassifierDTO)
-        {
-            GeoClassifier geoClassifier = new GeoClassifier();
-            geoClassifier.Id = geoClassifierDTO.Id;
-            geoClassifier.Name = geoClassifierDTO.Name;
-            geoClassifier.Code = geoClassifierDTO.Code;
-            geoClassifier.CommonInfo = geoClassifierDTO.CommonInfo;
-            return geoClassifier;
-        }
-
-        public async Task<GeoClassifierDTO> ClassifierToDTO(GeoClassifier geoClassifier)
-        {
-            GeoClassifierDTO geoClassifierDTO = new GeoClassifierDTO();
-            geoClassifierDTO.Id = geoClassifier.Id;
-            geoClassifierDTO.Name = geoClassifier.Name;
-            geoClassifierDTO.Code = geoClassifier.Code;
-            geoClassifierDTO.CommonInfo = geoClassifier.CommonInfo;
-            return geoClassifierDTO;
-        }
-
-        public async Task<TopologyLink> DTOToTopologyLink(TopologyLinkDTO topologyLinkDTO)
-        {
-            TopologyLink topologyLink = new TopologyLink();
-            topologyLink.Id = (Guid)topologyLinkDTO.Id;
-            topologyLink.Predicate = topologyLinkDTO.Predicate;
-            topologyLink.LastUpdatedDateTime = topologyLinkDTO.LastUpdatedDateTime;
-            topologyLink.CreationDateTime = topologyLinkDTO.CreationDateTime;
-            topologyLink.CommonBorder = topologyLinkDTO.CommonBorder;
-            topologyLink.GeographicalObjectInId = topologyLinkDTO.GeographicalObjectInId;
-            topologyLink.GeographicalObjectOutId = topologyLinkDTO.GeographicalObjectOutId;
-            return topologyLink;
-        }
-        public async Task<TopologyLinkDTO> TopologyLinkToDTO(TopologyLink topologyLink)
-        {
-            TopologyLinkDTO topologyLinkDTO = new TopologyLinkDTO();
-            topologyLinkDTO.Id = topologyLink.Id;
-            topologyLinkDTO.Predicate = topologyLink.Predicate;
-            topologyLinkDTO.LastUpdatedDateTime = topologyLink.LastUpdatedDateTime;
-            topologyLinkDTO.CreationDateTime = topologyLink.CreationDateTime;
-            topologyLinkDTO.CommonBorder = topologyLink.CommonBorder;
-            topologyLinkDTO.GeographicalObjectInId = topologyLink.GeographicalObjectInId;
-            topologyLinkDTO.GeographicalObjectOutId = topologyLink.GeographicalObjectOutId;
-            return topologyLinkDTO;
-        }
-
-        public async Task<Aspect> DTOToAspect(AspectDTO aspectDTO)
-        {
-            Aspect aspect = new Aspect();
-            aspect.Id = (Guid)aspectDTO.Id;
-            aspect.Type = aspectDTO.Type;
-            aspect.Code = aspectDTO.Code;
-            aspect.EndPoint = aspectDTO.EndPoint;
-            aspect.CommonInfo = aspectDTO.CommonInfo;
-            aspect.GeographicalObjectId = aspectDTO.GeographicalObjectId;
-            return aspect;
-        }
-        public async Task<AspectDTO> AspectToDTO(Aspect aspect)
-        {
-            AspectDTO aspectDTO = new AspectDTO();
-            aspectDTO.Id = (Guid)aspect.Id;
-            aspectDTO.Type = aspect.Type;
-            aspectDTO.Code = aspect.Code;
-            aspectDTO.EndPoint = aspect.EndPoint;
-            aspectDTO.CommonInfo = aspect.CommonInfo;
-            aspectDTO.GeographicalObjectId = aspect.GeographicalObjectId;
-            return aspectDTO;
-        }
-
     }
 }
