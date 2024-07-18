@@ -11,17 +11,17 @@ namespace GISServer.API.Controllers
     public class GOCController : ControllerBase
     {
 
-        private readonly IGeoObjectClassifierService _geoObjectClassifierService;
+        private readonly IGeoObjectClassifiersService _geoObjectClassifiersService;
 
-        public GOCController(IGeoObjectService service)
+        public GOCController(IGeoObjectClassifiersService geoObjectClassifiersService)
         {
-            _geoObjectService = service;
+            _geoObjectClassifiersService = geoObjectClassifiersService;
         }
 
-        [HttpGet("GeoObjectsClassifiers")]
+        [HttpGet("GetObjectsClassifiers")]
         public async Task<ActionResult> GetGeoObjectsClassifiers()
         {
-            var getGeoObjectsClassifiers = await _geoObjectClassifierService.GetGeoObjectsClassifiers();
+            var getGeoObjectsClassifiers = await _geoObjectClassifiersService.GetGeoObjectsClassifiers();
             if (getGeoObjectsClassifiers == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, "No Classifier in database");
@@ -30,30 +30,5 @@ namespace GISServer.API.Controllers
             return StatusCode(StatusCodes.Status200OK, getGeoObjectsClassifiers);
         }
 
-        [HttpPost("GeoObjectsClassifiers")]
-        public async Task<ActionResult<GeoObjectsClassifiersDTO>> PostGeoObjectsClassifiers(Guid geoObjectId, Guid classifierId)
-        {
-            try
-            {
-                var geoObjectsClassifiersDTO = new GeoObjectsClassifiersDTO
-                {
-                    GeoObjectId = geoObjectId,
-                    ClassifierId = classifierId
-                };
-
-                var dbGeoObjectsClassifiers = await _geoObjectService.AddGeoObjectsClassifiers(geoObjectsClassifiersDTO);
-                if (dbGeoObjectsClassifiers == null)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
-                }
-
-                return CreatedAtAction("GetGeoObjectsClassifiers", new { geoObjectId = geoObjectId, classifierId = classifierId }, geoObjectsClassifiersDTO);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"{ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
-            }
-        }
     }
 }

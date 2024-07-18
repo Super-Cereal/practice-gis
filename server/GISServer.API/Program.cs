@@ -13,7 +13,7 @@ builder.Services.AddScoped<IGeoObjectService, GeoObjectService>();
 builder.Services.AddScoped<IClassifierService, ClassifierService>();
 builder.Services.AddScoped<IAspectService, AspectService>();
 builder.Services.AddScoped<ITopologyService, TopologyService>();
-builder.Services.AddScoped<IGeoObjectClassifierService, GeoObjectClassifierService>();
+builder.Services.AddScoped<IGeoObjectClassifiersService, GeoObjectClassifiersService>();
 
 builder.Services.AddScoped<IGeoObjectRepository, GeoObjectRepository>();
 //builder.Services.AddScoped<IClassifierRepository, ClassifierRepository>();

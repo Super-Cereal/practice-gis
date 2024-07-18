@@ -15,6 +15,6 @@ namespace GISServer.API.Service
         public Task<GeoObjectDTO> AddGeoObjectAspect(Guid geoObjectId, Guid aspectId);
         public Task<List<AspectDTO>> GetGeoObjectAspects(Guid geoObjectId);
 
-        public async Task<GeoObjectsClassifiersDTO> AddGeoObjectsClassifiers(GeoObjectsClassifiersDTO geoObjectsClassifiersDTO)
+        public Task<GeoObjectsClassifiersDTO> AddGeoObjectsClassifiers(GeoObjectsClassifiersDTO geoObjectsClassifiersDTO);
     }
 }
