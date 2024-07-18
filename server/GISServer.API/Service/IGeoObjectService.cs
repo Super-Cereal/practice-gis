@@ -12,9 +12,10 @@ namespace GISServer.API.Service
         public Task<GeoObjectDTO> AddGeoObject(GeoObjectDTO geoObjectDTO);
         public Task<(bool, string)> DeleteGeoObject(Guid id);   
 
+        public Task<GeoObjectsClassifiersDTO> AddGeoObjectsClassifiers(GeoObjectsClassifiersDTO geoObjectsClassifiersDTO);
+        public Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers(Guid? geoObjectInfoId);
+
         public Task<GeoObjectDTO> AddGeoObjectAspect(Guid geoObjectId, Guid aspectId);
         public Task<List<AspectDTO>> GetGeoObjectAspects(Guid geoObjectId);
-
-        public Task<GeoObjectsClassifiersDTO> AddGeoObjectsClassifiers(GeoObjectsClassifiersDTO geoObjectsClassifiersDTO);
     }
 }

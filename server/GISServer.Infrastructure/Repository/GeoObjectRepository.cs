@@ -53,12 +53,15 @@ namespace GISServer.Infrastructure.Service
                 .Include(l2 => l2.OutputTopologyLinks)
                 .FirstOrDefaultAsync();
         }
-        public async Task<List<GeoObjectsClassifiers>> GetClassifiers(Guid geoObjectId)
-        {
-            return await _context.GeoObjectsClassifiers
-                .Where(o => o.GeoObjectId == geoObjectId)
-                .ToListAsync();
-        }
+
+        // GeoObjectsClassifiersRepository
+        //public async Task<List<GeoObjectsClassifiers>> GetClassifiers(Guid geoObjectId)
+        //{
+            //return await _context.GeoObjectsClassifiers
+                //.Where(o => o.GeoObjectId == geoObjectId)
+                //.ToListAsync();
+        //}
+
         public async Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers(Guid? geoObjectInfoId)
         {
             return await _context.GeoObjectsClassifiers
@@ -67,13 +70,7 @@ namespace GISServer.Infrastructure.Service
                 .Include(gogc => gogc.Classifier)
                 .ToListAsync();
         }
-        public async Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers()
-        {
-            return await _context.GeoObjectsClassifiers
-                .Include(gogc => gogc.GeoObjectInfo)
-                .Include(gogc => gogc.Classifier)
-                .ToListAsync();
-        }
+        
         public void ChangeTrackerClear()
         {
             _context.ChangeTracker.Clear();
@@ -101,7 +98,7 @@ namespace GISServer.Infrastructure.Service
             await _context.SaveChangesAsync();
             return geoObject;
         }
-        /// ?????? //// // //
+
         public async Task UpdateAsync(GeoObject geoObject)
         {
 
@@ -176,90 +173,6 @@ namespace GISServer.Infrastructure.Service
             return (true, "GeoObject got deleted");
         }
 
-        public async Task<List<Classifier>> GetClassifiers()
-        {
-            return await _context.Classifiers
-                .ToListAsync();
-        }
-
-        public async Task<Classifier> GetClassifier(Guid? id)
-        {
-            try{
-            return await _context.Classifiers
-                .Where(ci => ci.Id == id)
-                .FirstOrDefaultAsync();
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"{ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<Classifier> AddClassifier(Classifier classifier)
-        {
-            await _context.Classifiers.AddAsync(classifier);
-            await _context.SaveChangesAsync();
-            return await GetClassifier(classifier.Id);
-        }
-
-
-        public async Task<TopologyLink> GetTopologyLink(Guid? id)
-        {
-            try
-            {
-                return await _context.TopologyLinks
-                    .Where(tl => tl.Id == id)
-                    .FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"{ex.Message}");
-                return null;
-            }
-        }
-        public async Task<List<TopologyLink>> GetTopologyLinks()
-        {
-            try
-            {
-                return await _context.TopologyLinks
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"{ex.Message}");
-                return null;
-            }
-        }
-
-        public async Task<TopologyLink> AddTopologyLink(TopologyLink topologyLink)
-        {
-
-            await _context.TopologyLinks.AddAsync(topologyLink);
-            await _context.SaveChangesAsync();
-            return await GetTopologyLink(topologyLink.Id);
-        }
-
-        public async Task<Aspect> GetAspect(Guid? id)
-        {
-            return await _context.Aspects
-                .Where(a => a.Id == id)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<List<Aspect>> GetAspects()
-        {
-            return await _context.Aspects
-                .ToListAsync();
-        }
-
-        public async Task<Aspect> AddAspect(Aspect aspect)
-        {
-            await _context.AddAsync(aspect);
-            await _context.SaveChangesAsync();
-            return await GetAspect(aspect.Id);
-        }
-   
         public async Task<GeoObject> AddGeoObjectAspect(Guid geoObjectId, Guid aspectId)
         {
             _context.Aspects

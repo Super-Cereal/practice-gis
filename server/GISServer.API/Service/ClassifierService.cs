@@ -9,10 +9,10 @@ namespace GISServer.API.Service
 {
     public class ClassifierService : IClassifierService
     {
-        private readonly IGeoObjectRepository _repository;
+        private readonly IClassifierRepository _repository;
         private readonly ClassifierMapper _classifierMapper;
 
-        public ClassifierService(IGeoObjectRepository repository, ClassifierMapper classifierMapper)
+        public ClassifierService(IClassifierRepository repository, ClassifierMapper classifierMapper)
         {
             _repository = repository;
             _classifierMapper = classifierMapper;
