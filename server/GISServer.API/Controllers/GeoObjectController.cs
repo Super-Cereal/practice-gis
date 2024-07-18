@@ -1,5 +1,4 @@
-﻿////STARIY
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using GISServer.API.Service;
 using GISServer.API.Model;
 using GISServer.Domain.Model;

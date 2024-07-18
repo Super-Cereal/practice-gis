@@ -422,6 +422,7 @@ namespace GISServer.API.Service
             aspect.Code = aspectDTO.Code;
             aspect.EndPoint = aspectDTO.EndPoint;
             aspect.CommonInfo = aspectDTO.CommonInfo;
+            aspect.GeographicalObjectId = aspectDTO.GeographicalObjectId;
             return aspect;
         }
         public async Task<AspectDTO> AspectToDTO(Aspect aspect)
@@ -432,6 +433,7 @@ namespace GISServer.API.Service
             aspectDTO.Code = aspect.Code;
             aspectDTO.EndPoint = aspect.EndPoint;
             aspectDTO.CommonInfo = aspect.CommonInfo;
+            aspectDTO.GeographicalObjectId = aspect.GeographicalObjectId;
             return aspectDTO;
         }
 

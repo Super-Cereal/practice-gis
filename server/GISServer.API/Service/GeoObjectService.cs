@@ -32,10 +32,10 @@ namespace GISServer.API.Service
                     }
                 
                     List<Aspect> geoObjectAspectsFromDB = new List<Aspect>(await _repository.GetGeoObjectAspects(geoObject.Id));
-                    foreach(var aspect in geoObjectAspectsFromDB)
-                    {
-                        geoObject.Aspects.Add(await _repository.GetAspect(aspect.Id));
-                    }
+
+                    if (geoObjectAspectsFromDB == null)
+                        foreach(var aspect in geoObjectAspectsFromDB)
+                            geoObject.Aspects.Add(await _repository.GetAspect(aspect.Id));
 
                     geoObjects.Add(await _geoObjectMapper.ObjectToDTO(geoObject));
                 }
@@ -53,7 +53,9 @@ namespace GISServer.API.Service
             {
                 GeoObjectDTO geoObject = await _geoObjectMapper.ObjectToDTO(await _repository.GetGeoObject(id));
                 
-                List<GeoObjectsGeoClassifiers> geoObjectsGeoClassifiersFromDB = new List<GeoObjectsGeoClassifiers>(await _repository.GetGeoObjectsGeoClassifiers(id));
+                List<GeoObjectsGeoClassifiers> geoObjectsGeoClassifiersFromDB = new List<GeoObjectsGeoClassifiers>(
+                        await _repository.GetGeoObjectsGeoClassifiers(id));
+
                 foreach (var gogc in geoObjectsGeoClassifiersFromDB)
                 {
                    geoObject.GeoObjectInfo.GeoClassifiers.Add(
@@ -63,12 +65,11 @@ namespace GISServer.API.Service
                 }
 
                 List<Aspect> geoObjectAspectsFromDB = new List<Aspect>(await _repository.GetGeoObjectAspects(id));
-                foreach(var aspect in geoObjectAspectsFromDB)
-                {
-                    geoObject.Aspects.Add(
-                        await _geoObjectMapper.AspectToDTO(
-                            await _repository.GetAspect(aspect.Id)));
-                }
+                if (geoObjectAspectsFromDB == null)
+                    foreach(var aspect in geoObjectAspectsFromDB)
+                        geoObject.Aspects.Add(
+                            await _geoObjectMapper.AspectToDTO(
+                                await _repository.GetAspect(aspect.Id)));
 
                 return geoObject;
             }

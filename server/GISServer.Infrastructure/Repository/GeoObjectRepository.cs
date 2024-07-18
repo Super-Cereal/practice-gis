@@ -25,6 +25,7 @@ namespace GISServer.Infrastructure.Service
                 .Include(itl => itl.InputTopologyLinks)
                 .Include(otl => otl.OutputTopologyLinks)
                 .Include(gc => gc.GeoObjectInfo.GeoClassifiers)
+                .Include(a => a.Aspects)
                 .ToListAsync();
         }
 
@@ -41,6 +42,7 @@ namespace GISServer.Infrastructure.Service
                 .Include(itl => itl.InputTopologyLinks)
                 .Include(otl => otl.OutputTopologyLinks)
                 .Include(gc => gc.GeoObjectInfo.GeoClassifiers)
+                .Include(a => a.Aspects)
                 .FirstOrDefaultAsync();
         }
         public async Task<GeoObject> GetByNameAsync(string name)
