@@ -23,7 +23,7 @@ builder.Services.AddScoped<IGeoObjectRepository, GeoObjectRepository>();
 
 builder.Services.AddSingleton<GeoObjectMapper>();
 builder.Services.AddSingleton<ClassifierMapper>();
-builder.Services.AddSingleton<TopologyService>();
+builder.Services.AddSingleton<TopologyMapper>();
 builder.Services.AddSingleton<AspectMapper>();
 
 
