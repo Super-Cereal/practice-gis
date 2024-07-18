@@ -21,7 +21,7 @@ namespace GISServer.API.Controllers
         [HttpGet("GeoObjectsClassifiers")]
         public async Task<ActionResult> GetGeoObjectsClassifiers()
         {
-            var getGeoObjectsClassifiers = await _geoObjectService.GetGeoObjectsClassifiers();
+            var getGeoObjectsClassifiers = await _geoObjectClassifierService.GetGeoObjectsClassifiers();
             if (getGeoObjectsClassifiers == null)
             {
                 return StatusCode(StatusCodes.Status204NoContent, "No Classifier in database");

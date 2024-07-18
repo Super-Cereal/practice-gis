@@ -54,30 +54,6 @@ namespace GISServer.API.Controllers
             return StatusCode(StatusCodes.Status200OK, dbAspect);
         }
 
-        [HttpGet("GeoObjectAspect/{geoObjectId}")]
-        public async Task<ActionResult> GetGeoObjectAspects(Guid geoObjectId)
-        {
-            var dbAspects = await _aspectService.GetGeoObjectAspects(geoObjectId);
-            if (dbAspects == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "No Aspects of GeoObject in database.");
-            }
-            return StatusCode(StatusCodes.Status200OK, dbAspects);
-            
-        }
-
-        [HttpPost("GeoObjectAspect")]
-        public async Task<ActionResult> PostGeoObjectAspect(Guid geoObjectId, Guid aspectId)
-        {
-            var dbgeoObject = await _aspectService.AddGeoObjectAspect(geoObjectId, aspectId);
-            if (dbgeoObject == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "No Aspect or GeoObject in database.");
-            }
-            return StatusCode(StatusCodes.Status200OK, dbgeoObject);
-        }
-
-
         [HttpGet("CallAspect")]
         public async Task<ActionResult> CallAspect(String endPoint)
         {

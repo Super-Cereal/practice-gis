@@ -54,24 +54,6 @@ namespace GISServer.API.Service
             return aspectsDTO;
         }
 
-        public async Task<List<AspectDTO>> GetGeoObjectAspects(Guid geoObjectId)
-        {
-            try
-            {
-                List<AspectDTO> aspectsDTO = new List<AspectDTO>();
-                List<Aspect> aspects = await _repository.GetGeoObjectAspects(geoObjectId);
-                foreach(var aspect in aspects)
-                {
-                    aspectsDTO.Add(await _aspectMapper.AspectToDTO(aspect));
-                }
-                return aspectsDTO;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
         public String CallAspect(String endPoint)
         {
             String report = "some information";

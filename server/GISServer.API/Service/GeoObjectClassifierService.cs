@@ -16,27 +16,6 @@ namespace GISServer.API.Service
             _repository = repository;
         }
 
-        public async Task<GeoObjectsClassifiersDTO> AddGeoObjectsClassifiers(GeoObjectsClassifiersDTO geoObjectsClassifiersDTO)
-        {
-            try
-            {
-                var geoObjectClassifiers = new GeoObjectsClassifiers
-                {
-                    GeoObjectId = geoObjectsClassifiersDTO.GeoObjectId,
-                    ClassifierId = geoObjectsClassifiersDTO.ClassifierId
-                };
-
-                await _repository.AddGeoObjectsClassifiers(geoObjectClassifiers);
-
-                return geoObjectsClassifiersDTO;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
-                return null;
-            }
-        }
-
         public async Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers(Guid? geoObjectInfoId)
         {
             try

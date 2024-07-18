@@ -10,11 +10,7 @@ namespace GISServer.API.Controllers
     [Route("api/[controller]")]
     public class GeoObjectController : ControllerBase
     {
-
         private readonly IGeoObjectService _geoObjectService;
-        private readonly IClassifierService _classifierService;
-        private readonly IAspectService _aspectService;
-        private readonly IGeoObjectClassifierService _geoObjectClassifierService;
 
         public GeoObjectController(IGeoObjectService service)
         {
@@ -92,19 +88,8 @@ namespace GISServer.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("GeoObjectsClassifiers")]
-        public async Task<ActionResult> GetGeoObjectsClassifiers()
-        {
-            var getGeoObjectsClassifiers = await _geoObjectService.GetGeoObjectsClassifiers();
-            if (getGeoObjectsClassifiers == null)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "No Classifier in database");
-            }
 
-            return StatusCode(StatusCodes.Status200OK, getGeoObjectsClassifiers);
-        }
-
-        [HttpPost("GeoObjectsClassifiers")]
+        [HttpPost("AddClassifier")]
         public async Task<ActionResult<GeoObjectsClassifiersDTO>> PostGeoObjectsClassifiers(Guid geoObjectId, Guid classifierId)
         {
             try
@@ -130,7 +115,7 @@ namespace GISServer.API.Controllers
             }
         }
       
-        [HttpGet("GeoObjectAspect/{geoObjectId}")]
+        [HttpGet("GetAspects/{id}")]
         public async Task<ActionResult> GetGeoObjectAspects(Guid geoObjectId)
         {
             var dbAspects = await _geoObjectService.GetGeoObjectAspects(geoObjectId);
@@ -142,7 +127,7 @@ namespace GISServer.API.Controllers
             
         }
 
-        [HttpPost("GeoObjectAspect")]
+        [HttpPost("AddAspect")]
         public async Task<ActionResult> PostGeoObjectAspect(Guid geoObjectId, Guid aspectId)
         {
             var dbgeoObject = await _geoObjectService.AddGeoObjectAspect(geoObjectId, aspectId);

@@ -125,6 +125,27 @@ namespace GISServer.API.Service
             return geoObjectDTO;
         }
 
+        public async Task<GeoObjectsClassifiersDTO> AddGeoObjectsClassifiers(GeoObjectsClassifiersDTO geoObjectsClassifiersDTO)
+        {
+            try
+            {
+                var geoObjectClassifiers = new GeoObjectsClassifiers
+                {
+                    GeoObjectId = geoObjectsClassifiersDTO.GeoObjectId,
+                    ClassifierId = geoObjectsClassifiersDTO.ClassifierId
+                };
+
+                await _repository.AddGeoObjectsClassifiers(geoObjectClassifiers);
+
+                return geoObjectsClassifiersDTO;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
+                return null;
+            }
+        }
+
         public async Task<GeoObjectDTO> AddGeoObjectAspect(Guid geoObjectId, Guid aspectId)
         {
             try
