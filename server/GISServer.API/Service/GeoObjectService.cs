@@ -8,7 +8,8 @@ namespace GISServer.API.Service
 {
     public class GeoObjectService : IGeoObjectService
     {
-        private readonly IGeoObjectRepository _repository;
+        private readonly IGeoObjectRepository _geoObjectRepository;
+        private readonly IClassifierRepository _classifierRepository;
         private readonly GeoObjectMapper _geoObjectMapper;
         private readonly AspectMapper _aspectMapper;
         private readonly ClassifierMapper _classifierMapper;
@@ -19,7 +20,7 @@ namespace GISServer.API.Service
                 ClassifierMapper classifierMapper,
                 AspectMapper aspectMapper)
         {
-            _repository = repository;
+            _geoObjectRepository = repository;
             _geoObjectMapper = geoObjectMapper;
             _classifierMapper = classifierMapper;
             _aspectMapper = aspectMapper;
@@ -29,14 +30,16 @@ namespace GISServer.API.Service
         {
             try
             {
-                List<GeoObject> geoObjectsFromDB = new List<GeoObject>(await _repository.GetGeoObjects());
+                List<GeoObject> geoObjectsFromDB = new List<GeoObject>(await _geoObjectRepository.GetGeoObjects());
                 List<GeoObjectDTO> geoObjects = new List<GeoObjectDTO>();
                 foreach (var geoObject in geoObjectsFromDB)
                 {
-                    List<GeoObjectsClassifiers> geoObjectsClassifiersFromDB = new List<GeoObjectsClassifiers>(await _repository.GetGeoObjectsClassifiers(geoObject.Id));
+                    List<GeoObjectsClassifiers> geoObjectsClassifiersFromDB = new List<GeoObjectsClassifiers>(
+                            await _geoObjectRepository.GetGeoObjectsClassifiers(geoObject.Id));
                     foreach (var gogc in geoObjectsClassifiersFromDB)
                     {
-                        geoObject.GeoObjectInfo.Classifiers.Add(await _repository.GetClassifier(gogc.ClassifierId));
+                        geoObject.GeoObjectInfo.Classifiers.Add(
+                                await _classifierRepository.GetClassifier(gogc.ClassifierId));
 
                     }
                 
@@ -54,16 +57,16 @@ namespace GISServer.API.Service
         {
             try
             {
-                GeoObjectDTO geoObject = await _geoObjectMapper.ObjectToDTO(await _repository.GetGeoObject(id));
+                GeoObjectDTO geoObject = await _geoObjectMapper.ObjectToDTO(await _geoObjectRepository.GetGeoObject(id));
                 
                 List<GeoObjectsClassifiers> geoObjectsClassifiersFromDB = new List<GeoObjectsClassifiers>(
-                        await _repository.GetGeoObjectsClassifiers(id));
+                        await _geoObjectRepository.GetGeoObjectsClassifiers(id));
 
                 foreach (var gogc in geoObjectsClassifiersFromDB)
                 {
                    geoObject.GeoObjectInfo.Classifiers.Add(
                        await _classifierMapper.ClassifierToDTO(
-                           await _repository.GetClassifier(gogc.ClassifierId)));
+                           await _classifierRepository.GetClassifier(gogc.ClassifierId)));
 
                 }
 
@@ -80,7 +83,7 @@ namespace GISServer.API.Service
             try
             {
                 GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
-                return await _geoObjectMapper.ObjectToDTO(await _repository.AddGeoObject(geoObject));
+                return await _geoObjectMapper.ObjectToDTO(await _geoObjectRepository.AddGeoObject(geoObject));
             }
             catch (Exception ex)
             {
@@ -95,7 +98,7 @@ namespace GISServer.API.Service
             try
             {
                 GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
-                await _repository.UpdateGeoObject(geoObject);
+                await _geoObjectRepository.UpdateGeoObject(geoObject);
                 return geoObjectDTO;
             }
             catch (Exception ex)
@@ -107,7 +110,7 @@ namespace GISServer.API.Service
         {
             try
             {
-                return await _repository.DeleteGeoObject(id);
+                return await _geoObjectRepository.DeleteGeoObject(id);
             }
             catch (Exception ex)
             {
@@ -125,6 +128,10 @@ namespace GISServer.API.Service
             return geoObjectDTO;
         }
 
+        //
+        // ВАЖНЫЙ МОМЕНТ. из репозитория возвращается список классификаторов данного объекта
+        // но сервис в этой функции игнорирует это и возвращает тот же самый объект
+        // скорее всего в этом объекте нет нового классификатора(а может всех)
         public async Task<GeoObjectsClassifiersDTO> AddGeoObjectsClassifiers(GeoObjectsClassifiersDTO geoObjectsClassifiersDTO)
         {
             try
@@ -135,9 +142,22 @@ namespace GISServer.API.Service
                     ClassifierId = geoObjectsClassifiersDTO.ClassifierId
                 };
 
-                await _repository.AddGeoObjectsClassifiers(geoObjectClassifiers);
+                await _geoObjectRepository.AddGeoObjectsClassifiers(geoObjectClassifiers);
 
                 return geoObjectsClassifiersDTO;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers(Guid? geoObjectInfoId)
+        {
+            try
+            {
+                return await _geoObjectRepository.GetGeoObjectsClassifiers(geoObjectInfoId);
             }
             catch (Exception ex)
             {
@@ -151,7 +171,7 @@ namespace GISServer.API.Service
             try
             {
                 return await _geoObjectMapper.ObjectToDTO(
-                    await _repository.AddGeoObjectAspect(geoObjectId, aspectId)
+                    await _geoObjectRepository.AddGeoObjectAspect(geoObjectId, aspectId)
                     );
             }
             catch (Exception ex)
@@ -166,7 +186,7 @@ namespace GISServer.API.Service
             try
             {
                 List<AspectDTO> aspectsDTO = new List<AspectDTO>();
-                List<Aspect> aspects = await _repository.GetGeoObjectAspects(geoObjectId);
+                List<Aspect> aspects = await _geoObjectRepository.GetGeoObjectAspects(geoObjectId);
                 foreach(var aspect in aspects)
                 {
                     aspectsDTO.Add(await _aspectMapper.AspectToDTO(aspect));

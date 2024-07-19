@@ -9,10 +9,10 @@ namespace GISServer.API.Service
 {
     public class TopologyService : ITopologyService 
     {
-        private readonly IGeoObjectRepository _repository;
+        private readonly ITopologyRepository _repository;
         private readonly TopologyMapper _topologyMapper;
 
-        public TopologyService(IGeoObjectRepository repository, TopologyMapper topologyMapper)
+        public TopologyService(ITopologyRepository repository, TopologyMapper topologyMapper)
         {
             _repository = repository;
             _topologyMapper = topologyMapper;

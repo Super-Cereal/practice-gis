@@ -16,9 +16,16 @@ builder.Services.AddScoped<ITopologyService, TopologyService>();
 builder.Services.AddScoped<IGeoObjectClassifiersService, GeoObjectClassifiersService>();
 
 builder.Services.AddScoped<IGeoObjectRepository, GeoObjectRepository>();
+<<<<<<< HEAD
 //builder.Services.AddScoped<IClassifierRepository, ClassifierRepository>();
 //builder.Services.AddScoped<ITopologyRepository, TopologyRepository>();
 //builder.Services.AddScoped<IAspectRepository, AspectRepository>();
+=======
+builder.Services.AddScoped<IClassifierRepository, ClassifierRepository>();
+builder.Services.AddScoped<ITopologyRepository, TopologyRepository>();
+builder.Services.AddScoped<IAspectRepository, AspectRepository>();
+builder.Services.AddScoped<IGeoObjectsClassifiersRepository, GeoObjectsClassifiersRepository>();
+>>>>>>> f7ad924ea7ca3b79b54bc3c12d8cad91a905e317
 
 builder.Services.AddSingleton<GeoObjectMapper>();
 builder.Services.AddSingleton<ClassifierMapper>();

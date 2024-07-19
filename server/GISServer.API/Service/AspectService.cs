@@ -8,10 +8,10 @@ namespace GISServer.API.Service
 {
     public class AspectService : IAspectService
     {
-        private readonly IGeoObjectRepository _repository;
+        private readonly IAspectRepository _repository;
         private readonly AspectMapper _aspectMapper;
         
-        public AspectService(IGeoObjectRepository repository, AspectMapper aspectMapper)
+        public AspectService(IAspectRepository repository, AspectMapper aspectMapper)
         {
             _repository = repository;
             _aspectMapper = aspectMapper;

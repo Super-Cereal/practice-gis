@@ -9,25 +9,13 @@ namespace GISServer.API.Service
 {
     public class GeoObjectClassifiersService : IGeoObjectClassifiersService
     {
-        private readonly IGeoObjectRepository _repository;
+        private readonly IGeoObjectsClassifiersRepository _repository;
 
-        public GeoObjectClassifiersService(IGeoObjectRepository repository)
+        public GeoObjectClassifiersService(IGeoObjectsClassifiersRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers(Guid? geoObjectInfoId)
-        {
-            try
-            {
-                return await _repository.GetGeoObjectsClassifiers(geoObjectInfoId);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occured. Error Message: {ex.Message}");
-                return null;
-            }
-        }
 
         public async Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers()
         {
