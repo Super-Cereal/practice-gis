@@ -1,3 +1,5 @@
+import type { GEO_OBJECT_STATUS } from './constants';
+
 export interface GeoObject extends DraftGeoObject {
     id: string;
 }
@@ -7,7 +9,7 @@ export interface DraftGeoObject {
     name: string;
 
     /** Статус обьекта */
-    status?: 'actual' | 'expired';
+    status?: (typeof GEO_OBJECT_STATUS)[keyof typeof GEO_OBJECT_STATUS];
 
     /** Предлагаю это не использовать в пользу geoObjectInfo */
     geoNameFeature?: GeoNameFeature;
@@ -15,8 +17,6 @@ export interface DraftGeoObject {
     geometry: Geometry;
 
     geoObjectInfo?: GeoObjectInfo;
-
-    geoClassifiers?: Classifier[];
 }
 
 interface GeoNameFeature {
@@ -48,6 +48,8 @@ interface GeoObjectInfo {
 
     /** Всякая доп инфа */
     commonInfo?: string;
+
+    classifiers?: Classifier[];
 }
 
 export interface Classifier {

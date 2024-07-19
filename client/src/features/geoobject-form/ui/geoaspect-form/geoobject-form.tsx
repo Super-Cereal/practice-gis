@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 
 import { Modal } from '../../../../shared/ui/modal';
 import { Button } from '../../../../shared/ui/button';
-import { geoObjectModel } from '../../../../entities/geoobject';
+import { GEO_OBJECT_STATUS, geoObjectModel } from '../../../../entities/geoobject';
 import { aspects } from '../../../../widgets/map/lib/mocks';
 
 import type { FormFields } from '../../lib/types';
@@ -99,9 +99,15 @@ export const GeoobjectForm = () => {
                 </div>
                 <div>
                     <label>Статус: </label>
-                    <select className={styles.aspectSelect} {...register('status', { required: true })}>
-                        <option value="Актуален">Актуален</option>
-                        <option value="Устарел">Устарел</option>
+                    <select
+                        className={styles.aspectSelect}
+                        defaultValue={GEO_OBJECT_STATUS.actual}
+                        {...register('status', { required: true })}
+                    >
+                        {Object.keys(GEO_OBJECT_STATUS).map((key) => (
+                            // @ts-ignore
+                            <option value={GEO_OBJECT_STATUS[key]}>{key}</option>
+                        ))}
                     </select>
                 </div>
 

@@ -29,7 +29,6 @@ export const MapObjectPopup = (props: Props) => (
 /** Выделяем отдельно, чтобы не рендерить, пока попап скрыт */
 const Content = ({ onDelete, object, type }: Props) => {
     const { id, name, status, geoObjectInfo } = object;
-    console.log('content');
 
     return (
         <>
@@ -38,7 +37,13 @@ const Content = ({ onDelete, object, type }: Props) => {
             </h3>
             <MapObjectIdWithCopy id={id} />
 
-            <span className={styles.info}>{geoObjectInfo?.commonInfo}</span>
+            <div className={styles.content}>
+                <span>{geoObjectInfo?.commonInfo}</span>
+            </div>
+
+            <div className={styles.bottom}>
+                <span>Язык: {geoObjectInfo?.language}</span>
+            </div>
         </>
     );
 };

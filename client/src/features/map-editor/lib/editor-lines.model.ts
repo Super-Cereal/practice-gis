@@ -3,6 +3,8 @@ import { nanoid } from 'nanoid';
 
 import { editorPointsModel } from './editor-points.model';
 import type { EditorLine } from './types';
+import { geoObjectModel } from '../../../entities/geoobject';
+import { geoObjectFormModel } from '../../geoobject-form';
 
 const $lines = createStore<Record<EditorLine['_id'], EditorLine>>({});
 const $selectedLines = sample({
@@ -70,6 +72,16 @@ sample({
     clock: deleteSelectedLines,
     source: $selectedLines,
     fn: (lines) => lines.forEach(({ _id }) => deleteLine(_id)),
+});
+
+// если удалось сохранить линию, то удаляем ее из черновиков
+sample({
+    clock: geoObjectModel.saveGeoObjectFx.done,
+    source: { lines: $lines, selectedObject: geoObjectFormModel.$selectedEditorObject },
+    filter: ({ lines, selectedObject }) => Boolean(selectedObject && lines[selectedObject._id]),
+    // @ts-ignore
+    fn: ({ selectedObject: { _id } }) => _id,
+    target: deleteLine,
 });
 
 export const editorLinesModel = {

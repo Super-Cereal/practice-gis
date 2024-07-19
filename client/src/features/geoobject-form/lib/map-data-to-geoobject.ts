@@ -8,6 +8,7 @@ export const mapDataToGeoobject = (
     editorObject: PreparedEditorObject,
 ): DraftGeoObject => ({
     name,
+    // status,
     geometry: {
         authoritativeKnowledgeSource: 'источник/автор',
 
@@ -23,11 +24,11 @@ export const mapDataToGeoobject = (
     geoObjectInfo: {
         language: 'Russian',
         commonInfo: description,
+        // классифаер на данный момент сперва надо создать
+        classifiers: [
+            {
+                code: getClassifierCodeWithType(editorObject.type, classCode),
+            },
+        ],
     },
-    // классифаер на данный момент сперва надо создать
-    geoClassifiers: [
-        {
-            code: getClassifierCodeWithType(editorObject.type, classCode),
-        },
-    ],
 });
