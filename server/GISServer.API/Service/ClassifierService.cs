@@ -28,6 +28,7 @@ namespace GISServer.API.Service
         {
             try
             {
+                classifierDTO = CreateGuid(classifierDTO);
                 Classifier classifier = await _classifierMapper.DTOToClassifier(classifierDTO);
                 return await _classifierMapper.ClassifierToDTO(await _repository.AddClassifier(classifier));
             }

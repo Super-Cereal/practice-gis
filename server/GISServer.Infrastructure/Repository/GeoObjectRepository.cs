@@ -24,7 +24,6 @@ namespace GISServer.Infrastructure.Service
                 .Include(cgo => cgo.ChildGeoObjects)
                 .Include(itl => itl.InputTopologyLinks)
                 .Include(otl => otl.OutputTopologyLinks)
-                .Include(gc => gc.GeoObjectInfo.Classifiers)
                 .Include(a => a.Aspects)
                 .ToListAsync();
         }
@@ -41,7 +40,6 @@ namespace GISServer.Infrastructure.Service
                 .Include(cgo => cgo.ChildGeoObjects)
                 .Include(itl => itl.InputTopologyLinks)
                 .Include(otl => otl.OutputTopologyLinks)
-                .Include(gc => gc.GeoObjectInfo.Classifiers)
                 .Include(a => a.Aspects)
                 .FirstOrDefaultAsync();
         }
