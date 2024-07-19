@@ -2,7 +2,7 @@ import React from 'react';
 import { useUnit } from 'effector-react';
 import { Circle, Polygon, Polyline } from 'react-leaflet';
 
-import { type GeoObject, geoObjectModel, getGeometry } from '../../../../entities/geoobject';
+import { type GeoObject, geoObjectModel, getGeometry, GeometryGeoJSON } from '../../../../entities/geoobject';
 import { MapObjectPopup } from '../map-object-popup/map-object-popup';
 
 import { mapObjectsModel } from '../../lib/map-objects.model';
@@ -10,52 +10,43 @@ import { mapObjectsModel } from '../../lib/map-objects.model';
 export const MapObjects = () => {
     const geoObjects = useUnit(geoObjectModel.$geoObjects);
 
-    return (
-        <>
-            {geoObjects.map((object) => (
-                <MapObject object={object} key={object.id} />
-            ))}
-        </>
-    );
-};
+    const getProps = (object: GeoObject, { type, coordinates }: GeometryGeoJSON) => {
+        const common: Record<string, any> = {
+            key: object.id,
+            eventHandlers: {
+                click: () => mapObjectsModel.setSelectedGeoobject(object),
+                popupclose: () => mapObjectsModel.setSelectedGeoobject(null),
+            },
+        };
 
-const MapObject = ({ object }: { object: GeoObject }) => {
-    const geometry = getGeometry(object);
-
-    if (!geometry) {
-        return null;
-    }
-
-    const events = {
-        click: () => mapObjectsModel.setSelectedGeoobject(object),
-        popupclose: () => mapObjectsModel.setSelectedGeoobject(null),
+        switch (type) {
+            case 'Point':
+                return { ...common, radius: 20, center: coordinates, Component: Circle };
+            case 'PolyLine':
+                return { ...common, weight: 7, positions: coordinates, Component: Polyline };
+            case 'Polygon':
+                return { ...common, positions: coordinates, Component: Polygon };
+        }
     };
 
-    const { type: geometryType, coordinates } = geometry;
+    return (
+        <>
+            {geoObjects.map((object) => {
+                const geometry = getGeometry(object);
 
-    if (geometryType === 'Point') {
-        return (
-            <Circle eventHandlers={events} center={coordinates} radius={20}>
-                <MapObjectPopup onDelete={() => {}} object={object} type={geometryType} />
-            </Circle>
-        );
-    }
+                if (!geometry) {
+                    return null;
+                }
 
-    if (geometryType === 'PolyLine') {
-        return (
-            <Polyline eventHandlers={events} positions={coordinates} weight={7}>
-                <MapObjectPopup onDelete={() => {}} object={object} type={geometryType} />
-            </Polyline>
-        );
-    }
+                const { Component, ...props } = getProps(object, geometry);
 
-    if (geometryType === 'Polygon') {
-        return (
-            <Polygon eventHandlers={events} positions={coordinates}>
-                <MapObjectPopup onDelete={() => {}} object={object} type={geometryType} />
-            </Polygon>
-        );
-    }
-
-    return null;
+                return (
+                    // @ts-ignore
+                    <Component {...props}>
+                        <MapObjectPopup onDelete={() => {}} object={object} type={geometry.type} />
+                    </Component>
+                );
+            })}
+        </>
+    );
 };

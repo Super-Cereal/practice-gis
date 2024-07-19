@@ -6,15 +6,13 @@ import { Button } from '../../../../shared/ui/button';
 import { mapModel } from '../../../../entities/map';
 import { geoObjectFormModel } from '../../../geoobject-form';
 
-import type { EditorObjectType } from '../../lib/types';
+import type { EditorObject } from '../../lib/types';
+import { editorModel } from '../../lib/editor.model';
 
 import styles from './map-editor-popup.module.css';
 
 interface Props {
-    _id: string;
-    type: EditorObjectType;
-    onDelete: () => void;
-    onRemoveSelect: () => void;
+    object: EditorObject;
 }
 
 /** Рендерит попап для черновиковых обьектов на карте */
@@ -25,23 +23,25 @@ export const MapEditorPopup = (props: Props) => (
 );
 
 /** Выделяем отдельно, чтобы не рендерить, пока попап скрыт */
-const Content = ({ onDelete, onRemoveSelect, type, _id }: Props) => {
+const Content = ({ object }: Props) => {
+    const { _id, type } = object;
+
     const map = useUnit(mapModel.$map);
 
     const handleRemoveSelect = (e: React.MouseEvent) => {
         e.stopPropagation();
 
         map?.closePopup();
-        onRemoveSelect();
+        editorModel.toggleObjectSelect(_id);
     };
 
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
-        onDelete();
+        editorModel.deleteObject(_id);
     };
 
     const handleModalFormOpen = () => {
-        geoObjectFormModel.setSelectedEditorObject({ _id, type });
+        geoObjectFormModel.setSelectedEditorObject(object);
         geoObjectFormModel.setIsGeoObjectModalOpen(true);
     };
 

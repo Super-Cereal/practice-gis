@@ -1,24 +1,27 @@
 import type { LatLngTuple } from 'leaflet';
 
-// _id - только фронтовый, бэк создает свои
-// в сохраненных геообьектах работаем с их id
-
-export type EditorObjectType = 'Point' | 'PolyLine' | 'Polygon';
-
-export interface EditorPoint {
+interface Obj {
+    /**
+     * _id - только фронтовый, бэк создает свои.
+     * В сохраненных геообьектах работаем с их id
+     */
     _id: string;
+    selected?: boolean | undefined;
+}
+
+export interface EditorPoint extends Obj {
+    type: 'Point';
     coordinates: LatLngTuple;
-    selected?: boolean | undefined;
 }
 
-export interface EditorPolygon {
-    _id: string;
+export interface EditorPolygon extends Obj {
+    type: 'PolyLine';
     coordinates: LatLngTuple[];
-    selected?: boolean | undefined;
 }
 
-export interface EditorLine {
-    _id: string;
+export interface EditorPolyLine extends Obj {
+    type: 'Polygon';
     coordinates: LatLngTuple[];
-    selected?: boolean | undefined;
 }
+
+export type EditorObject = EditorPoint | EditorPolyLine | EditorPolygon;

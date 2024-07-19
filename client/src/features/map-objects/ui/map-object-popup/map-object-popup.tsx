@@ -7,7 +7,7 @@ import { Button } from '../../../../shared/ui/button';
 import { mapModel } from '../../../../entities/map';
 import { GeoObject } from '../../../../entities/geoobject';
 
-import { EditorObjectType } from '../../../map-editor';
+import { EditorObject } from '../../../map-editor';
 import { geoObjectFormModel } from '../../../geoobject-form';
 
 import styles from './map-object-popup.module.css';
@@ -16,7 +16,7 @@ import { MapObjectIdWithCopy } from '../map-object-id-with-copy/map-object-id-wi
 interface Props {
     onDelete: () => void;
     object: GeoObject;
-    type: EditorObjectType;
+    type: EditorObject['type'];
 }
 
 /** Рендерит попап с описанием для геообьектов на карте */

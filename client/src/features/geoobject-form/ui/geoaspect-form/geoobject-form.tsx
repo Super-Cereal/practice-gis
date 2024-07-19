@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useUnit } from 'effector-react';
 
 import { Modal } from '../../../../shared/ui/modal';
 import { Button } from '../../../../shared/ui/button';
@@ -8,7 +9,6 @@ import { aspects } from '../../../../widgets/map/lib/mocks';
 
 import type { FormFields } from '../../lib/types';
 import { geoObjectFormModel } from '../../lib/geoobject-form.model';
-import { usePreparedEditorObject } from '../../lib/use-prepared-editor-object';
 import { mockedClassifiers } from '../../lib/classifiers';
 import { mapDataToGeoobject } from '../../lib/map-data-to-geoobject';
 
@@ -34,7 +34,7 @@ export const GeoobjectForm = () => {
         reset,
     } = useForm<FormFields>();
 
-    const editorObject = usePreparedEditorObject();
+    const editorObject = useUnit(geoObjectFormModel.$selectedEditorObject);
 
     if (!editorObject) {
         return null;
@@ -59,7 +59,7 @@ export const GeoobjectForm = () => {
                     Создание геообъекта на основе &nbsp;
                     {editorObject && typeToLabel[editorObject.type]}
                 </label>
-                <label>ID: {editorObject.object != null && editorObject?.object._id}</label>
+                <label>ID: {editorObject._id}</label>
             </div>
 
             <form className={styles.form} onSubmit={handleSubmit(handleSave)}>

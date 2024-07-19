@@ -1,21 +1,19 @@
 import { DraftGeoObject } from '../../../entities/geoobject';
+import { EditorObject } from '../../map-editor';
 
 import { getClassifierCodeWithType } from './classifiers';
-import type { FormFields, PreparedEditorObject } from './types';
+import type { FormFields } from './types';
 
 export const mapDataToGeoobject = (
     { name, aspect, status, classCode, description }: FormFields,
-    editorObject: PreparedEditorObject,
+    { type, coordinates }: EditorObject,
 ): DraftGeoObject => ({
     name,
     // status,
     geometry: {
         authoritativeKnowledgeSource: 'источник/автор',
 
-        borderGeocodes: JSON.stringify({
-            type: editorObject.type,
-            coordinates: editorObject.object.coordinates,
-        }),
+        borderGeocodes: JSON.stringify({ type, coordinates }),
 
         areaValue: 0,
         westToEastLength: 0,
@@ -27,7 +25,7 @@ export const mapDataToGeoobject = (
         // классифаер на данный момент сперва надо создать
         classifiers: [
             {
-                code: getClassifierCodeWithType(editorObject.type, classCode),
+                code: getClassifierCodeWithType(type, classCode),
             },
         ],
     },

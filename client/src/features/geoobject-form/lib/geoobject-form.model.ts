@@ -1,11 +1,11 @@
 import { createStore, createEvent, sample } from 'effector';
 
 import type { GeoObject } from '../../../entities/geoobject';
-import type { EditorObjectType } from '../../map-editor';
+import type { EditorObject } from '../../map-editor';
 
 // Создаем стор для выбранного черновика
-const $selectedEditorObject = createStore<{ type: EditorObjectType; _id: string } | null>(null);
-const setSelectedEditorObject = createEvent<{ type: EditorObjectType; _id: string } | null>();
+const $selectedEditorObject = createStore<EditorObject | null>(null);
+const setSelectedEditorObject = createEvent<EditorObject | null>();
 sample({ clock: setSelectedEditorObject, target: $selectedEditorObject });
 
 // Создаем стор для выбранного геообъекта

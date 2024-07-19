@@ -6,7 +6,8 @@ import { Button } from '../../../../shared/ui/button';
 import { mapModel } from '../../../../entities/map';
 
 import { editorModel } from '../../lib/editor.model';
-import { EditorObjectType } from '../../lib/types';
+import { EditorObject } from '../../lib/types';
+import { useSelectedObjectsByType } from '../../lib/use-objects-by-type';
 
 import styles from './map-editor-actions.module.scss';
 
@@ -14,13 +15,14 @@ import styles from './map-editor-actions.module.scss';
 export const MapEditorActions = () => {
     const map = useUnit(mapModel.$map);
 
+    // Клик по карте создает новую точку
     useEffect(() => {
         if (!map) {
             return;
         }
 
         const handleMapClick = (e: LeafletMouseEvent) => {
-            editorModel.addPoint([e.latlng.lat, e.latlng.lng]);
+            editorModel.addObject({ type: 'Point', coordinates: [e.latlng.lat, e.latlng.lng] });
         };
 
         map.addEventListener('click', handleMapClick);
@@ -30,111 +32,85 @@ export const MapEditorActions = () => {
         };
     }, [map]);
 
-    const selectedPoints = useUnit(editorModel.$selectedPoints);
-    const selectedLines = useUnit(editorModel.$selectedLines);
-    const selectedPolygons = useUnit(editorModel.$selectedPolygons);
-
-    const typeToSettings = {
-        Point: {
-            list: selectedPoints,
-            onDelete: editorModel.deletePoint,
-            onRemoveSelect: editorModel.togglePointSelect,
-        },
-        PolyLine: {
-            list: selectedLines,
-            onDelete: editorModel.deleteLine,
-            onRemoveSelect: editorModel.toggleLineSelect,
-        },
-        Polygon: {
-            list: selectedPolygons,
-            onDelete: editorModel.deletePolygon,
-            onRemoveSelect: editorModel.togglePolygonSelect,
-        },
-    };
-
-    const deleteObjects = (objectType: EditorObjectType) => {
+    const unitePointsTo = (type: Exclude<EditorObject['type'], 'Point'>) => {
         map?.closePopup();
 
-        const { list, onDelete } = typeToSettings[objectType];
-        list.map(({ _id }) => onDelete(_id));
+        editorModel.unitePointsTo(type);
     };
 
-    const removeObjectsSelection = (objectType: EditorObjectType) => {
-        map?.closePopup();
-
-        const { list, onRemoveSelect } = typeToSettings[objectType];
-        list.map(({ _id }) => onRemoveSelect(_id));
-    };
-
-    const uniteToPolyline = () => {
-        map?.closePopup();
-
-        editorModel.createLine();
-    };
-
-    const uniteToPolygon = () => {
-        map?.closePopup();
-
-        editorModel.createPolygon();
-    };
+    const selectedPoints = useSelectedObjectsByType('Point');
+    const selectedPolylines = useSelectedObjectsByType('PolyLine');
+    const selectedPolygons = useSelectedObjectsByType('Polygon');
 
     return (
         <div>
             <h2>Выбранные геообъекты:</h2>
 
-            {selectedPoints.length !== 0 && (
-                <div className={styles.container}>
-                    <h3>Точки ({selectedPoints.length})</h3>
+            <ObjectsActionsContainer
+                objects={selectedPoints}
+                extraButtons={
+                    <>
+                        {selectedPoints.length > 1 && (
+                            <Button onClick={() => unitePointsTo('PolyLine')}>Обьединить в линию</Button>
+                        )}
+                        {selectedPoints.length > 2 && (
+                            <Button onClick={() => unitePointsTo('Polygon')}>Обьединить в полигон</Button>
+                        )}
+                    </>
+                }
+            />
+            <ObjectsActionsContainer objects={selectedPolylines} />
+            <ObjectsActionsContainer objects={selectedPolygons} />
+        </div>
+    );
+};
 
-                    <div>
-                        {selectedPoints.map(({ _id, coordinates }) => (
-                            <div key={_id}>id: {_id}</div>
-                        ))}
-                    </div>
+const typeToText = {
+    Point: 'Точки',
+    PolyLine: 'Линии',
+    Polygon: 'Полигоны',
+};
 
-                    {selectedPoints.length > 1 && <Button onClick={uniteToPolyline}>Обьединить в линию</Button>}
-                    {selectedPoints.length > 2 && <Button onClick={uniteToPolygon}>Обьединить в полигон</Button>}
+const ObjectsActionsContainer = ({
+    objects,
+    extraButtons,
+}: {
+    objects: EditorObject[];
+    extraButtons?: React.ReactNode;
+}) => {
+    const map = useUnit(mapModel.$map);
 
-                    <Button onClick={() => removeObjectsSelection('Point')}>Снять выделение</Button>
-                    <Button onClick={() => deleteObjects('Point')} color="orange">
-                        Удалить
-                    </Button>
-                </div>
-            )}
+    if (objects.length === 0) {
+        return null;
+    }
 
-            {selectedLines.length !== 0 && (
-                <div className={styles.container}>
-                    <h3>Линии ({selectedLines.length})</h3>
+    /** Обработчик "массовых" событий для обьектов одного типа */
+    const handleEvent = (func: (_id: string) => void) => {
+        map?.closePopup();
 
-                    <div>
-                        {selectedLines.map(({ _id }) => (
-                            <div key={_id}>id: {_id}</div>
-                        ))}
-                    </div>
+        objects.forEach(({ _id }) => func(_id));
+    };
+    const handleDelete = () => handleEvent(editorModel.deleteObject);
+    const handleRemoveSelection = () => handleEvent(editorModel.toggleObjectSelect);
 
-                    <Button onClick={() => removeObjectsSelection('PolyLine')}>Снять выделение</Button>
-                    <Button onClick={() => deleteObjects('PolyLine')} color="orange">
-                        Удалить
-                    </Button>
-                </div>
-            )}
+    return (
+        <div className={styles.container}>
+            <h3>
+                {typeToText[objects[0].type]} ({objects.length})
+            </h3>
 
-            {selectedPolygons.length !== 0 && (
-                <div className={styles.container}>
-                    <h3>Полигоны ({selectedPolygons.length})</h3>
+            <div>
+                {objects.map(({ _id }) => (
+                    <div key={_id}>id: {_id}</div>
+                ))}
+            </div>
 
-                    <div>
-                        {selectedPolygons.map(({ _id }) => (
-                            <div key={_id}>id: {_id}</div>
-                        ))}
-                    </div>
+            {extraButtons}
 
-                    <Button onClick={() => removeObjectsSelection('Polygon')}>Снять выделение</Button>
-                    <Button onClick={() => deleteObjects('Polygon')} color="orange">
-                        Удалить
-                    </Button>
-                </div>
-            )}
+            <Button onClick={handleRemoveSelection}>Снять выделение</Button>
+            <Button onClick={handleDelete} color="orange">
+                Удалить
+            </Button>
         </div>
     );
 };
