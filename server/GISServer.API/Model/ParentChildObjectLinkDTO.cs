@@ -9,5 +9,8 @@ namespace GISServer.API.Model
         public double? IncludedPercent { get; set; }
         public DateTime? CreationDateTime { get; set; }
         public DateTime? LastUpdatedDateTime { get; set; }
+        public Guid? ParentGeographicalObjectId { get; set; }
+        public Guid? ChildGeographicalObjectId { get; set; }
+
     }
 }

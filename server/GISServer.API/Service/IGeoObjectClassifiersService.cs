@@ -5,6 +5,6 @@ namespace GISServer.API.Service
 {
     public interface IGeoObjectClassifiersService
     {
-        public Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers();
+        public Task<List<GeoObjectsClassifiersDTO>> GetGeoObjectsClassifiers();
     }
 }
