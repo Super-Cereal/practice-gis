@@ -5,7 +5,7 @@ namespace GISServer.API.Service
 {
     public interface IAspectService
     {
-        public AspectDTO CreateGuid(AspectDTO aspectDTO);
+        public AspectDTO InitAspect(AspectDTO aspectDTO);
         public Task<AspectDTO> AddAspect(AspectDTO AspectDTO);
         public Task<AspectDTO> GetAspect(Guid id);
         public Task<List<AspectDTO>> GetAspects();

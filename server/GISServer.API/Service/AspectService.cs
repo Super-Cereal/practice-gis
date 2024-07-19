@@ -17,7 +17,7 @@ namespace GISServer.API.Service
             _aspectMapper = aspectMapper;
         }
         
-        public AspectDTO CreateGuid(AspectDTO aspectDTO)
+        public AspectDTO InitAspect(AspectDTO aspectDTO)
         {
             aspectDTO.Id = Guid.NewGuid();
             return aspectDTO;
@@ -27,6 +27,7 @@ namespace GISServer.API.Service
         {
             try 
             {
+                aspectDTO = InitAspect(aspectDTO);                
                 Aspect aspect = await _aspectMapper.DTOToAspect(aspectDTO);
                 return await _aspectMapper.AspectToDTO(await _repository.AddAspect(aspect));
             }

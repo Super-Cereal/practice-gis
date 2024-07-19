@@ -5,7 +5,7 @@ namespace GISServer.API.Service
 {
     public interface IGeoObjectService
     {
-        public GeoObjectDTO CreateGuids(GeoObjectDTO geoObjectDTO);
+        public GeoObjectDTO InitGeoObject(GeoObjectDTO geoObjectDTO);
         public Task<List<GeoObjectDTO>> GetGeoObjects();
         public Task<GeoObjectDTO> GetGeoObject(Guid id);
         public Task<GeoObjectDTO> UpdateGeoObject(GeoObjectDTO geoObjectDTO);
