@@ -29,6 +29,7 @@ namespace GISServer.API.Service
         {
             try
             {
+                topologyLinkDTO = CreateGuid(topologyLinkDTO);
                 TopologyLink topologyLink = await _topologyMapper.DTOToTopologyLink(topologyLinkDTO);
                 return await _topologyMapper.TopologyLinkToDTO(await _repository.AddTopologyLink(topologyLink));
             }
