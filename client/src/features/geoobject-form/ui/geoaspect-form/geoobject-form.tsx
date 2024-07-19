@@ -1,17 +1,17 @@
-import React, { ChangeEvent, useState } from 'react';
-import { useUnit } from 'effector-react';
-import { nanoid } from 'nanoid';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Modal } from '../../../../shared/ui/modal';
 import { Button } from '../../../../shared/ui/button';
-import { geoObjectModel, type DraftGeoObject } from '../../../../entities/geoobject';
+import { geoObjectModel } from '../../../../entities/geoobject';
 import { aspects } from '../../../../widgets/map/lib/mocks';
 
-import { mapEditorModel } from '../../../map-editor';
+import type { FormFields } from '../../lib/types';
 import { geoObjectFormModel } from '../../lib/geoobject-form.model';
 import { usePreparedEditorObject } from '../../lib/use-prepared-editor-object';
-import { mockedClassifiers, getClassifierCodeWithType } from '../../lib/classifiers';
+import { mockedClassifiers } from '../../lib/classifiers';
+import { mapDataToGeoobject } from '../../lib/map-data-to-geoobject';
+
 import styles from './geoobject-form.module.css';
 
 //нужно получить с бэка список классификаторов
@@ -20,14 +20,6 @@ const typeToLabel = {
     Point: 'точки',
     PolyLine: 'линии',
     Polygon: 'полигона',
-};
-
-type Fields = {
-    name: string;
-    aspect: string;
-    description: string;
-    classCode: string;
-    status: DraftGeoObject['status'];
 };
 
 /** Пока что только сохраняет черновики */
@@ -40,7 +32,7 @@ export const GeoobjectForm = () => {
         handleSubmit,
         formState: { isValid },
         reset,
-    } = useForm<Fields>();
+    } = useForm<FormFields>();
 
     const editorObject = usePreparedEditorObject();
 
@@ -48,36 +40,8 @@ export const GeoobjectForm = () => {
         return null;
     }
 
-    const handleSave = ({ name, aspect, status, classCode, description }: Fields) => {
-        const geobjectToSave: DraftGeoObject = {
-            name,
-            geometry: {
-                authoritativeKnowledgeSource: '?авторитетный источник инфы?',
-
-                borderGeocodes: JSON.stringify({
-                    type: editorObject.type,
-                    coordinates: editorObject.object.coordinates,
-                }),
-
-                areaValue: 0,
-                westToEastLength: 0,
-                northToSouthLength: 0,
-            },
-            geoObjectInfo: {
-                languageCode: 'видимо код языка',
-                language: 'видимо название языка',
-                commonInfo: description,
-            },
-            // классифаер на данный момент сперва надо создать
-            geoClassifiers: [
-                {
-                    code: getClassifierCodeWithType(editorObject.type, classCode),
-                },
-            ],
-        };
-
-        geoObjectModel.saveGeoObjectFx(geobjectToSave);
-
+    const handleSave = (data: FormFields) => {
+        geoObjectModel.saveGeoObjectFx(mapDataToGeoobject(data, editorObject));
         geoObjectFormModel.setIsGeoObjectModalOpen(false);
         reset();
     };

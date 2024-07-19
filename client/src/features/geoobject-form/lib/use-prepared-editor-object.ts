@@ -3,12 +3,8 @@ import { useUnit } from 'effector-react';
 import type { EditorLine, EditorObjectType, EditorPoint, EditorPolygon } from '../../map-editor';
 import { mapEditorModel } from '../../map-editor';
 
+import type { PreparedEditorObject } from './types';
 import { geoObjectFormModel } from './geoobject-form.model';
-
-interface PreparedEditorObject {
-    object: EditorPoint | EditorLine | EditorPolygon;
-    type: EditorObjectType;
-}
 
 export const usePreparedEditorObject = (): PreparedEditorObject | null => {
     const $selectedEditorObject = useUnit(geoObjectFormModel.$selectedEditorObject);
