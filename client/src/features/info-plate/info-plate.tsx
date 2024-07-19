@@ -8,10 +8,10 @@ import styles from './info-plate.module.css';
 
 /** Настройки страницы и карты (выбор режима просмотра) */
 export const InfoPlate = () => {
-    const setMapMode = useUnit(mapModel.setMapMode);
+    const mapMode = useUnit(mapModel.$mapMode);
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setMapMode(e.target.value as MapMode);
+        mapModel.setMapMode(e.target.value as MapMode);
     };
 
     return (
@@ -20,10 +20,12 @@ export const InfoPlate = () => {
                 <label htmlFor="map-mode-select">Режим работы с картой:</label>
 
                 <select name="map-mode" id="map-mode-select" onChange={handleChange}>
-                    <option value="view" defaultChecked={true}>
+                    <option value="view" selected={mapMode === 'view'}>
                         Просмотр сохраненных геообьектов
                     </option>
-                    <option value="edit">Создание новых геообьектов</option>
+                    <option value="edit" selected={mapMode === 'edit'}>
+                        Создание новых геообьектов
+                    </option>
                 </select>
             </div>
         </div>

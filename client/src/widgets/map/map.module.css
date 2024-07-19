@@ -1,4 +1,4 @@
-.map {
+.container {
     display: grid;
 
     grid-template-columns: 1fr 4fr;
@@ -18,12 +18,13 @@
     grid-area: asp;
 }
 
-.view {
+.map {
     grid-area: map;
 }
 
 .actions {
     grid-area: act;
+
     margin-right: 12px;
 
     background-color: var(--block);

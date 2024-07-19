@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useUnit } from 'effector-react';
 import cx from 'classnames';
 
+import { Loader } from '../../shared/ui/loader';
 import { MapView, mapModel } from '../../entities/map';
 import { geoObjectModel } from '../../entities/geoobject';
 import { InfoPlate } from '../../features/info-plate';
@@ -27,15 +28,11 @@ export const Map = () => {
         geoObjectModel.getGeoObjectsFx();
     }, []);
 
-    const loading = useUnit(geoObjectModel.$getGeoObjectsLoading);
-
-    if (loading === 'pending') {
-        return <>загрузка</>;
-    }
+    const requestStatus = useUnit(geoObjectModel.$getGeoObjectsLoading);
 
     return (
         <>
-            <div className={cx(styles.map)}>
+            <div className={cx(styles.container)}>
                 <aside className={styles.infoPlate}>
                     <InfoPlate />
                 </aside>
@@ -44,8 +41,8 @@ export const Map = () => {
                     <Aspects aspects={aspects} />
                 </div>
 
-                <div className={styles.view}>
-                    <MapView>
+                <div className={styles.map}>
+                    <MapView loading={requestStatus === 'pending'}>
                         <MapObjects />
 
                         {mapEditable && <MapEditorObjects />}

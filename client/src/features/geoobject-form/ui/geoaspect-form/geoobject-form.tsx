@@ -13,6 +13,7 @@ import { mockedClassifiers } from '../../lib/classifiers';
 import { mapDataToGeoobject } from '../../lib/map-data-to-geoobject';
 
 import styles from './geoobject-form.module.css';
+import { editorModel } from '../../../map-editor/lib/editor.model';
 
 //нужно получить с бэка список классификаторов
 
@@ -40,8 +41,12 @@ export const GeoobjectForm = () => {
         return null;
     }
 
-    const handleSave = (data: FormFields) => {
-        geoObjectModel.saveGeoObjectFx(mapDataToGeoobject(data, editorObject));
+    const handleSave = async (data: FormFields) => {
+        await geoObjectModel.saveGeoObjectFx(mapDataToGeoobject(data, editorObject));
+
+        // После успешного сохранения удаляем выбранный обьект
+        editorModel.deleteObject(editorObject._id);
+
         geoObjectFormModel.setIsGeoObjectModalOpen(false);
         reset();
     };
