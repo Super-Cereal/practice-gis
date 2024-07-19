@@ -15,7 +15,7 @@ interface Props extends React.PropsWithChildren {
 export const MapView = ({ loading, children }: Props) => {
     return (
         <div className={styles.map}>
-            <MapContainer className={styles.container} center={[59.957, 30.409]} zoom={16} scrollWheelZoom={true}>
+            <MapContainer className={styles.container} center={[59.957, 30.409]} zoom={15} scrollWheelZoom={true}>
                 <_MapSetter />
 
                 {loading ? (

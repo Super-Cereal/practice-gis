@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 
 import type { EditorObject, EditorPoint } from './types';
 import { geoObjectModel, getGeometry } from '../../../entities/geoobject';
+import { mapModel } from '../../../entities/map';
 
 const $objects = createStore<Record<EditorObject['_id'], EditorObject>>({});
 const $selectedObjects = sample({
@@ -86,9 +87,13 @@ export const editorModel = {
 
 /** Когда загрузились сохраненные обьекты, то на границе  */
 sample({
-    clock: geoObjectModel.getGeoObjectsFx.doneData,
-    source: $objects,
-    fn: (objects, geoobjects) => {
+    clock: [mapModel.$editorPointsOnCorners, geoObjectModel.$geoObjects],
+    source: {
+        editorPointsOnCorners: mapModel.$editorPointsOnCorners,
+        geoobjects: geoObjectModel.$geoObjects,
+        objects: $objects,
+    },
+    fn: ({ objects, geoobjects, editorPointsOnCorners }) => {
         const newObjects: Record<EditorObject['_id'], EditorObject> = {};
 
         /** Убираем предыдущие ридонли элементы */
@@ -98,28 +103,30 @@ sample({
             }
         });
 
-        /** Добавляем новые */
-        geoobjects.forEach((geoobject) => {
-            const geometry = getGeometry(geoobject);
-            if (!geometry) return;
+        /** И добавляем новые если надо */
+        if (editorPointsOnCorners) {
+            geoobjects.forEach((geoobject) => {
+                const geometry = getGeometry(geoobject);
+                if (!geometry) return;
 
-            const { type, coordinates } = geometry;
+                const { type, coordinates } = geometry;
 
-            if (type === 'Polygon' || type === 'PolyLine') {
-                coordinates.map((pointCoords) => {
-                    // @ts-ignore
-                    const newObject: EditorObject = {
-                        _id: nanoid(),
-                        type: 'Point',
-                        coordinates: pointCoords,
-                        selected: false,
-                        readonly: true,
-                    };
+                if (type === 'Polygon' || type === 'PolyLine') {
+                    coordinates.map((pointCoords) => {
+                        // @ts-ignore
+                        const newObject: EditorObject = {
+                            _id: nanoid(),
+                            type: 'Point',
+                            coordinates: pointCoords,
+                            selected: false,
+                            readonly: true,
+                        };
 
-                    newObjects[newObject._id] = newObject;
-                });
-            }
-        });
+                        newObjects[newObject._id] = newObject;
+                    });
+                }
+            });
+        }
 
         return newObjects;
     },

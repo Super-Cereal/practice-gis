@@ -20,25 +20,37 @@ export const InfoPlate = () => {
         }
     }, [searchParams]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSearchParams({ mapMode: e.target.value as MapMode });
+    const mapMode = useUnit(mapModel.$mapMode);
+    const handleModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSearchParams({ ...searchParams, mapMode: e.target.value as MapMode });
     };
 
-    const mapMode = useUnit(mapModel.$mapMode);
+    const editorPointsOnCorners = useUnit(mapModel.$editorPointsOnCorners);
+    const handlePointsOnCornersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        mapModel.setEditorPointsOnCorners(e.target.checked);
+    };
 
     return (
         <div className={styles.plate}>
-            <div className={styles.setting}>
-                <label htmlFor="map-mode-select">Режим работы с картой:</label>
+            <div className={styles.settings}>
+                <label>
+                    <span>Режим работы с картой:</span>
+                    <select name="map-mode" onChange={handleModeChange}>
+                        <option value="view" selected={mapMode === 'view'}>
+                            Просмотр сохраненных геообьектов
+                        </option>
+                        <option value="edit" selected={mapMode === 'edit'}>
+                            Создание новых геообьектов
+                        </option>
+                    </select>
+                </label>
 
-                <select name="map-mode" id="map-mode-select" onChange={handleChange}>
-                    <option value="view" selected={mapMode === 'view'}>
-                        Просмотр сохраненных геообьектов
-                    </option>
-                    <option value="edit" selected={mapMode === 'edit'}>
-                        Создание новых геообьектов
-                    </option>
-                </select>
+                {mapMode === 'edit' && (
+                    <label>
+                        <span>Включить отображение точек на углах:</span>
+                        <input type="checkbox" onChange={handlePointsOnCornersChange} checked={editorPointsOnCorners} />
+                    </label>
+                )}
             </div>
         </div>
     );
