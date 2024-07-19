@@ -1,5 +1,4 @@
 .map {
-    background: var(--block);
     overflow: hidden;
     height: 80vh;
     max-height: 800px;
@@ -9,6 +8,7 @@
 }
 
 .container {
+    background: var(--block);
     height: 100%;
 }
 

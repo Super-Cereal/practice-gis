@@ -2,6 +2,7 @@ import { createStore, sample, createEvent } from 'effector';
 import { nanoid } from 'nanoid';
 
 import type { EditorObject, EditorPoint } from './types';
+import { geoObjectModel, getGeometry } from '../../../entities/geoobject';
 
 const $objects = createStore<Record<EditorObject['_id'], EditorObject>>({});
 const $selectedObjects = sample({
@@ -10,17 +11,18 @@ const $selectedObjects = sample({
 });
 
 /** Добавить обьект по координатам */
-const addObject = createEvent<Omit<EditorObject, '_id' | 'selected'>>();
+const addObject = createEvent<Omit<EditorObject, '_id'>>();
 sample({
     clock: addObject,
     source: $objects,
-    fn: (objects, { type, coordinates }) => {
+    fn: (objects, { type, coordinates, selected, readonly }) => {
         // @ts-ignore
         const newObject: EditorObject = {
             _id: nanoid(),
             type,
             coordinates,
-            selected: true,
+            selected: selected ?? true,
+            readonly: readonly ?? false,
         };
 
         return { ...objects, [newObject._id]: newObject };
@@ -46,6 +48,7 @@ const deleteObject = createEvent<EditorObject['_id']>();
 sample({
     clock: deleteObject,
     source: $objects,
+    filter: (objects, _id) => !objects[_id]?.readonly, // проверяем что его можно удалить
     fn: (objects, _id) => {
         const copiedPoints = { ...objects };
         delete copiedPoints[_id];
@@ -80,3 +83,45 @@ export const editorModel = {
 
     unitePointsTo,
 };
+
+/** Когда загрузились сохраненные обьекты, то на границе  */
+sample({
+    clock: geoObjectModel.getGeoObjectsFx.doneData,
+    source: $objects,
+    fn: (objects, geoobjects) => {
+        const newObjects: Record<EditorObject['_id'], EditorObject> = {};
+
+        /** Убираем предыдущие ридонли элементы */
+        Object.values(objects).forEach((object) => {
+            if (!object.readonly) {
+                newObjects[object._id] = object;
+            }
+        });
+
+        /** Добавляем новые */
+        geoobjects.forEach((geoobject) => {
+            const geometry = getGeometry(geoobject);
+            if (!geometry) return;
+
+            const { type, coordinates } = geometry;
+
+            if (type === 'Polygon' || type === 'PolyLine') {
+                coordinates.map((pointCoords) => {
+                    // @ts-ignore
+                    const newObject: EditorObject = {
+                        _id: nanoid(),
+                        type: 'Point',
+                        coordinates: pointCoords,
+                        selected: false,
+                        readonly: true,
+                    };
+
+                    newObjects[newObject._id] = newObject;
+                });
+            }
+        });
+
+        return newObjects;
+    },
+    target: $objects,
+});

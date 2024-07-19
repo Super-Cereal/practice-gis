@@ -13,27 +13,25 @@ interface Props extends React.PropsWithChildren {
 
 /** Рендерит саму карту */
 export const MapView = ({ loading, children }: Props) => {
-    if (loading) {
-        return (
-            <div className={styles.map}>
-                <div className={styles.loader}>
-                    <Loader />
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className={styles.map}>
             <MapContainer className={styles.container} center={[59.957, 30.409]} zoom={16} scrollWheelZoom={true}>
                 <_MapSetter />
 
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
+                {loading ? (
+                    <div className={styles.loader}>
+                        <Loader />
+                    </div>
+                ) : (
+                    <>
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
 
-                {children}
+                        {children}
+                    </>
+                )}
             </MapContainer>
         </div>
     );

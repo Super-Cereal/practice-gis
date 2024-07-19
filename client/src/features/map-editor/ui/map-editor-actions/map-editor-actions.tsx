@@ -100,8 +100,10 @@ const ObjectsActionsContainer = ({
             </h3>
 
             <div>
-                {objects.map(({ _id }) => (
-                    <div key={_id}>id: {_id}</div>
+                {objects.map(({ _id, readonly }) => (
+                    <div key={_id}>
+                        id: {_id} {readonly && '(readonly)'}
+                    </div>
                 ))}
             </div>
 

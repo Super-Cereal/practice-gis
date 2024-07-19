@@ -6,7 +6,12 @@ interface Obj {
      * В сохраненных геообьектах работаем с их id
      */
     _id: string;
-    selected?: boolean | undefined;
+
+    /** Выбран ли обьект */
+    selected?: boolean;
+
+    /** Может быть выбран, но не может быть удален */
+    readonly?: boolean;
 }
 
 export interface EditorPoint extends Obj {

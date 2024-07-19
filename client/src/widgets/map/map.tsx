@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useUnit } from 'effector-react';
 import cx from 'classnames';
+import { useMount } from 'react-use';
 
-import { Loader } from '../../shared/ui/loader';
 import { MapView, mapModel } from '../../entities/map';
 import { geoObjectModel } from '../../entities/geoobject';
 import { InfoPlate } from '../../features/info-plate';
@@ -24,9 +24,9 @@ export const Map = () => {
 
     const mapEditable = $mapMode === 'edit';
 
-    useEffect(() => {
-        geoObjectModel.getGeoObjectsFx();
-    }, []);
+    useMount(() => {
+        geoObjectModel.getGeoObjects();
+    });
 
     const requestStatus = useUnit(geoObjectModel.$getGeoObjectsLoading);
 

@@ -24,7 +24,7 @@ export const MapEditorPopup = (props: Props) => (
 
 /** Выделяем отдельно, чтобы не рендерить, пока попап скрыт */
 const Content = ({ object }: Props) => {
-    const { _id, type } = object;
+    const { _id, type, readonly } = object;
 
     const map = useUnit(mapModel.$map);
 
@@ -55,14 +55,17 @@ const Content = ({ object }: Props) => {
             <h3>
                 {type} : {_id}
             </h3>
+            {readonly && <span className={styles.readonly}>Это readonly точка для создания границ</span>}
 
             <div className={styles.btns}>
                 <Button onClick={handleModalFormOpen}>Создать геообъект</Button>
 
                 <Button onClick={handleRemoveSelect}>Снять выделение</Button>
-                <Button onClick={handleDelete} color="orange">
-                    Удалить
-                </Button>
+                {!readonly && (
+                    <Button onClick={handleDelete} color="orange">
+                        Удалить
+                    </Button>
+                )}
             </div>
         </>
     );

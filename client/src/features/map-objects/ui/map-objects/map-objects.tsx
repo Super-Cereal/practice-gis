@@ -21,7 +21,7 @@ export const MapObjects = () => {
 
         switch (type) {
             case 'Point':
-                return { ...common, radius: 20, center: coordinates, Component: Circle };
+                return { ...common, radius: 16, center: coordinates, Component: Circle };
             case 'PolyLine':
                 return { ...common, weight: 7, positions: coordinates, Component: Polyline };
             case 'Polygon':

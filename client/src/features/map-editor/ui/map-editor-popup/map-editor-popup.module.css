@@ -5,3 +5,12 @@
 
     margin-top: 12px;
 }
+
+.readonly {
+    display: block;
+
+    margin-top: 4px;
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: #888;
+}

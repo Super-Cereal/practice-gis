@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Copy as CopyIcon } from 'react-bootstrap-icons';
 
-import styles from './map-objcet-id-with-copy.module.css';
+import styles from './map-object-id-with-copy.module.css';
 
 /** Рендерит айдишник геообьекта с кнопкой "копировать" */
 export const MapObjectIdWithCopy = ({ id }: { id: string }) => {
