@@ -20,17 +20,25 @@ interface Props {
 }
 
 /** Рендерит попап с описанием для геообьектов на карте */
-export const MapObjectPopup = ({ onDelete, object, type }: Props) => {
+export const MapObjectPopup = (props: Props) => (
+    <Popup>
+        <Content {...props} />
+    </Popup>
+);
+
+/** Выделяем отдельно, чтобы не рендерить, пока попап скрыт */
+const Content = ({ onDelete, object, type }: Props) => {
     const { id, name, status, geoObjectInfo } = object;
+    console.log('content');
 
     return (
-        <Popup>
+        <>
             <h3 className={styles.title}>
                 {type}: {name}
             </h3>
             <MapObjectIdWithCopy id={id} />
 
             <span className={styles.info}>{geoObjectInfo?.commonInfo}</span>
-        </Popup>
+        </>
     );
 };

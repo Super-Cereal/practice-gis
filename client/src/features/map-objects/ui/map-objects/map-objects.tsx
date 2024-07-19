@@ -26,9 +26,10 @@ const MapObject = ({ object }: { object: GeoObject }) => {
         return null;
     }
 
-    const handleClick = () => mapObjectsModel.setSelectedGeoobject(object);
-    const handleClose = () => mapObjectsModel.setSelectedGeoobject(null);
-    const events = { click: handleClick, popupclose: handleClose };
+    const events = {
+        click: () => mapObjectsModel.setSelectedGeoobject(object),
+        popupclose: () => mapObjectsModel.setSelectedGeoobject(null),
+    };
 
     const { type: geometryType, coordinates } = geometry;
 
@@ -42,7 +43,7 @@ const MapObject = ({ object }: { object: GeoObject }) => {
 
     if (geometryType === 'PolyLine') {
         return (
-            <Polyline eventHandlers={events} positions={coordinates} weight={7} >
+            <Polyline eventHandlers={events} positions={coordinates} weight={7}>
                 <MapObjectPopup onDelete={() => {}} object={object} type={geometryType} />
             </Polyline>
         );

@@ -18,7 +18,14 @@ interface Props {
 }
 
 /** Рендерит попап для черновиковых обьектов на карте */
-export const MapEditorPopup = ({ onDelete, onRemoveSelect, type, _id }: Props) => {
+export const MapEditorPopup = (props: Props) => (
+    <Popup>
+        <Content {...props} />
+    </Popup>
+);
+
+/** Выделяем отдельно, чтобы не рендерить, пока попап скрыт */
+const Content = ({ onDelete, onRemoveSelect, type, _id }: Props) => {
     const map = useUnit(mapModel.$map);
 
     const handleRemoveSelect = (e: React.MouseEvent) => {
@@ -43,11 +50,8 @@ export const MapEditorPopup = ({ onDelete, onRemoveSelect, type, _id }: Props) =
     //     geoObjectFormModel.setSelectedEditorObject({ _id, type });
     //     geoObjectFormModel.setIsAspectsModalOpen(true);
     // };
-
-    const popupRef = useRef(null);
-
     return (
-        <Popup ref={popupRef}>
+        <>
             <h3>
                 {type} : {_id}
             </h3>
@@ -60,6 +64,6 @@ export const MapEditorPopup = ({ onDelete, onRemoveSelect, type, _id }: Props) =
                     Удалить
                 </Button>
             </div>
-        </Popup>
+        </>
     );
 };
