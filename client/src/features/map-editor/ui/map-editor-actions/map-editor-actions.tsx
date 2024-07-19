@@ -12,10 +12,10 @@ import styles from './map-editor-actions.module.scss';
 
 /** Рендерит список действий в черновиковом режиме (обьединение/удаление кнопок/полигонов) */
 export const MapEditorActions = () => {
-    const $map = useUnit(mapModel.$map);
+    const map = useUnit(mapModel.$map);
 
     useEffect(() => {
-        if (!$map) {
+        if (!map) {
             return;
         }
 
@@ -23,12 +23,12 @@ export const MapEditorActions = () => {
             editorModel.addPoint([e.latlng.lat, e.latlng.lng]);
         };
 
-        $map.addEventListener('click', handleMapClick);
+        map.addEventListener('click', handleMapClick);
 
         return () => {
-            $map.removeEventListener('click', handleMapClick);
+            map.removeEventListener('click', handleMapClick);
         };
-    }, [$map]);
+    }, [map]);
 
     const selectedPoints = useUnit(editorModel.$selectedPoints);
     const selectedLines = useUnit(editorModel.$selectedLines);
@@ -38,32 +38,48 @@ export const MapEditorActions = () => {
         Point: {
             list: selectedPoints,
             onDelete: editorModel.deletePoint,
-            onToggleSelect: editorModel.togglePointSelect,
+            onRemoveSelect: editorModel.togglePointSelect,
         },
         PolyLine: {
             list: selectedLines,
             onDelete: editorModel.deleteLine,
-            onToggleSelect: editorModel.toggleLineSelect,
+            onRemoveSelect: editorModel.toggleLineSelect,
         },
         Polygon: {
             list: selectedPolygons,
             onDelete: editorModel.deletePolygon,
-            onToggleSelect: editorModel.togglePolygonSelect,
+            onRemoveSelect: editorModel.togglePolygonSelect,
         },
     };
 
     const deleteObjects = (objectType: EditorObjectType) => {
+        map?.closePopup();
+
         const { list, onDelete } = typeToSettings[objectType];
         list.map(({ _id }) => onDelete(_id));
     };
 
     const removeObjectsSelection = (objectType: EditorObjectType) => {
-        const { list, onToggleSelect } = typeToSettings[objectType];
-        list.map(({ _id }) => onToggleSelect(_id));
+        map?.closePopup();
+
+        const { list, onRemoveSelect } = typeToSettings[objectType];
+        list.map(({ _id }) => onRemoveSelect(_id));
+    };
+
+    const uniteToPolyline = () => {
+        map?.closePopup();
+
+        editorModel.createLine();
+    };
+
+    const uniteToPolygon = () => {
+        map?.closePopup();
+
+        editorModel.createPolygon();
     };
 
     return (
-        <div className={styles.editor}>
+        <div>
             <h2>Выбранные геообъекты:</h2>
 
             {selectedPoints.length !== 0 && (
@@ -76,12 +92,8 @@ export const MapEditorActions = () => {
                         ))}
                     </div>
 
-                    {selectedPoints.length > 1 && (
-                        <Button onClick={() => editorModel.createLine()}>Обьединить в линию</Button>
-                    )}
-                    {selectedPoints.length > 2 && (
-                        <Button onClick={() => editorModel.createPolygon()}>Обьединить в полигон</Button>
-                    )}
+                    {selectedPoints.length > 1 && <Button onClick={uniteToPolyline}>Обьединить в линию</Button>}
+                    {selectedPoints.length > 2 && <Button onClick={uniteToPolygon}>Обьединить в полигон</Button>}
 
                     <Button onClick={() => removeObjectsSelection('Point')}>Снять выделение</Button>
                     <Button onClick={() => deleteObjects('Point')} color="orange">

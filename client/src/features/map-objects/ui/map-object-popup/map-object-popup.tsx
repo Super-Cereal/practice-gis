@@ -1,6 +1,7 @@
 import React from 'react';
 import { Popup } from 'react-leaflet';
 import { useUnit } from 'effector-react';
+import { Copy as CopyIcon } from 'react-bootstrap-icons';
 
 import { Button } from '../../../../shared/ui/button';
 import { mapModel } from '../../../../entities/map';
@@ -10,6 +11,7 @@ import { EditorObjectType } from '../../../map-editor';
 import { geoObjectFormModel } from '../../../geoobject-form';
 
 import styles from './map-object-popup.module.css';
+import { MapObjectIdWithCopy } from '../map-object-id-with-copy/map-object-id-with-copy';
 
 interface Props {
     onDelete: () => void;
@@ -17,51 +19,18 @@ interface Props {
     type: EditorObjectType;
 }
 
-/** Рендерит попап для сохраненных обьектов на карте */
+/** Рендерит попап с описанием для геообьектов на карте */
 export const MapObjectPopup = ({ onDelete, object, type }: Props) => {
-    const { id } = object;
-
-    const selectedAspect = useUnit(mapModel.$mapAspect);
-
-    const handleDelete = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        onDelete();
-    };
-
-    const handleModalFormOpen = () => {
-        geoObjectFormModel.setSelectedGeoObject(object);
-        geoObjectFormModel.setIsGeoObjectModalOpen(true);
-    };
-
-    const handleModalAspectsOpen = () => {
-        geoObjectFormModel.setSelectedGeoObject(object);
-        geoObjectFormModel.setIsAspectsModalOpen(true);
-    };
+    const { id, name, status, geoObjectInfo } = object;
 
     return (
         <Popup>
-            <h3>
-                {type} : {id}
+            <h3 className={styles.title}>
+                {type}: {name}
             </h3>
+            <MapObjectIdWithCopy id={id} />
 
-            <div className={styles.btns}>
-                {selectedAspect ? (
-                    <Button /* onClick={handleModalFormOpen} */>Создать {selectedAspect.title} для геообъекта</Button>
-                ) : (
-                    <>
-                        <Button /* onClick={handleModalFormOpen} */>Изменить родительский геообъект</Button>
-                        <Button /* onClick={handleModalFormOpen} */>Создать дочерний геообъект</Button>
-                    </>
-                )}
-
-                {/*    {isObjectExists && (
-                    <Button onClick={handleModalAspectsOpen}>Просмотр аспектов на данной геометрии</Button>
-                )} */}
-
-                {/* <Button onClick={handleDelete} color="orange">
-                    Удалить
-                </Button> */}
-            </div>
+            <span className={styles.info}>{geoObjectInfo?.commonInfo}</span>
         </Popup>
     );
 };

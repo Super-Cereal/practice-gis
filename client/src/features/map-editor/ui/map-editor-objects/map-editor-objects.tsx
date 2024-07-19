@@ -4,7 +4,7 @@ import { Circle, Polyline, Polygon } from 'react-leaflet';
 
 import { selectedOptions, defaultOptions } from '../../lib/constants';
 import { editorModel } from '../../lib/editor.model';
-import { MapEditorPopupForm } from '../map-editor-popup-form/map-editor-popup-form';
+import { MapEditorPopup } from '../map-editor-popup/map-editor-popup';
 
 /** Рендерит геообьекты на карте */
 export const MapEditorObjects = () => {
@@ -21,11 +21,15 @@ export const MapEditorObjects = () => {
                     pathOptions={selected ? selectedOptions : defaultOptions}
                     radius={20}
                     eventHandlers={{
-                        click: () => editorModel.togglePointSelect(_id),
-                        mouseover: (e) => e.target.openPopup(),
+                        click: () => !selected && editorModel.togglePointSelect(_id),
                     }}
                 >
-                    <MapEditorPopupForm _id={_id} type="Point" onDelete={() => editorModel.deletePoint(_id)} />
+                    <MapEditorPopup
+                        _id={_id}
+                        type="Point"
+                        onRemoveSelect={() => editorModel.togglePointSelect(_id)}
+                        onDelete={() => editorModel.deletePoint(_id)}
+                    />
                 </Circle>
             ))}
 
@@ -36,11 +40,15 @@ export const MapEditorObjects = () => {
                     positions={coordinates}
                     pathOptions={selected ? selectedOptions : defaultOptions}
                     eventHandlers={{
-                        click: () => editorModel.toggleLineSelect(_id),
-                        mouseover: (e) => e.target.openPopup(),
+                        click: () => !selected && editorModel.toggleLineSelect(_id),
                     }}
                 >
-                    <MapEditorPopupForm _id={_id} type="PolyLine" onDelete={() => editorModel.deleteLine(_id)} />
+                    <MapEditorPopup
+                        _id={_id}
+                        type="PolyLine"
+                        onRemoveSelect={() => editorModel.toggleLineSelect(_id)}
+                        onDelete={() => editorModel.deleteLine(_id)}
+                    />
                 </Polyline>
             ))}
 
@@ -50,14 +58,14 @@ export const MapEditorObjects = () => {
                     positions={coordinates}
                     pathOptions={selected ? selectedOptions : defaultOptions}
                     eventHandlers={{
-                        click: () => editorModel.togglePolygonSelect(_id),
-                        mouseover: (e) => e.target.openPopup(),
+                        click: () => !selected && editorModel.togglePolygonSelect(_id),
                     }}
                 >
-                    <MapEditorPopupForm
+                    <MapEditorPopup
                         _id={_id}
                         type="Polygon"
-                        /* polygonId={id} */ onDelete={() => editorModel.deletePolygon(_id)}
+                        onRemoveSelect={() => editorModel.togglePolygonSelect(_id)}
+                        onDelete={() => editorModel.deletePolygon(_id)}
                     />
                 </Polygon>
             ))}

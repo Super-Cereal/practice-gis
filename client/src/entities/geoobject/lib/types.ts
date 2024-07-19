@@ -21,7 +21,7 @@ export interface DraftGeoObject {
 
 interface GeoNameFeature {
     /** гео код*/
-    GeoNameFeature:string;
+    GeoNameFeature: string;
     /** Любой комментарий */
     commentsRu?: string;
 }

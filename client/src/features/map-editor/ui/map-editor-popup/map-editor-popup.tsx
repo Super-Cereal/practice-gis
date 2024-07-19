@@ -1,24 +1,32 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Popup } from 'react-leaflet';
 import { useUnit } from 'effector-react';
 
 import { Button } from '../../../../shared/ui/button';
 import { mapModel } from '../../../../entities/map';
-import { geoObjectFormModel } from '../../../geoobject-form/';
+import { geoObjectFormModel } from '../../../geoobject-form';
 
 import type { EditorObjectType } from '../../lib/types';
 
-import styles from './map-editor-popup-form.module.css';
+import styles from './map-editor-popup.module.css';
 
 interface Props {
     _id: string;
     type: EditorObjectType;
     onDelete: () => void;
+    onRemoveSelect: () => void;
 }
 
-/** Рендерит универсальную форму в попапе для черновиковых обьектов на карте */
-export const MapEditorPopupForm = ({ onDelete, type, _id }: Props) => {
-    const selectedAspect = useUnit(mapModel.$mapAspect);
+/** Рендерит попап для черновиковых обьектов на карте */
+export const MapEditorPopup = ({ onDelete, onRemoveSelect, type, _id }: Props) => {
+    const map = useUnit(mapModel.$map);
+
+    const handleRemoveSelect = (e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        map?.closePopup();
+        onRemoveSelect();
+    };
 
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -30,13 +38,16 @@ export const MapEditorPopupForm = ({ onDelete, type, _id }: Props) => {
         geoObjectFormModel.setIsGeoObjectModalOpen(true);
     };
 
-    const handleModalAspectsOpen = () => {
-        geoObjectFormModel.setSelectedEditorObject({ _id, type });
-        geoObjectFormModel.setIsAspectsModalOpen(true);
-    };
+    // const selectedAspect = useUnit(mapModel.$mapAspect);
+    // const handleModalAspectsOpen = () => {
+    //     geoObjectFormModel.setSelectedEditorObject({ _id, type });
+    //     geoObjectFormModel.setIsAspectsModalOpen(true);
+    // };
+
+    const popupRef = useRef(null);
 
     return (
-        <Popup>
+        <Popup ref={popupRef}>
             <h3>
                 {type} : {_id}
             </h3>
@@ -44,6 +55,7 @@ export const MapEditorPopupForm = ({ onDelete, type, _id }: Props) => {
             <div className={styles.btns}>
                 <Button onClick={handleModalFormOpen}>Создать геообъект</Button>
 
+                <Button onClick={handleRemoveSelect}>Снять выделение</Button>
                 <Button onClick={handleDelete} color="orange">
                     Удалить
                 </Button>

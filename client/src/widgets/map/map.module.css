@@ -5,13 +5,6 @@
 
     grid-template-areas:
         'info info'
-        'asp asp'
-        'map map';
-}
-
-.map.editable {
-    grid-template-areas:
-        'info info'
         'act asp'
         'act map';
 }
@@ -32,4 +25,14 @@
 .actions {
     grid-area: act;
     margin-right: 12px;
+
+    background-color: var(--block);
+    padding: 12px;
+
+    border-radius: 12px;
+
+    max-height: calc(80vh + 28px);
+    box-sizing: border-box;
+
+    overflow-y: scroll;
 }

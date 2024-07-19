@@ -11,7 +11,7 @@ import { aspects } from '../../../../widgets/map/lib/mocks';
 import { mapEditorModel } from '../../../map-editor';
 import { geoObjectFormModel } from '../../lib/geoobject-form.model';
 import { usePreparedEditorObject } from '../../lib/use-prepared-editor-object';
-import { Classifiers, getClassifierCodeWithType } from '../../lib/classifiers'
+import { mockedClassifiers, getClassifierCodeWithType } from '../../lib/classifiers';
 import styles from './geoobject-form.module.css';
 
 //нужно получить с бэка список классификаторов
@@ -33,13 +33,13 @@ type Fields = {
 /** Пока что только сохраняет черновики */
 export const GeoobjectForm = () => {
     //нужно получить с бэка список классификаторов
-    const geoClassifiers = Classifiers
+    const geoClassifiers = mockedClassifiers;
     //нужно получить с бэка список классификаторов
     const {
         register,
         handleSubmit,
         formState: { isValid },
-        reset
+        reset,
     } = useForm<Fields>();
 
     const editorObject = usePreparedEditorObject();
@@ -51,7 +51,6 @@ export const GeoobjectForm = () => {
     const handleSave = ({ name, aspect, status, classCode, description }: Fields) => {
         const geobjectToSave: DraftGeoObject = {
             name,
-            // status: status as DraftGeoObject['status'],
             geometry: {
                 authoritativeKnowledgeSource: '?авторитетный источник инфы?',
 
@@ -70,29 +69,23 @@ export const GeoobjectForm = () => {
                 commonInfo: description,
             },
             // классифаер на данный момент сперва надо создать
-            geoClassifiers:[
+            geoClassifiers: [
                 {
-                    code: getClassifierCodeWithType(editorObject.type, classCode)
+                    code: getClassifierCodeWithType(editorObject.type, classCode),
                 },
-            ]
-           
-
+            ],
         };
 
         geoObjectModel.saveGeoObjectFx(geobjectToSave);
 
-
         geoObjectFormModel.setIsGeoObjectModalOpen(false);
         reset();
-
     };
 
     const handleClose = () => {
-
         geoObjectFormModel.setIsGeoObjectModalOpen(false);
         reset();
-
-    }
+    };
 
     return (
         <Modal onClose={handleClose}>

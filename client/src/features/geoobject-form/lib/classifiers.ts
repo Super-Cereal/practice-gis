@@ -1,4 +1,4 @@
-export const Classifiers = [
+export const mockedClassifiers = [
     {
         name: 'Physiography',
         code: 'PH' ,

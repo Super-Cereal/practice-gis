@@ -2,8 +2,10 @@ import React from 'react';
 import { useUnit } from 'effector-react';
 import { Circle, Polygon, Polyline } from 'react-leaflet';
 
-import { MapObjectPopup } from '../map-object-popup/map-object-popup';
 import { type GeoObject, geoObjectModel, getGeometry } from '../../../../entities/geoobject';
+import { MapObjectPopup } from '../map-object-popup/map-object-popup';
+
+import { mapObjectsModel } from '../../lib/map-objects.model';
 
 export const MapObjects = () => {
     const geoObjects = useUnit(geoObjectModel.$geoObjects);
@@ -24,11 +26,15 @@ const MapObject = ({ object }: { object: GeoObject }) => {
         return null;
     }
 
+    const handleClick = () => mapObjectsModel.setSelectedGeoobject(object);
+    const handleClose = () => mapObjectsModel.setSelectedGeoobject(null);
+    const events = { click: handleClick, popupclose: handleClose };
+
     const { type: geometryType, coordinates } = geometry;
 
     if (geometryType === 'Point') {
         return (
-            <Circle center={coordinates} radius={20}>
+            <Circle eventHandlers={events} center={coordinates} radius={20}>
                 <MapObjectPopup onDelete={() => {}} object={object} type={geometryType} />
             </Circle>
         );
@@ -36,7 +42,7 @@ const MapObject = ({ object }: { object: GeoObject }) => {
 
     if (geometryType === 'PolyLine') {
         return (
-            <Polyline weight={7} positions={coordinates}>
+            <Polyline eventHandlers={events} positions={coordinates} weight={7} >
                 <MapObjectPopup onDelete={() => {}} object={object} type={geometryType} />
             </Polyline>
         );
@@ -44,7 +50,7 @@ const MapObject = ({ object }: { object: GeoObject }) => {
 
     if (geometryType === 'Polygon') {
         return (
-            <Polygon positions={coordinates}>
+            <Polygon eventHandlers={events} positions={coordinates}>
                 <MapObjectPopup onDelete={() => {}} object={object} type={geometryType} />
             </Polygon>
         );

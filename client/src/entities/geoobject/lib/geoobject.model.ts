@@ -17,6 +17,9 @@ sample({ clock: getGeoObjectsFx.doneData, target: $geoObjects });
 const saveGeoObjectFx = createEffect(saveGeoObjectRequest);
 const $saveGeoObjectLoading = status(saveGeoObjectFx);
 
+// Перезапрашиваем геообьекты после сохранения
+sample({ clock: saveGeoObjectFx.doneData, target: getGeoObjectsFx });
+
 // Обновить геообьект в бэк
 const updateGeoObjectFx = createEffect(updateGeoObjectRequest);
 const $updateGeoObjectLoading = status(updateGeoObjectFx);
