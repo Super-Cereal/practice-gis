@@ -1,30 +1,52 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useUnit } from 'effector-react';
 
 import { mapModel } from '../../entities/map';
 import type { MapMode } from '../../entities/map/lib/types';
 
 import styles from './info-plate.module.css';
+import { useSearchParams } from 'react-router-dom';
 
 /** Настройки страницы и карты (выбор режима просмотра) */
 export const InfoPlate = () => {
-    const setMapMode = useUnit(mapModel.setMapMode);
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setMapMode(e.target.value as MapMode);
+    /** Сохраняем режим карты в query, чтобы не сбрасывать вкладку при перезагрузке */
+    useEffect(() => {
+        const mapModeFromSearch = searchParams.get('mapMode') as MapMode | null;
+
+        if (mapModeFromSearch) {
+            mapModel.setMapMode(mapModeFromSearch);
+        }
+    }, [searchParams]);
+
+    const mapMode = useUnit(mapModel.$mapMode);
+    const handleModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSearchParams({ ...searchParams, mapMode: e.target.value as MapMode });
+    };
+
+    const editorPointsOnCorners = useUnit(mapModel.$editorPointsOnCorners);
+    const handlePointsOnCornersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        mapModel.setEditorPointsOnCorners(e.target.checked);
     };
 
     return (
         <div className={styles.plate}>
-            <div className={styles.setting}>
-                <label htmlFor="map-mode-select">Режим работы с картой:</label>
+            <div className={styles.settings}>
+                <label>
+                    <span>Режим работы с картой:</span>
+                    <select name="map-mode" onChange={handleModeChange} value={mapMode}>
+                        <option value="view">Просмотр сохраненных геообьектов</option>
+                        <option value="edit">Создание новых геообьектов</option>
+                    </select>
+                </label>
 
-                <select name="map-mode" id="map-mode-select" onChange={handleChange}>
-                    <option value="view" defaultChecked={true}>
-                        Просмотр сохраненных геообьектов
-                    </option>
-                    <option value="edit">Создание новых геообьектов</option>
-                </select>
+                {mapMode === 'edit' && (
+                    <label>
+                        <span>Включить отображение точек на углах:</span>
+                        <input type="checkbox" onChange={handlePointsOnCornersChange} checked={editorPointsOnCorners} />
+                    </label>
+                )}
             </div>
         </div>
     );

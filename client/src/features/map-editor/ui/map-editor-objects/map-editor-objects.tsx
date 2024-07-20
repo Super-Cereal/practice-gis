@@ -1,66 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useUnit } from 'effector-react';
 import { Circle, Polyline, Polygon } from 'react-leaflet';
 
-import { selectedOptions, defaultOptions } from '../../lib/constants';
+import { MapEditorPopup } from '../map-editor-popup/map-editor-popup';
+
+import { getColorOptions } from '../../lib/get-color-options';
 import { editorModel } from '../../lib/editor.model';
-import { MapEditorPopupForm } from '../map-editor-popup-form/map-editor-popup-form';
+import { EditorObject } from '../../lib/types';
 
 /** Рендерит геообьекты на карте */
 export const MapEditorObjects = () => {
-    const $points = useUnit(editorModel.$points);
-    const $lines = useUnit(editorModel.$lines);
-    const $polygons = useUnit(editorModel.$polygons);
+    const objects = useUnit(editorModel.$objects);
 
     return (
         <>
-            {Object.values($points).map(({ _id, coordinates, selected }) => (
-                <Circle
-                    key={_id}
-                    center={coordinates}
-                    pathOptions={selected ? selectedOptions : defaultOptions}
-                    radius={20}
-                    eventHandlers={{
-                        click: () => editorModel.togglePointSelect(_id),
-                        mouseover: (e) => e.target.openPopup(),
-                    }}
-                >
-                    <MapEditorPopupForm _id={_id} type="Point" onDelete={() => editorModel.deletePoint(_id)} />
-                </Circle>
-            ))}
+            {Object.values(objects).map((object) => {
+                const { Component, ...props } = getProps(object);
 
-            {Object.values($lines).map(({ _id, coordinates, selected }) => (
-                <Polyline
-                    weight={7}
-                    key={_id}
-                    positions={coordinates}
-                    pathOptions={selected ? selectedOptions : defaultOptions}
-                    eventHandlers={{
-                        click: () => editorModel.toggleLineSelect(_id),
-                        mouseover: (e) => e.target.openPopup(),
-                    }}
-                >
-                    <MapEditorPopupForm _id={_id} type="PolyLine" onDelete={() => editorModel.deleteLine(_id)} />
-                </Polyline>
-            ))}
-
-            {Object.values($polygons).map(({ _id, coordinates, selected }) => (
-                <Polygon
-                    key={_id}
-                    positions={coordinates}
-                    pathOptions={selected ? selectedOptions : defaultOptions}
-                    eventHandlers={{
-                        click: () => editorModel.togglePolygonSelect(_id),
-                        mouseover: (e) => e.target.openPopup(),
-                    }}
-                >
-                    <MapEditorPopupForm
-                        _id={_id}
-                        type="Polygon"
-                        /* polygonId={id} */ onDelete={() => editorModel.deletePolygon(_id)}
-                    />
-                </Polygon>
-            ))}
+                return (
+                    // @ts-ignore
+                    <Component {...props} key={object._id}>
+                        <MapEditorPopup object={object} />
+                    </Component>
+                );
+            })}
         </>
     );
+};
+
+const getProps = (object: EditorObject) => {
+    const { _id, type, selected, readonly, coordinates } = object;
+
+    const common: Record<string, any> = {
+        pathOptions: getColorOptions(selected, readonly),
+        eventHandlers: {
+            click: () => !selected && editorModel.toggleObjectSelect(_id),
+        },
+    };
+
+    switch (type) {
+        case 'Point':
+            return { ...common, radius: 16, center: coordinates, Component: Circle };
+        case 'PolyLine':
+            return { ...common, weight: 7, positions: coordinates, Component: Polyline };
+        case 'Polygon':
+            return { ...common, positions: coordinates, Component: Polygon };
+    }
 };

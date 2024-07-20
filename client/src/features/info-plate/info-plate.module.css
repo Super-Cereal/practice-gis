@@ -4,8 +4,13 @@
     border-radius: 8px;
 }
 
-.setting {
+.settings,
+.settings label {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 16px;
+}
+
+.settings label {
+    gap: 4px;
 }

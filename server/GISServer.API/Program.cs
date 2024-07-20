@@ -14,6 +14,7 @@ builder.Services.AddScoped<IClassifierService, ClassifierService>();
 builder.Services.AddScoped<IAspectService, AspectService>();
 builder.Services.AddScoped<ITopologyService, TopologyService>();
 builder.Services.AddScoped<IGeoObjectClassifiersService, GeoObjectClassifiersService>();
+builder.Services.AddScoped<IParentChildService, ParentChildService>();
 
 builder.Services.AddScoped<IGeoObjectRepository, GeoObjectRepository>();
 <<<<<<< HEAD
@@ -25,12 +26,18 @@ builder.Services.AddScoped<IClassifierRepository, ClassifierRepository>();
 builder.Services.AddScoped<ITopologyRepository, TopologyRepository>();
 builder.Services.AddScoped<IAspectRepository, AspectRepository>();
 builder.Services.AddScoped<IGeoObjectsClassifiersRepository, GeoObjectsClassifiersRepository>();
+<<<<<<< HEAD
 >>>>>>> f7ad924ea7ca3b79b54bc3c12d8cad91a905e317
+=======
+builder.Services.AddScoped<IParentChildRepository, ParentChildRepository>();
+>>>>>>> a44333b7008197c897c747ea4f866317742d6172
 
 builder.Services.AddSingleton<GeoObjectMapper>();
 builder.Services.AddSingleton<ClassifierMapper>();
 builder.Services.AddSingleton<TopologyMapper>();
 builder.Services.AddSingleton<AspectMapper>();
+builder.Services.AddScoped<ParentChildMapper>();
+builder.Services.AddSingleton<GeoObjectClassifiersMapper>();
 
 
 builder.Services.AddControllers().AddJsonOptions(x =>

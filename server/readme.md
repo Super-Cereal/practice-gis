@@ -10,7 +10,7 @@
 
 ### Postgres
 
-При создании пользователя лучше поставьте пароль 12345, а порт оставте 5432. Эти настройки используются поумолчанию для сервера ;)
+При создании пользователя оставьте параметры поумолчанию - port=5432 password=12345
 
 ### PostGis
 
@@ -18,7 +18,7 @@
 
 ### Asp.Net
 
-Обязательно нужна 6 версия. Возможно надо будет руками устанавливать используемые библиотеки. но это не точно
+Обязательно 6 версия.
 \
 \
 **_Далее все команды вводятся в терминале_**
@@ -32,124 +32,54 @@
 
 `dotnet tool install --global dotnet-ef`
 
-## Запуск сервера
+## Подготовка к запуску сервера
 
-Запустить терминал
+> Ее следует выполнять каждый раз после новых коммитов.
 
-Перейти в директорию server и сделать билд  
-`dotnet build ./GISServer.API`
+1. Запустить терминал
 
-Применить миграцию, то есть перейти в директорию server и ввести команду:  
-`dotnet ef database update -s ./GISServer.API -p ./GISServer.Infrastructure`
+2. Cделать билд:  
+   `dotnet build ./GISServer.API`
 
-Сервер готов к запуску. из директории server:  
-`dotnet run --project ./GISServer.API`
+3. Применить миграцию:  
+   `dotnet ef database update -s ./GISServer.API -p ./GISServer.Infrastructure`
 
-## Шаблон объекта
+4. Если при подготовке сервера не было ошибок, то можно запускать сервер:  
+   `dotnet run --project ./GISServer.API`
+
+## Если сервер не запускается или была ошибка при подготовке к запуску
+
+### Проверьте строку подключения в файле GISServer.Infrastructure/Data/Context
+
+Возможно там записаны данные не вашего пользователя. Измените их на собственные. По умолчанию данные пользователя port=5432, password=12345.
+
+### Если не помогло - ...
+
+Выполните очистку базы данных.
+`dotnet ef database drop -s ./GISServer.API -p ./GISServer.Infrastructure`.
+
+И заново создайте ее.
+`dotnet ef database update -s ./GISServer.API -p ./GISServer.Infrastructure`.
+
+> ↑↑↑ В любой непонятной ситуации с сервером сносите базу данных и создавайте ее заново ↑↑↑
+
+## Пример структуры объекта
+
+Минимальный набор информации требуемый для создания объекта
 
 ```
 {
-  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "name": "string",
-  "geoNameId": 0,
-  "status": 0,
-  "updateTime": "2024-07-05T01:03:55.733Z",
-  "creationTime": "2024-07-05T01:03:55.733Z",
-  "geoNameFeature": {
-    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "geoNamesFeatureCode": "string",
-    "geoNamesFeatureKind": "string",
-    "featureKindNameEn": "string",
-    "featureNameEn": "string",
-    "featureKindNameRu": "string",
-    "featureNameRu": "string",
-    "commentsEn": "string",
-    "commentsRu": "string"
-  },
+  "name": "имя объекта",
   "geometry": {
-    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "authoritativeKnowledgeSource": "string",
-    "version": 0,
-    "status": 0,
-    "archiveTime": "2024-07-05T01:03:55.733Z",
-    "updateTime": "2024-07-05T01:03:55.733Z",
-    "creationTime": "2024-07-05T01:03:55.733Z",
-    "borderGeocodes": "string",
+    "authoritativeKnowledgeSource": "источник/автор",
+    "borderGeocodes": "geoJson",
     "areaValue": 0,
     "westToEastLength": 0,
     "northToSouthLength": 0
   },
-  "geometryVersion": [
-    {
-      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "authoritativeKnowledgeSource": "string",
-      "version": 0,
-      "status": 0,
-      "archiveTime": "2024-07-05T01:03:55.733Z",
-      "updateTime": "2024-07-05T01:03:55.733Z",
-      "creationTime": "2024-07-05T01:03:55.733Z",
-      "borderGeocodes": "string",
-      "areaValue": 0,
-      "westToEastLength": 0,
-      "northToSouthLength": 0
-    }
-  ],
   "geoObjectInfo": {
-    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "fullName": "string",
-    "shortName": "string",
-    "authoritativeKnowledgeSource": "string",
-    "version": 0,
-    "languageCode": "string",
-    "language": "string",
-    "status": 0,
-    "archiveTime": "2024-07-05T01:03:55.733Z",
-    "updateTime": "2024-07-05T01:03:55.733Z",
-    "creationTime": "2024-07-05T01:03:55.733Z",
-    "commonInfo": "string"
-  },
-
-  "parentGeoObjects": [
-    {
-      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa4",
-      "parentGeographicalObjectName": "string",
-      "childGeographicalObjectName": "string",
-      "completelyIncludedFlag": true,
-      "includedPercent": 0,
-      "creationDateTime": "2024-07-05T01:03:55.733Z",
-      "lastUpdatedDateTime": "2024-07-05T01:03:55.733Z"
-    }
-  ],
-  "childGeoObjects": [
-    {
-      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa5",
-      "parentGeographicalObjectName": "string",
-      "childGeographicalObjectName": "string",
-      "completelyIncludedFlag": true,
-      "includedPercent": 0,
-      "creationDateTime": "2024-07-05T01:03:55.734Z",
-      "lastUpdatedDateTime": "2024-07-05T01:03:55.734Z"
-    }
-  ],
-  "outputTopologyLinks": [
-    {
-      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa5",
-      "predicate": "string",
-      "status": 0,
-      "creationDateTime": "2024-07-05T01:03:55.734Z",
-      "lastUpdatedDateTime": "2024-07-05T01:03:55.734Z",
-      "commonBorder": "string"
-    }
-  ],
-  "inputTopologyLinks": [
-    {
-      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa4",
-      "predicate": "string",
-      "status": 0,
-      "creationDateTime": "2024-07-05T01:03:55.734Z",
-      "lastUpdatedDateTime": "2024-07-05T01:03:55.734Z",
-      "commonBorder": "string"
-    }
-  ]
+    "language": "язык",
+    "commonInfo": "дополнительная информация"
+  }
 }
 ```

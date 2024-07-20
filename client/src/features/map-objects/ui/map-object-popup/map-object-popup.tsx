@@ -1,67 +1,54 @@
 import React from 'react';
 import { Popup } from 'react-leaflet';
-import { useUnit } from 'effector-react';
 
-import { Button } from '../../../../shared/ui/button';
-import { mapModel } from '../../../../entities/map';
-import { GeoObject } from '../../../../entities/geoobject';
+import { type GeoObject, type GeometryGeoJSON, getCenterByCoords } from '../../../../entities/geoobject';
+import { useTimezoneAndLocalTime } from '../../../../shared/lib/time';
 
-import { EditorObjectType } from '../../../map-editor';
-import { geoObjectFormModel } from '../../../geoobject-form';
+import { MapObjectIdWithCopy } from '../map-object-id-with-copy/map-object-id-with-copy';
 
 import styles from './map-object-popup.module.css';
 
 interface Props {
-    onDelete: () => void;
     object: GeoObject;
-    type: EditorObjectType;
+    geometry: GeometryGeoJSON;
+
+    /**
+     * Попап не анмаунтится автоматически, поэтому костылим это сами,
+     * иначе будет запущено очень много интервалов и начнутся лаги
+     */
+    visible: boolean;
 }
 
-/** Рендерит попап для сохраненных обьектов на карте */
-export const MapObjectPopup = ({ onDelete, object, type }: Props) => {
-    const { id } = object;
+/** Рендерит попап с описанием для геообьектов на карте */
+export const MapObjectPopup = (props: Props) => {
+    return <Popup>{props.visible && <Content {...props} />}</Popup>;
+};
 
-    const selectedAspect = useUnit(mapModel.$mapAspect);
+/** Выделяем отдельно, чтобы не рендерить, пока попап скрыт */
+const Content = ({ object, geometry: { type, coordinates } }: Props) => {
+    const { id, name, status, geoObjectInfo } = object;
 
-    const handleDelete = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        onDelete();
-    };
-
-    const handleModalFormOpen = () => {
-        geoObjectFormModel.setSelectedGeoObject(object);
-        geoObjectFormModel.setIsGeoObjectModalOpen(true);
-    };
-
-    const handleModalAspectsOpen = () => {
-        geoObjectFormModel.setSelectedGeoObject(object);
-        geoObjectFormModel.setIsAspectsModalOpen(true);
-    };
+    const { timezone, localTime } = useTimezoneAndLocalTime(getCenterByCoords(coordinates), id);
 
     return (
-        <Popup>
-            <h3>
-                {type} : {id}
+        <>
+            <h3 className={styles.title}>
+                {type}: {name}
             </h3>
+            <MapObjectIdWithCopy id={id} />
 
-            <div className={styles.btns}>
-                {selectedAspect ? (
-                    <Button /* onClick={handleModalFormOpen} */>Создать {selectedAspect.title} для геообъекта</Button>
-                ) : (
-                    <>
-                        <Button /* onClick={handleModalFormOpen} */>Изменить родительский геообъект</Button>
-                        <Button /* onClick={handleModalFormOpen} */>Создать дочерний геообъект</Button>
-                    </>
-                )}
-
-                {/*    {isObjectExists && (
-                    <Button onClick={handleModalAspectsOpen}>Просмотр аспектов на данной геометрии</Button>
-                )} */}
-
-                {/* <Button onClick={handleDelete} color="orange">
-                    Удалить
-                </Button> */}
+            <div className={styles.content}>
+                <span>{geoObjectInfo?.commonInfo}</span>
             </div>
-        </Popup>
+
+            <div className={styles.bottom}>
+                <div className={styles.bottomBlock}>
+                    <span>Время: {localTime}</span>
+                    <span>Таймзона: {timezone}</span>
+                </div>
+
+                <span>Язык: {geoObjectInfo?.language}</span>
+            </div>
+        </>
     );
 };

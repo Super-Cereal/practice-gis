@@ -10,18 +10,28 @@ namespace GISServer.API.Service
     public class GeoObjectClassifiersService : IGeoObjectClassifiersService
     {
         private readonly IGeoObjectsClassifiersRepository _repository;
+        private readonly GeoObjectClassifiersMapper _geoObjectClassifiersMapper;
 
-        public GeoObjectClassifiersService(IGeoObjectsClassifiersRepository repository)
+
+        public GeoObjectClassifiersService(IGeoObjectsClassifiersRepository repository, GeoObjectClassifiersMapper geoObjectClassifiersMapper)
         {
             _repository = repository;
+            _geoObjectClassifiersMapper = geoObjectClassifiersMapper;
         }
 
 
-        public async Task<List<GeoObjectsClassifiers>> GetGeoObjectsClassifiers()
+        public async Task<List<GeoObjectsClassifiersDTO>> GetGeoObjectsClassifiers()
         {
             try
             {
-                return await _repository.GetGeoObjectsClassifiers();
+                List<GeoObjectsClassifiersDTO> geoObjectsClassifiersDTO = new List<GeoObjectsClassifiersDTO>();
+                List<GeoObjectsClassifiers> geoObjectsClassifiers = await _repository.GetGeoObjectsClassifiers();
+
+                foreach (var geoObjectsClassifier in geoObjectsClassifiers)
+                {
+                    geoObjectsClassifiersDTO.Add(await _geoObjectClassifiersMapper.GOCToDTO(geoObjectsClassifier));
+                }
+                return geoObjectsClassifiersDTO;
             }
             catch (Exception ex)
             {

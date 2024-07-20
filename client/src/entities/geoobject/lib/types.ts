@@ -1,3 +1,6 @@
+import type { LatLngTuple } from 'leaflet';
+import type { GEO_OBJECT_STATUS } from './constants';
+
 export interface GeoObject extends DraftGeoObject {
     id: string;
 }
@@ -7,7 +10,7 @@ export interface DraftGeoObject {
     name: string;
 
     /** Статус обьекта */
-    status?: 'actual' | 'expired';
+    status?: (typeof GEO_OBJECT_STATUS)[keyof typeof GEO_OBJECT_STATUS];
 
     /** Предлагаю это не использовать в пользу geoObjectInfo */
     geoNameFeature?: GeoNameFeature;
@@ -15,13 +18,11 @@ export interface DraftGeoObject {
     geometry: Geometry;
 
     geoObjectInfo?: GeoObjectInfo;
-
-    geoClassifiers?: Classifier[];
 }
 
 interface GeoNameFeature {
     /** гео код*/
-    GeoNameFeature:string;
+    GeoNameFeature: string;
     /** Любой комментарий */
     commentsRu?: string;
 }
@@ -48,25 +49,34 @@ interface GeoObjectInfo {
 
     /** Всякая доп инфа */
     commonInfo?: string;
+
+    classifiers?: Classifier[];
 }
 
 export interface Classifier {
+
+    id?: string;
+
     /** Имя классификатора */
     name?: string;
 
     /** Код классификатора */
-    code: string;
+    code?: string;
 
     /** О чем этот классификатор */
     commonInfo?: string;
 }
+ export interface ParentChildObjectLink  {
+    ParentGeoObjectId: string;
+    ChildGeoObjectId: string;
 
+ }
 export type GeometryGeoJSON =
     | {
           type: 'Point';
-          coordinates: [number, number];
+          coordinates: LatLngTuple;
       }
     | {
           type: 'PolyLine' | 'Polygon';
-          coordinates: [number, number][];
+          coordinates: LatLngTuple[];
       };

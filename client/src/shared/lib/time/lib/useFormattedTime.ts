@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { formatTime } from './formatTime';
 
-export const useFormattedTime = (zone?: string) => {
+export const useFormattedTime = (timeZone?: string) => {
     const [date, setDate] = useState<Date>(new Date());
 
     useEffect(() => {
@@ -13,5 +13,5 @@ export const useFormattedTime = (zone?: string) => {
         return () => clearInterval(interval);
     }, []);
 
-    return formatTime(date);
+    return formatTime(date, { timeZone });
 };

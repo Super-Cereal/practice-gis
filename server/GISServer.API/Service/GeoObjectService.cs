@@ -16,14 +16,46 @@ namespace GISServer.API.Service
 
         public GeoObjectService(
                 IGeoObjectRepository repository, 
+                IClassifierRepository classifierRepository,
                 GeoObjectMapper geoObjectMapper, 
                 ClassifierMapper classifierMapper,
                 AspectMapper aspectMapper)
         {
             _geoObjectRepository = repository;
+            _classifierRepository = classifierRepository;
             _geoObjectMapper = geoObjectMapper;
             _classifierMapper = classifierMapper;
             _aspectMapper = aspectMapper;
+        }
+
+        public GeoObjectDTO InitGeoObject(GeoObjectDTO geoObjectDTO)
+        {
+            Guid guid = Guid.NewGuid();
+
+            geoObjectDTO.Id = guid;
+            geoObjectDTO.GeoObjectInfo.Id = guid;
+            geoObjectDTO.Geometry.Id = guid;
+            
+            geoObjectDTO.Status = Status.Actual;
+            geoObjectDTO.UpdateTime = DateTime.UtcNow;
+            geoObjectDTO.CreationTime = DateTime.UtcNow;
+
+            return geoObjectDTO;
+        }
+
+        public async Task<GeoObjectDTO> AddGeoObject(GeoObjectDTO geoObjectDTO)
+        {
+            try
+            {
+                geoObjectDTO = InitGeoObject(geoObjectDTO);
+                GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
+                return await _geoObjectMapper.ObjectToDTO(await _geoObjectRepository.AddGeoObject(geoObject));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
 
         public async Task<List<GeoObjectDTO>> GetGeoObjects()
@@ -36,19 +68,22 @@ namespace GISServer.API.Service
                 {
                     List<GeoObjectsClassifiers> geoObjectsClassifiersFromDB = new List<GeoObjectsClassifiers>(
                             await _geoObjectRepository.GetGeoObjectsClassifiers(geoObject.Id));
-                    foreach (var gogc in geoObjectsClassifiersFromDB)
+
+                    foreach (var goc in geoObjectsClassifiersFromDB)
                     {
+                        Console.WriteLine(goc.ClassifierId);
                         geoObject.GeoObjectInfo.Classifiers.Add(
-                                await _classifierRepository.GetClassifier(gogc.ClassifierId));
+                                await _classifierRepository.GetClassifier(goc.ClassifierId));
 
                     }
-                
+
                     geoObjects.Add(await _geoObjectMapper.ObjectToDTO(geoObject));
                 }
                 return geoObjects;
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"\n\n{ex.ToString()}\n\n");
                 return null;
             }
         }
@@ -78,25 +113,11 @@ namespace GISServer.API.Service
             }
         }
 
-        public async Task<GeoObjectDTO> AddGeoObject(GeoObjectDTO geoObjectDTO)
-        {
-            try
-            {
-                GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
-                return await _geoObjectMapper.ObjectToDTO(await _geoObjectRepository.AddGeoObject(geoObject));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
-
         public async Task<GeoObjectDTO> UpdateGeoObject(GeoObjectDTO geoObjectDTO)
         {
             try
             {
+                geoObjectDTO = InitGeoObject(geoObjectDTO);
                 GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
                 await _geoObjectRepository.UpdateGeoObject(geoObject);
                 return geoObjectDTO;
@@ -118,16 +139,6 @@ namespace GISServer.API.Service
             }
         }
 
-        public GeoObjectDTO CreateGuids(GeoObjectDTO geoObjectDTO)
-        {
-            Guid guid = Guid.NewGuid();
-            geoObjectDTO.Id = guid;
-            geoObjectDTO.GeoObjectInfo.Id = guid;
-            geoObjectDTO.Geometry.Id = guid;
-
-            return geoObjectDTO;
-        }
-
         //
         // ВАЖНЫЙ МОМЕНТ. из репозитория возвращается список классификаторов данного объекта
         // но сервис в этой функции игнорирует это и возвращает тот же самый объект
@@ -144,10 +155,13 @@ namespace GISServer.API.Service
 
                 await _geoObjectRepository.AddGeoObjectsClassifiers(geoObjectClassifiers);
 
+                Console.WriteLine("\n\nPROBLEMO\n\n");
+
                 return geoObjectsClassifiersDTO;
             }
             catch (Exception ex)
             {
+                Console.WriteLine("\n\nPROBLEMO EX EX EX!\n\n");
                 Console.WriteLine($"An error occured. Error Message: {ex.Message}");
                 return null;
             }

@@ -11,6 +11,10 @@ const $mapMode = createStore<MapMode>('view');
 const setMapMode = createEvent<MapMode>();
 sample({ clock: setMapMode, target: $mapMode });
 
+const $editorPointsOnCorners = createStore<boolean>(false);
+const setEditorPointsOnCorners = createEvent<boolean>();
+sample({ clock: setEditorPointsOnCorners, target: $editorPointsOnCorners });
+
 const $mapAspect = createStore<Aspect | null>(null);
 const setMapAspect = createEvent<Aspect | null>();
 sample({ clock: setMapAspect, target: $mapAspect });
@@ -24,4 +28,7 @@ export const mapModel = {
 
     $mapAspect,
     setMapAspect,
+
+    $editorPointsOnCorners,
+    setEditorPointsOnCorners,
 };

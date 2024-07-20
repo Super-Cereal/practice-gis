@@ -63,8 +63,6 @@ namespace GISServer.API.Controllers
         [HttpPost]
         public async Task<ActionResult<GeoObjectDTO>> PostGeoObject(GeoObjectDTO geoObjectDTO)
         {
-            geoObjectDTO = _geoObjectService.CreateGuids(geoObjectDTO);
-
             var dbGeoObject = await _geoObjectService.AddGeoObject(geoObjectDTO);
 
             if (dbGeoObject == null)
@@ -103,10 +101,12 @@ namespace GISServer.API.Controllers
                 var dbGeoObjectsClassifiers = await _geoObjectService.AddGeoObjectsClassifiers(geoObjectsClassifiersDTO);
                 if (dbGeoObjectsClassifiers == null)
                 {
+                    Console.WriteLine("Problem's here");
                     return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
                 }
 
-                return CreatedAtAction("GetGeoObjectsClassifiers", new { geoObjectId = geoObjectId, classifierId = classifierId }, geoObjectsClassifiersDTO);
+                return StatusCode(StatusCodes.Status200OK, geoObjectsClassifiersDTO);
+
             }
             catch (Exception ex)
             {

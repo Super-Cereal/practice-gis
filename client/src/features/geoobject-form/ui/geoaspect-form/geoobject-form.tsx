@@ -1,18 +1,19 @@
-import React, { ChangeEvent, useState } from 'react';
-import { useUnit } from 'effector-react';
-import { nanoid } from 'nanoid';
+import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useUnit } from 'effector-react';
 
 import { Modal } from '../../../../shared/ui/modal';
 import { Button } from '../../../../shared/ui/button';
-import { geoObjectModel, type DraftGeoObject } from '../../../../entities/geoobject';
+import { GEO_OBJECT_STATUS, geoObjectModel } from '../../../../entities/geoobject';
 import { aspects } from '../../../../widgets/map/lib/mocks';
 
-import { mapEditorModel } from '../../../map-editor';
+import type { FormFields } from '../../lib/types';
 import { geoObjectFormModel } from '../../lib/geoobject-form.model';
-import { usePreparedEditorObject } from '../../lib/use-prepared-editor-object';
-import { Classifiers, getClassifierCodeWithType } from '../../lib/classifiers'
+import { mockedClassifiers } from '../../lib/classifiers';
+import { mapDataToGeoobject } from '../../lib/map-data-to-geoobject';
+
 import styles from './geoobject-form.module.css';
+import { editorModel } from '../../../map-editor/lib/editor.model';
 
 //нужно получить с бэка список классификаторов
 
@@ -22,77 +23,38 @@ const typeToLabel = {
     Polygon: 'полигона',
 };
 
-type Fields = {
-    name: string;
-    aspect: string;
-    description: string;
-    classCode: string;
-    status: DraftGeoObject['status'];
-};
-
 /** Пока что только сохраняет черновики */
 export const GeoobjectForm = () => {
     //нужно получить с бэка список классификаторов
-    const geoClassifiers = Classifiers
+    const geoClassifiers = mockedClassifiers;
     //нужно получить с бэка список классификаторов
     const {
         register,
         handleSubmit,
         formState: { isValid },
-        reset
-    } = useForm<Fields>();
+        reset,
+    } = useForm<FormFields>();
 
-    const editorObject = usePreparedEditorObject();
+    const editorObject = useUnit(geoObjectFormModel.$selectedEditorObject);
 
     if (!editorObject) {
         return null;
     }
 
-    const handleSave = ({ name, aspect, status, classCode, description }: Fields) => {
-        const geobjectToSave: DraftGeoObject = {
-            name,
-            // status: status as DraftGeoObject['status'],
-            geometry: {
-                authoritativeKnowledgeSource: '?авторитетный источник инфы?',
+    const handleSave = async (data: FormFields) => {
+        await geoObjectModel.saveGeoObjectFx(mapDataToGeoobject(data, editorObject));
 
-                borderGeocodes: JSON.stringify({
-                    type: editorObject.type,
-                    coordinates: editorObject.object.coordinates,
-                }),
-
-                areaValue: 0,
-                westToEastLength: 0,
-                northToSouthLength: 0,
-            },
-            geoObjectInfo: {
-                languageCode: 'видимо код языка',
-                language: 'видимо название языка',
-                commonInfo: description,
-            },
-            // классифаер на данный момент сперва надо создать
-            geoClassifiers:[
-                {
-                    code: getClassifierCodeWithType(editorObject.type, classCode)
-                },
-            ]
-           
-
-        };
-
-        geoObjectModel.saveGeoObjectFx(geobjectToSave);
-
+        // После успешного сохранения удаляем выбранный обьект
+        editorModel.deleteObject(editorObject._id);
 
         geoObjectFormModel.setIsGeoObjectModalOpen(false);
         reset();
-
     };
 
     const handleClose = () => {
-
         geoObjectFormModel.setIsGeoObjectModalOpen(false);
         reset();
-
-    }
+    };
 
     return (
         <Modal onClose={handleClose}>
@@ -102,7 +64,7 @@ export const GeoobjectForm = () => {
                     Создание геообъекта на основе &nbsp;
                     {editorObject && typeToLabel[editorObject.type]}
                 </label>
-                <label>ID: {editorObject.object != null && editorObject?.object._id}</label>
+                <label>ID: {editorObject._id}</label>
             </div>
 
             <form className={styles.form} onSubmit={handleSubmit(handleSave)}>
@@ -142,9 +104,17 @@ export const GeoobjectForm = () => {
                 </div>
                 <div>
                     <label>Статус: </label>
-                    <select className={styles.aspectSelect} {...register('status', { required: true })}>
-                        <option value="Актуален">Актуален</option>
-                        <option value="Устарел">Устарел</option>
+                    <select
+                        className={styles.aspectSelect}
+                        defaultValue={GEO_OBJECT_STATUS.actual}
+                        {...register('status', { required: true })}
+                    >
+                        {Object.keys(GEO_OBJECT_STATUS).map((key) => (
+                            // @ts-ignore
+                            <option key={key} value={GEO_OBJECT_STATUS[key]}>
+                                {key}
+                            </option>
+                        ))}
                     </select>
                 </div>
 

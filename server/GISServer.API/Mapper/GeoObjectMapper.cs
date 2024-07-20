@@ -115,7 +115,9 @@ namespace GISServer.API.Mapper
                         CompletelyIncludedFlag = parentGeoObject.CompletelyIncludedFlag,
                         IncludedPercent = parentGeoObject.IncludedPercent,
                         CreationDateTime = parentGeoObject.CreationDateTime,
-                        LastUpdatedDateTime = parentGeoObject.LastUpdatedDateTime
+                        LastUpdatedDateTime = parentGeoObject.LastUpdatedDateTime,
+                        ParentGeographicalObjectId = parentGeoObject.ParentGeographicalObjectId,
+                        ChildGeographicalObjectId = parentGeoObject.ChildGeographicalObjectId
                     });
                 }
             }
@@ -131,7 +133,9 @@ namespace GISServer.API.Mapper
                         CompletelyIncludedFlag = childGeoObject.CompletelyIncludedFlag,
                         IncludedPercent = childGeoObject.IncludedPercent,
                         CreationDateTime = childGeoObject.CreationDateTime,
-                        LastUpdatedDateTime = childGeoObject.LastUpdatedDateTime
+                        LastUpdatedDateTime = childGeoObject.LastUpdatedDateTime,
+                        ParentGeographicalObjectId = childGeoObject.ParentGeographicalObjectId,
+                        ChildGeographicalObjectId = childGeoObject.ChildGeographicalObjectId
                     });
                 }
             }
@@ -300,7 +304,9 @@ namespace GISServer.API.Mapper
                         CompletelyIncludedFlag = (bool?)parentGeoObject.CompletelyIncludedFlag,
                         IncludedPercent = (double?)parentGeoObject.IncludedPercent,
                         CreationDateTime = (DateTime?)parentGeoObject.CreationDateTime,
-                        LastUpdatedDateTime = (DateTime?)parentGeoObject.LastUpdatedDateTime
+                        LastUpdatedDateTime = (DateTime?)parentGeoObject.LastUpdatedDateTime,
+                        ParentGeographicalObjectId = (Guid)parentGeoObject.ParentGeographicalObjectId,
+                        ChildGeographicalObjectId = (Guid)parentGeoObject.ChildGeographicalObjectId
                     });
                 }
             }
@@ -316,7 +322,9 @@ namespace GISServer.API.Mapper
                         CompletelyIncludedFlag = (bool?)childGeoObject.CompletelyIncludedFlag,
                         IncludedPercent = (double?)childGeoObject.IncludedPercent,
                         CreationDateTime = (DateTime?)childGeoObject.CreationDateTime,
-                        LastUpdatedDateTime = (DateTime?)childGeoObject.LastUpdatedDateTime
+                        LastUpdatedDateTime = (DateTime?)childGeoObject.LastUpdatedDateTime,
+                        ParentGeographicalObjectId = (Guid)childGeoObject.ParentGeographicalObjectId,
+                        ChildGeographicalObjectId = (Guid)childGeoObject.ChildGeographicalObjectId
                     });
                 }
             }
