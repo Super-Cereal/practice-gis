@@ -57,7 +57,6 @@ namespace GISServer.API.Service
                 return null;
             }
         }
-
         public async Task<GeoObjectDTO> GetGeoObject(Guid id)
         {
             try

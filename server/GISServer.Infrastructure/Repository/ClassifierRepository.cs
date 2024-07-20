@@ -42,6 +42,17 @@ namespace GISServer.Infrastructure.Service
             await _context.SaveChangesAsync();
             return await GetClassifier(classifier.Id);
         }
+        public async Task<(bool, string)> DeleteClassifier(Guid id)
+        {
 
+            var dbClassifier = await GetClassifier(id);
+            if (dbClassifier == null)
+            {
+                return (false, "GeoObeject could not be found");
+            }
+            _context.Classifiers.Remove(dbClassifier);
+            await _context.SaveChangesAsync();
+            return (true, "Classifier got deleted");
+        }
     }
 }

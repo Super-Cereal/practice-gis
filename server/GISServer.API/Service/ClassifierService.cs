@@ -3,6 +3,7 @@ using GISServer.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using GISServer.API.Mapper;
+using GISServer.Infrastructure.Service;
 
 
 namespace GISServer.API.Service
@@ -68,6 +69,17 @@ namespace GISServer.API.Service
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+        public async Task<(bool, string)> DeleteClassifier(Guid id)
+        {
+            try
+            {
+                return await _repository.DeleteClassifier(id);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"An error occured. Error Message: {ex.Message}");
             }
         }
     }

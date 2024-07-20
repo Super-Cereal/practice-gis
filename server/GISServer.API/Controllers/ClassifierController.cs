@@ -60,5 +60,17 @@ namespace GISServer.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"{classifierDTO.Name} could not be added.");
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteClassifier(Guid id)
+        {
+            (bool status, string message) = await _classifierService.DeleteClassifier(id);
+
+            if (status == false)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
+            }
+            return NoContent();
+        }
     }
 }

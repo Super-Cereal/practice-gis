@@ -30,7 +30,6 @@ builder.Services.AddSingleton<AspectMapper>();
 builder.Services.AddScoped<ParentChildMapper>();
 builder.Services.AddSingleton<GeoObjectClassifiersMapper>();
 
-
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 

@@ -9,5 +9,6 @@ namespace GISServer.API.Service
         public Task<ClassifierDTO> AddClassifier(ClassifierDTO classifierDTO);
         public Task<ClassifierDTO> GetClassifier(Guid id);
         public Task<List<ClassifierDTO>> GetClassifiers();
+        public Task<(bool, string)> DeleteClassifier(Guid id);
     }
 }
