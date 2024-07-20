@@ -1,11 +1,11 @@
 import { createStore, createEvent, sample } from 'effector';
 
 import type { GeoObject } from '../../../entities/geoobject';
-import type { EditorObjectType } from '../../map-editor';
+import type { EditorObject } from '../../map-editor';
 
 // Создаем стор для выбранного черновика
-const $selectedEditorObject = createStore<{ type: EditorObjectType; _id: string } | null>(null);
-const setSelectedEditorObject = createEvent<{ type: EditorObjectType; _id: string } | null>();
+const $selectedEditorObject = createStore<EditorObject | null>(null);
+const setSelectedEditorObject = createEvent<EditorObject | null>();
 sample({ clock: setSelectedEditorObject, target: $selectedEditorObject });
 
 // Создаем стор для выбранного геообъекта
@@ -23,6 +23,18 @@ const $isAspectsModalOpen = createStore(false);
 const setIsAspectsModalOpen = createEvent<boolean>();
 sample({ clock: setIsAspectsModalOpen, target: $isAspectsModalOpen });
 
+//form update
+const $isUpdateModalOpen = createStore(false);
+const setIsUpdateModalOpen = createEvent<boolean>();
+sample({ clock: setIsUpdateModalOpen, target: $isUpdateModalOpen });
+
+//form update
+const $isChildModalOpen = createStore(false);
+const setIsChildModalOpen = createEvent<boolean>();
+sample({ clock: setIsChildModalOpen, target: $isChildModalOpen });
+
+
+
 export const geoObjectFormModel = {
     $selectedEditorObject,
     setSelectedEditorObject,
@@ -35,4 +47,10 @@ export const geoObjectFormModel = {
 
     $isAspectsModalOpen,
     setIsAspectsModalOpen,
+
+    $isUpdateModalOpen,
+    setIsUpdateModalOpen,
+
+    $isChildModalOpen,
+    setIsChildModalOpen,
 };

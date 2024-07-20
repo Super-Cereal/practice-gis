@@ -28,6 +28,36 @@ namespace GISServer.API.Service
             _aspectMapper = aspectMapper;
         }
 
+        public GeoObjectDTO InitGeoObject(GeoObjectDTO geoObjectDTO)
+        {
+            Guid guid = Guid.NewGuid();
+
+            geoObjectDTO.Id = guid;
+            geoObjectDTO.GeoObjectInfo.Id = guid;
+            geoObjectDTO.Geometry.Id = guid;
+            
+            geoObjectDTO.Status = Status.Actual;
+            geoObjectDTO.UpdateTime = DateTime.UtcNow;
+            geoObjectDTO.CreationTime = DateTime.UtcNow;
+
+            return geoObjectDTO;
+        }
+
+        public async Task<GeoObjectDTO> AddGeoObject(GeoObjectDTO geoObjectDTO)
+        {
+            try
+            {
+                geoObjectDTO = InitGeoObject(geoObjectDTO);
+                GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
+                return await _geoObjectMapper.ObjectToDTO(await _geoObjectRepository.AddGeoObject(geoObject));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
         public async Task<List<GeoObjectDTO>> GetGeoObjects()
         {
             try
@@ -82,25 +112,11 @@ namespace GISServer.API.Service
             }
         }
 
-        public async Task<GeoObjectDTO> AddGeoObject(GeoObjectDTO geoObjectDTO)
-        {
-            try
-            {
-                GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
-                return await _geoObjectMapper.ObjectToDTO(await _geoObjectRepository.AddGeoObject(geoObject));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
-
         public async Task<GeoObjectDTO> UpdateGeoObject(GeoObjectDTO geoObjectDTO)
         {
             try
             {
+                geoObjectDTO = InitGeoObject(geoObjectDTO);
                 GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
                 await _geoObjectRepository.UpdateGeoObject(geoObject);
                 return geoObjectDTO;
@@ -120,16 +136,6 @@ namespace GISServer.API.Service
             {
                 return (false, $"An error occured. Error Message: {ex.Message}");
             }
-        }
-
-        public GeoObjectDTO CreateGuids(GeoObjectDTO geoObjectDTO)
-        {
-            Guid guid = Guid.NewGuid();
-            geoObjectDTO.Id = guid;
-            geoObjectDTO.GeoObjectInfo.Id = guid;
-            geoObjectDTO.Geometry.Id = guid;
-
-            return geoObjectDTO;
         }
 
         //

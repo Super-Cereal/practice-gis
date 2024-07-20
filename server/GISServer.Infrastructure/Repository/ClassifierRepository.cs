@@ -1,3 +1,13 @@
+<<<<<<< HEAD
+﻿using GISServer.Domain.Model;
+using GISServer.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace GISServer.Infrastructure.Repository
+{
+    public class ClassifierRepository
+    {
+=======
 using GISServer.Domain.Model;
 using GISServer.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -42,8 +52,12 @@ namespace GISServer.Infrastructure.Service
             await _context.SaveChangesAsync();
             return await GetClassifier(classifier.Id);
         }
+<<<<<<< HEAD
         public async Task<(bool, string)> DeleteClassifier(Guid id)
         {
+=======
+>>>>>>> f7ad924ea7ca3b79b54bc3c12d8cad91a905e317
+>>>>>>> 4f71d6e34d285074f65b8b1bbb82d74fc4315c5f
 
             var dbClassifier = await GetClassifier(id);
             if (dbClassifier == null)

@@ -36,22 +36,21 @@
 
 > Ее следует выполнять каждый раз после новых коммитов.
 
-Запустить терминал.
+1. Запустить терминал
 
-Перейти в директорию server и сделать билд  
-`dotnet build ./GISServer.API`.
+2. Cделать билд:  
+   `dotnet build ./GISServer.API`
 
-Обновить/Создать базу данных:  
-`dotnet ef database update -s ./GISServer.API -p ./GISServer.Infrastructure`.
+3. Применить миграцию:  
+   `dotnet ef database update -s ./GISServer.API -p ./GISServer.Infrastructure`
 
-## Запуск сервера
-
-Если при подготовке сервера не было ошибок, то все готово к запуску. из директории server:  
-`dotnet run --project ./GISServer.API`.
+4. Если при подготовке сервера не было ошибок, то можно запускать сервер:  
+   `dotnet run --project ./GISServer.API`
 
 ## Если сервер не запускается или была ошибка при подготовке к запуску
 
 ### Проверьте строку подключения в файле GISServer.Infrastructure/Data/Context
+
 Возможно там записаны данные не вашего пользователя. Измените их на собственные. По умолчанию данные пользователя port=5432, password=12345.
 
 ### Если не помогло - ...
@@ -64,23 +63,23 @@
 
 > ↑↑↑ В любой непонятной ситуации с сервером сносите базу данных и создавайте ее заново ↑↑↑
 
-
-
 ## Пример структуры объекта
+
 Минимальный набор информации требуемый для создания объекта
+
 ```
-{ 
-  "name": "имя объекта", 
-  "geometry": { 
-    "authoritativeKnowledgeSource": "источник/автор", 
-    "borderGeocodes": "geoJson", 
-    "areaValue": 0, 
-    "westToEastLength": 0, 
-    "northToSouthLength": 0 
-  }, 
-  "geoObjectInfo": { 
-    "language": "язык", 
-    "commonInfo": "дополнительная информация" 
-  } 
+{
+  "name": "имя объекта",
+  "geometry": {
+    "authoritativeKnowledgeSource": "источник/автор",
+    "borderGeocodes": "geoJson",
+    "areaValue": 0,
+    "westToEastLength": 0,
+    "northToSouthLength": 0
+  },
+  "geoObjectInfo": {
+    "language": "язык",
+    "commonInfo": "дополнительная информация"
+  }
 }
 ```

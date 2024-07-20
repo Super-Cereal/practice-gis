@@ -3,52 +3,66 @@ import { useUnit } from 'effector-react';
 import { Circle, Polygon, Polyline } from 'react-leaflet';
 
 import { MapObjectPopup } from '../map-object-popup/map-object-popup';
-import { type GeoObject, geoObjectModel, getGeometry } from '../../../../entities/geoobject';
+import { geoObjectModel, getGeometry, type GeoObject, type GeometryGeoJSON } from '../../../../entities/geoobject';
+
+import { mapObjectsModel } from '../../lib/map-objects.model';
 
 export const MapObjects = () => {
     const geoObjects = useUnit(geoObjectModel.$geoObjects);
+    const selectedObject = useUnit(mapObjectsModel.$selectedGeoobject);
 
     return (
         <>
-            {geoObjects.map((object) => (
-                <MapObject object={object} key={object.id} />
-            ))}
+            {geoObjects.map((object) => {
+                const geometry = getGeometry(object);
+
+                if (!geometry) {
+                    return null;
+                }
+
+                const { Component, ...props } = getProps(object, geometry);
+
+                return (
+                    // @ts-ignore
+                    <Component {...props} key={object.id}>
+                        <MapObjectPopup
+                            object={object}
+                            geometry={geometry}
+                            visible={selectedObject?.id === object.id}
+                        />
+                    </Component>
+                );
+            })}
         </>
     );
 };
 
-const MapObject = ({ object }: { object: GeoObject }) => {
-    const geometry = getGeometry(object);
+const getProps = (object: GeoObject, geometry: GeometryGeoJSON) => {
+    const { type, coordinates } = geometry;
 
-    if (!geometry) {
-        return null;
+    const common: Record<string, any> = {
+        eventHandlers: {
+            click: () => {
+                mapObjectsModel.setSelectedGeoobject(object);
+                // И из-за того, что при повторном клике на обьект попап
+                // сперва закрывается, затем открывается, у нас пропадает контент
+                // Этот таймаут это лечит
+                setTimeout(() => {
+                    mapObjectsModel.setSelectedGeoobject(object);
+                }, 200);
+                // Попап из react-leaflet плохой
+                // Из-за того что он не анмаунтится приходится писать костыли
+            },
+            popupclose: () => mapObjectsModel.setSelectedGeoobject(null),
+        },
+    };
+
+    switch (type) {
+        case 'Point':
+            return { ...common, radius: 16, center: coordinates, Component: Circle };
+        case 'PolyLine':
+            return { ...common, weight: 7, positions: coordinates, Component: Polyline };
+        case 'Polygon':
+            return { ...common, positions: coordinates, Component: Polygon };
     }
-
-    const { type: geometryType, coordinates } = geometry;
-
-    if (geometryType === 'Point') {
-        return (
-            <Circle center={coordinates} radius={20}>
-                <MapObjectPopup onDelete={() => {}} object={object} type={geometryType} />
-            </Circle>
-        );
-    }
-
-    if (geometryType === 'PolyLine') {
-        return (
-            <Polyline weight={7} positions={coordinates}>
-                <MapObjectPopup onDelete={() => {}} object={object} type={geometryType} />
-            </Polyline>
-        );
-    }
-
-    if (geometryType === 'Polygon') {
-        return (
-            <Polygon positions={coordinates}>
-                <MapObjectPopup onDelete={() => {}} object={object} type={geometryType} />
-            </Polygon>
-        );
-    }
-
-    return null;
 };

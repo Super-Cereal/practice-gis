@@ -19,7 +19,7 @@ namespace GISServer.API.Service
             _classifierMapper = classifierMapper;
         }
 
-        public ClassifierDTO CreateGuid(ClassifierDTO classifierDTO)
+        public ClassifierDTO InitClassifier(ClassifierDTO classifierDTO)
         {
             classifierDTO.Id = Guid.NewGuid();
             return classifierDTO;
@@ -29,7 +29,7 @@ namespace GISServer.API.Service
         {
             try
             {
-                classifierDTO = CreateGuid(classifierDTO);
+                classifierDTO = InitClassifier(classifierDTO);
                 Classifier classifier = await _classifierMapper.DTOToClassifier(classifierDTO);
                 return await _classifierMapper.ClassifierToDTO(await _repository.AddClassifier(classifier));
             }

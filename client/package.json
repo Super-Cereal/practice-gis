@@ -36,7 +36,9 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "start": "concurrently \"npm run start:client\" \"cd fastify-server && npm run start\"",
+        "deps": "npm i && cd fastify-server && npm i",
+        "start:client": "react-scripts start",
         "build": "react-scripts build"
     },
     "browserslist": {
@@ -52,6 +54,7 @@
         ]
     },
     "devDependencies": {
+        "concurrently": "^8.2.2",
         "typescript-plugin-css-modules": "^5.1.0"
     }
 }

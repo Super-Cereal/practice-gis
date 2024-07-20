@@ -1,7 +1,11 @@
 import { domain } from './constants';
 
-export function post<T, B>(path: string, body: B): Promise<T> {
-    return fetch(`${domain}${path}`, {
+interface ExtraSettings {
+    domain?: string;
+}
+
+export function post<T, B>(path: string, body: B, settings?: ExtraSettings): Promise<T> {
+    return fetch(`${settings?.domain ?? domain}${path}`, {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {

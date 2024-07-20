@@ -1,3 +1,13 @@
+<<<<<<< HEAD
+﻿using GISServer.Domain.Model;
+using GISServer.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace GISServer.Infrastructure.Repository
+{
+    public class AspectRepository : IAspectRepository
+    {
+=======
 using GISServer.Domain.Model;
 using GISServer.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -36,5 +46,6 @@ namespace GISServer.Infrastructure.Service
             return await GetAspect(aspect.Id);
         }
 
+>>>>>>> f7ad924ea7ca3b79b54bc3c12d8cad91a905e317
     }
 }
