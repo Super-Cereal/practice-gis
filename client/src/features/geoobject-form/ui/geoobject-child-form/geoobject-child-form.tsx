@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react'
-
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useUnit } from 'effector-react';
 
 import { Modal } from '../../../../shared/ui/modal';
 import { Button } from '../../../../shared/ui/button';
-import { DraftGeoObject, GEO_OBJECT_STATUS, GeoObject, geoObjectModel } from '../../../../entities/geoobject';
+import { GEO_OBJECT_STATUS, geoObjectModel } from '../../../../entities/geoobject';
 import { aspects } from '../../../../widgets/map/lib/mocks';
 
 import type { FormFields } from '../../lib/types';
@@ -13,58 +12,67 @@ import { geoObjectFormModel } from '../../lib/geoobject-form.model';
 import { mockedClassifiers } from '../../lib/classifiers';
 import { mapDataToGeoobject } from '../../lib/map-data-to-geoobject';
 
-import styles from './geoobject-edit-from.module.css'
+import styles from './geoobject-child-form.module.css';
 import { editorModel } from '../../../map-editor/lib/editor.model';
 import { mapObjectsModel } from '../../../map-objects/lib/map-objects.model';
+import { addParentChildLinkRequest } from '../../../../entities/geoobject/api/requests';
 import { mapGeoObjectToEditorObject } from '../../lib/map-geoobject-to-data';
-import { updateGeoObjectRequest } from '../../../../entities/geoobject/api/requests';
 
-export const GeoobjectEditFrom = () => {
-    //сохраненные объекты
-    const savedGeoObjects = useUnit(geoObjectModel.$geoObjects)
+//создаем новый объект а затем связь ребенок - родитель
 
-    // сохраненный  объект для изменения
-    const geoObjectforUpdate = useUnit(mapObjectsModel.$selectedGeoobject)
+const typeToLabel = {
+    Point: 'точки',
+    PolyLine: 'линии',
+    Polygon: 'полигона',
+};
 
+export const GeoobjectСhildForm = () => {
     //нужно получить с бэка список классификаторов
     const geoClassifiers = mockedClassifiers;
-  
+    //нужно получить с бэка список классификаторов
+
+    //родитель
+    const parentGeoObject = useUnit(mapObjectsModel.$selectedGeoobject)  
+
     const {
         register,
         handleSubmit,
         formState: { isValid },
         reset,
-    } = useForm<FormFields>({
-        defaultValues: {
-         name: geoObjectforUpdate?.name,
-         aspect: '1',
-         description: geoObjectforUpdate?.geoObjectInfo?.commonInfo,
-         status: geoObjectforUpdate?.status,
-         // чето не робит 
-         classCode: geoObjectforUpdate?.geoObjectInfo?.classifiers?.[0]?.code ?? '', 
-        }
-    });
+    } = useForm<FormFields>();
 
-
-    if (!geoObjectforUpdate) {
+    if (!parentGeoObject) {
         return null;
     }
+    //геометрия родитея
+    const editorObject = mapGeoObjectToEditorObject(parentGeoObject);
 
-    const handleUpdate = async (data: FormFields) => {
-        const updatedObject: GeoObject = {
-            ...mapDataToGeoobject(data, mapGeoObjectToEditorObject(geoObjectforUpdate)),
-            id: geoObjectforUpdate.id, 
-          };
-       
-        await updateGeoObjectRequest(updatedObject);
-        geoObjectFormModel.setIsGeoObjectModalOpen(false);
+   
+    const [showCreateRelationship, setShowCreateRelationship] = useState(false);
+    const [parentId, setParentId] = useState('');
+    const [childId, setChildId] = useState('');
+
+
+    const handleSave = async (data: FormFields) => {
+        const childGeoobject = await geoObjectModel.saveGeoObjectFx(mapDataToGeoobject(data, editorObject));
+        
+        setParentId(parentGeoObject.id);
+        setChildId(childGeoobject.id); 
+        setShowCreateRelationship(true); 
+        
+
+        
+    };
+    const handleCreateRelationship = async () => {
+        await addParentChildLinkRequest({ ParentGeoObjectId: parentId, ChildGeoObjectId: childId });
+        setShowCreateRelationship(false);
+
+        geoObjectFormModel.setIsChildModalOpen(false);
         reset();
-      };
-      
-
+    };
 
     const handleClose = () => {
-        geoObjectFormModel.setIsUpdateModalOpen(false);
+        geoObjectFormModel.setIsChildModalOpen(false);
         reset();
     };
 
@@ -73,13 +81,13 @@ export const GeoobjectEditFrom = () => {
             {/* Описание + id полигона */}
             <div className={styles.formGroup}>
                 <label>
-                    Изменение сохраненного объекта &nbsp;
-                    {geoObjectforUpdate.name}
+                    Создание дочернего геообъекта на основе &nbsp;
+                    {parentGeoObject?.name}
                 </label>
-                <label>ID: {geoObjectforUpdate.id}</label>
+                <label>ID родителя: {editorObject._id}</label>
             </div>
 
-            <form className={styles.form}  onSubmit={handleSubmit(handleUpdate)} >
+            <form className={styles.form} onSubmit={handleSubmit(handleSave)}>
                 <input
                     className={styles.input}
                     type="text"
@@ -145,6 +153,14 @@ export const GeoobjectEditFrom = () => {
                     </Button>
                 </div>
             </form>
+            {showCreateRelationship && (
+                <div>
+                    <p>
+                        Создать связь между родителем (ID: {parentId}) и ребенком (ID: {childId})?
+                    </p>
+                    <Button onClick={handleCreateRelationship}>Создать связь</Button>
+                </div>
+            )}
         </Modal>
     );
-}
+};

@@ -28,7 +28,12 @@ const $isUpdateModalOpen = createStore(false);
 const setIsUpdateModalOpen = createEvent<boolean>();
 sample({ clock: setIsUpdateModalOpen, target: $isUpdateModalOpen });
 
-//object for update
+//form update
+const $isChildModalOpen = createStore(false);
+const setIsChildModalOpen = createEvent<boolean>();
+sample({ clock: setIsChildModalOpen, target: $isChildModalOpen });
+
+
 
 export const geoObjectFormModel = {
     $selectedEditorObject,
@@ -44,5 +49,8 @@ export const geoObjectFormModel = {
     setIsAspectsModalOpen,
 
     $isUpdateModalOpen,
-    setIsUpdateModalOpen
+    setIsUpdateModalOpen,
+
+    $isChildModalOpen,
+    setIsChildModalOpen,
 };

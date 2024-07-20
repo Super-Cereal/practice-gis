@@ -19,6 +19,12 @@ export const MapObjectActions = () => {
     const handleUpdateModalFormOpen = () =>{
         geoObjectFormModel.setIsUpdateModalOpen(true)
     }
+    //form child
+    const handleChildModalFormOpen= ()=>{
+        geoObjectFormModel.setIsChildModalOpen(true)
+        console.log(geoObjectFormModel.$isChildModalOpen.getState());
+        
+    }
 
     if (!selectedGeoobject) {
         return <h3>Нажмите на геообьект, чтобы редактировать его</h3>;
@@ -47,7 +53,7 @@ export const MapObjectActions = () => {
                 ) : (
                     <>
                         <Button  onClick={handleUpdateModalFormOpen} >Изменить родительский геообъект</Button>
-                        <Button /* onClick={handleModalFormOpen} */>Создать дочерний геообъект</Button>
+                        <Button  onClick={handleChildModalFormOpen} >Создать дочерний геообъект</Button>
                     </>
                 )}
 

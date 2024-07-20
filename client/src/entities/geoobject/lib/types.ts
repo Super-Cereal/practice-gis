@@ -53,16 +53,23 @@ interface GeoObjectInfo {
 }
 
 export interface Classifier {
+
+    id?: string;
+
     /** Имя классификатора */
     name?: string;
 
     /** Код классификатора */
-    code: string;
+    code?: string;
 
     /** О чем этот классификатор */
     commonInfo?: string;
 }
+ export interface ParentChildObjectLink  {
+    ParentGeoObjectId: string;
+    ChildGeoObjectId: string;
 
+ }
 export type GeometryGeoJSON =
     | {
           type: 'Point';

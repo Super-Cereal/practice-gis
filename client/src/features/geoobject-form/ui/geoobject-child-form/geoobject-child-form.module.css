@@ -1,0 +1,64 @@
+.formGroup {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.input,
+.textarea {
+    font-family: inherit;
+    font-size: 16px;
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.textarea {
+    resize: vertical;
+    max-height: 100px;
+    height: 40%;
+}
+
+.aspectSelect {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #265178;
+    background-color: white;
+    outline: none;
+    font-size: 1em;
+
+    margin-left: 8px;
+}
+
+.btns {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 20px;
+}
+
+.btn {
+    max-width: 150px;
+}
+.classifierGroup{
+    display: flex;
+    flex-direction: column;
+}
+.classifierSelect{
+    margin-top: 8px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #265178;
+    background-color: white;
+    outline: none;
+    font-size: 1em;
+    max-width: 100%;
+
+}

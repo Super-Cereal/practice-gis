@@ -3,6 +3,12 @@ import { EditorObject } from '../../map-editor';
 
 import { getClassifierCodeWithType } from './classifiers';
 import type { FormFields } from './types';
+import { mockedClassifiers } from './classifiers';
+
+export const getClass = (classCode: string) => {
+    return mockedClassifiers.find((cl) => cl.code === classCode);
+  };
+
 
 export const mapDataToGeoobject = (
     { name, aspect, status, classCode, description }: FormFields,
@@ -22,11 +28,15 @@ export const mapDataToGeoobject = (
     geoObjectInfo: {
         language: 'Russian',
         commonInfo: description,
-        // классифаер на данный момент сперва надо создать
-        classifiers: [
+        // классифаер - затычка с моковыми данными
+         classifiers: [
             {
-                code: getClassifierCodeWithType(type, classCode),
+                id: getClass(classCode)?.id,
+                code: getClass(classCode)?.code,
+                name:getClass(classCode)?.name,
+                commonInfo: getClass(classCode)?.commonInfo
+
             },
-        ],
+        ], 
     },
 });
