@@ -58,5 +58,16 @@ namespace GISServer.API.Service
                 return null;
             }
         }
+        public async Task<(bool, string)> DeleteTopologyLink(Guid id)
+        {
+            try
+            {
+                return await _repository.DeleteTopologyLink(id);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"An error occured. Error Message: {ex.Message}");
+            }
+        }
     }
 }

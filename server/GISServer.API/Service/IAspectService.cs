@@ -10,5 +10,6 @@ namespace GISServer.API.Service
         public Task<AspectDTO> GetAspect(Guid id);
         public Task<List<AspectDTO>> GetAspects();
         public String CallAspect(String endPoint);
+        public Task<(bool, string)> DeleteAspect(Guid id);
     }
 }

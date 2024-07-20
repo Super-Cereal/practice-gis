@@ -44,5 +44,19 @@ namespace GISServer.API.Controllers
 
             return CreatedAtAction("GetTopologyLinks", new { topologyLinkDTO });
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTopologyLink(Guid id)
+        {
+            (bool status, string message) = await _topologyService.DeleteTopologyLink(id);
+            
+
+            if (status == false)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
+            }
+            return NoContent();
+        }
+
     }
 }

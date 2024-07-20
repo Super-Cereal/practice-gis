@@ -45,5 +45,16 @@ namespace GISServer.API.Controllers
 
             return CreatedAtAction("GetParentChildLinks", new { parentChildLinkDTO });
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteParentChildLink(Guid id)
+        {
+            (bool status, string message) = await _parentChildService.DeleteParentChildLink(id);
+
+            if (status == false)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
+            }
+            return NoContent();
+        }
     }
 }

@@ -52,6 +52,17 @@ namespace GISServer.Infrastructure.Service
             await _context.SaveChangesAsync();
             return await GetTopologyLink(topologyLink.Id);
         }
+        public async Task<(bool, string)> DeleteTopologyLink(Guid id)
+        {
 
+            var dbTopologyLink = await GetTopologyLink(id);
+            if (dbTopologyLink == null)
+            {
+                return (false, "TopologyLink could not be found");
+            }
+            _context.TopologyLinks.Remove(dbTopologyLink);
+            await _context.SaveChangesAsync();
+            return (true, "TopologyLink got deleted");
+        }
     }
 }
