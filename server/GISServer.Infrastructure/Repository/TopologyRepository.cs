@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-﻿using GISServer.Domain.Model;
-using GISServer.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-
-namespace GISServer.Infrastructure.Repository
-{
-    public class TopologyRepository
-    {
-=======
 using GISServer.Domain.Model;
 using GISServer.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -65,9 +55,6 @@ namespace GISServer.Infrastructure.Service
         public async Task<(bool, string)> DeleteTopologyLink(Guid id)
         {
 
-<<<<<<< HEAD
->>>>>>> f7ad924ea7ca3b79b54bc3c12d8cad91a905e317
-=======
             var dbTopologyLink = await GetTopologyLink(id);
             if (dbTopologyLink == null)
             {
@@ -77,6 +64,6 @@ namespace GISServer.Infrastructure.Service
             await _context.SaveChangesAsync();
             return (true, "TopologyLink got deleted");
         }
->>>>>>> mylocal
+
     }
 }
