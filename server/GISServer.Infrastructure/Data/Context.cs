@@ -27,11 +27,7 @@ namespace GISServer.Infrastructure.Data
         {
             if (!builder.IsConfigured)
             {
-<<<<<<< HEAD
                 builder.UseNpgsql("Host=localhost;Port=5432;Database=gisserver;Username=postgres;Password=12345;",
-=======
-                builder.UseNpgsql("Host=localhost;Port=5432;Database=gisserver;Username=postgres;Password=admin;",
->>>>>>> a44333b7008197c897c747ea4f866317742d6172
                 o => o.UseNetTopologySuite());
             }
         }
