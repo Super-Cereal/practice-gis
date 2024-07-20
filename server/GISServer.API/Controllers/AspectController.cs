@@ -62,5 +62,17 @@ namespace GISServer.API.Controllers
             String reportAspect = _aspectService.CallAspect(endPoint);
             return StatusCode(StatusCodes.Status200OK, reportAspect);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAspect(Guid id)
+        {
+            (bool status, string message) = await _aspectService.DeleteAspect(id);
+
+            if (status == false)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
+            }
+            return NoContent();
+        }
     }
 }

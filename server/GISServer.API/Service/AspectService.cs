@@ -60,6 +60,16 @@ namespace GISServer.API.Service
             String report = "some information";
             return report;
         }
-
+        public async Task<(bool, string)> DeleteAspect(Guid id)
+        {
+            try
+            {
+                return await _repository.DeleteAspect(id);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"An error occured. Error Message: {ex.Message}");
+            }
+        }
     }
 }

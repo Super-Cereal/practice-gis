@@ -8,5 +8,6 @@ namespace GISServer.API.Service
         public ParentChildObjectLinkDTO CreateGuid(ParentChildObjectLinkDTO parentChildObjectLinkDTO);
         public Task<ParentChildObjectLinkDTO> AddParentChildLink(ParentChildObjectLinkDTO parentChildObjectLinkDTO);
         public Task<List<ParentChildObjectLinkDTO>> GetParentChildLinks();
+        public Task<(bool, string)> DeleteParentChildLink(Guid id);
     }
 }

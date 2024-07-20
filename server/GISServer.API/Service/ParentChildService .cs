@@ -60,5 +60,16 @@ namespace GISServer.API.Service
                 return null;
             }
         }
+        public async Task<(bool, string)> DeleteParentChildLink(Guid id)
+        {
+            try
+            {
+                return await _repository.DeleteParentChildLink(id);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"An error occured. Error Message: {ex.Message}");
+            }
+        }
     }
 }

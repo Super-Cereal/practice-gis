@@ -1,5 +1,6 @@
 ﻿using GISServer.API.Model;
 using GISServer.Domain.Model;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GISServer.API.Service
 {
@@ -8,5 +9,6 @@ namespace GISServer.API.Service
         public TopologyLinkDTO CreateGuid(TopologyLinkDTO topologyLinkDTO);
         public Task<TopologyLinkDTO> AddTopologyLink(TopologyLinkDTO topologyLinkDTO);
         public Task<List<TopologyLinkDTO>> GetTopologyLinks();
+        public Task<(bool, string)> DeleteTopologyLink(Guid id);
     }
 }

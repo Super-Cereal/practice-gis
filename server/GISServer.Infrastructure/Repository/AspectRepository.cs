@@ -45,6 +45,18 @@ namespace GISServer.Infrastructure.Service
             await _context.SaveChangesAsync();
             return await GetAspect(aspect.Id);
         }
+        public async Task<(bool, string)> DeleteAspect(Guid id)
+        {
+
+            var dbAspect = await GetAspect(id);
+            if (dbAspect == null)
+            {
+                return (false, "Aspect could not be found");
+            }
+            _context.Aspects.Remove(dbAspect);
+            await _context.SaveChangesAsync();
+            return (true, "Aspect got deleted");
+        }
 
 >>>>>>> f7ad924ea7ca3b79b54bc3c12d8cad91a905e317
     }

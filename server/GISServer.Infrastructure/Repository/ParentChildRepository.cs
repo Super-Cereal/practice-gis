@@ -50,5 +50,17 @@ namespace GISServer.Infrastructure.Service
             return await GetParentChildLink(parentChildObjectLink.Id);
         }
 
+        public async Task<(bool, string)> DeleteParentChildLink(Guid id)
+        {
+            var dbParentChildLink = await GetParentChildLink(id);
+            if (dbParentChildLink == null)
+            {
+                return (false, "ParentChildLink could not be found");
+            }
+            _context.ParentChildObjectLinks.Remove(dbParentChildLink);
+            await _context.SaveChangesAsync();
+            return (true, "ParentChildLink got deleted");
+        }
+
     }
 }
