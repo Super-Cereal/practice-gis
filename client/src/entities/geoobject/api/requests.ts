@@ -1,4 +1,4 @@
-import { get, post, put } from '../../../shared/lib/fetch';
+import { get, post, put, del } from '../../../shared/lib/fetch';
 import type { GeoObject, DraftGeoObject, ParentChildObjectLink } from '../lib/types';
 
 export const getGeoObjectsRequest = async () => {
@@ -24,4 +24,9 @@ export const updateGeoObjectRequest = async (object: GeoObject) => {
 export const addParentChildLinkRequest = async (parentChildLink: ParentChildObjectLink) => {
     const data = await post<ParentChildObjectLink[], ParentChildObjectLink>('/api/ParentChild/AddParentChildLink', parentChildLink);
     return data;
+};
+
+export const deleteGeoObjectRequest = async (id: string) => {
+    await del(`/api/GeoObject/${id}`);
+    
 };

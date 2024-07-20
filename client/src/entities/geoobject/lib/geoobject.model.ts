@@ -2,7 +2,7 @@ import { createStore, sample, createEffect, createEvent } from 'effector';
 import { status } from 'patronum/status';
 import { debounce } from 'patronum/debounce';
 
-import { getGeoObjectsRequest, saveGeoObjectRequest, updateGeoObjectRequest } from '../api/requests';
+import { deleteGeoObjectRequest, getGeoObjectsRequest, saveGeoObjectRequest, updateGeoObjectRequest } from '../api/requests';
 import type { GeoObject } from './types';
 
 // Создаем стор
@@ -33,6 +33,10 @@ sample({ clock: saveGeoObjectFx.doneData, target: getGeoObjectsFx });
 const updateGeoObjectFx = createEffect(updateGeoObjectRequest);
 const $updateGeoObjectLoading = status(updateGeoObjectFx);
 
+// Удалить геообьект в бэк
+const deleteGeoObjectFx = createEffect(deleteGeoObjectRequest);
+const $deleteGeoObjectLoading = status(deleteGeoObjectFx);
+
 export const geoObjectModel = {
     $geoObjects,
 
@@ -45,4 +49,7 @@ export const geoObjectModel = {
 
     $updateGeoObjectLoading,
     updateGeoObjectFx,
+
+    $deleteGeoObjectLoading,
+    deleteGeoObjectFx,
 };

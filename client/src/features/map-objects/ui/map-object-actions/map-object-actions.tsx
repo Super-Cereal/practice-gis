@@ -6,7 +6,7 @@ import { mapObjectsModel } from '../../lib/map-objects.model';
 import { mapModel } from '../../../../entities/map';
 
 import styles from './map-object-actions.module.css';
-import { getGeometry } from '../../../../entities/geoobject';
+import { geoObjectModel, getGeometry } from '../../../../entities/geoobject';
 import { MapObjectIdWithCopy } from '../map-object-id-with-copy/map-object-id-with-copy';
 import { geoObjectFormModel } from '../../../geoobject-form';
 
@@ -38,7 +38,10 @@ export const MapObjectActions = () => {
     const { id, name } = selectedGeoobject;
     const { type } = geometry;
 
-    const handleDelete = () => {};
+    const handleDelete = async (id: string) => {
+     await geoObjectModel.deleteGeoObjectFx(id)
+
+    };
 
     return (
         <div>
@@ -57,7 +60,7 @@ export const MapObjectActions = () => {
                     </>
                 )}
 
-                <Button onClick={handleDelete} color="orange">
+                <Button onClick={() => handleDelete(id)} color="orange">
                     Удалить
                 </Button>
             </div>
