@@ -111,7 +111,9 @@ export const GeoobjectForm = () => {
                     >
                         {Object.keys(GEO_OBJECT_STATUS).map((key) => (
                             // @ts-ignore
-                            <option value={GEO_OBJECT_STATUS[key]}>{key}</option>
+                            <option key={key} value={GEO_OBJECT_STATUS[key]}>
+                                {key}
+                            </option>
                         ))}
                     </select>
                 </div>

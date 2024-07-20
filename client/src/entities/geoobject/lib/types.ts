@@ -1,3 +1,4 @@
+import type { LatLngTuple } from 'leaflet';
 import type { GEO_OBJECT_STATUS } from './constants';
 
 export interface GeoObject extends DraftGeoObject {
@@ -73,9 +74,9 @@ export interface Classifier {
 export type GeometryGeoJSON =
     | {
           type: 'Point';
-          coordinates: [number, number];
+          coordinates: LatLngTuple;
       }
     | {
           type: 'PolyLine' | 'Polygon';
-          coordinates: [number, number][];
+          coordinates: LatLngTuple[];
       };

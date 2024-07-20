@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useUnit } from 'effector-react';
 import { Circle, Polyline, Polygon } from 'react-leaflet';
 
@@ -12,25 +12,6 @@ import { EditorObject } from '../../lib/types';
 export const MapEditorObjects = () => {
     const objects = useUnit(editorModel.$objects);
 
-    const getProps = ({ _id, type, selected, readonly, coordinates }: EditorObject) => {
-        const common: Record<string, any> = {
-            key: _id,
-            pathOptions: getColorOptions(selected, readonly),
-            eventHandlers: {
-                click: () => !selected && editorModel.toggleObjectSelect(_id),
-            },
-        };
-
-        switch (type) {
-            case 'Point':
-                return { ...common, radius: 16, center: coordinates, Component: Circle };
-            case 'PolyLine':
-                return { ...common, weight: 7, positions: coordinates, Component: Polyline };
-            case 'Polygon':
-                return { ...common, positions: coordinates, Component: Polygon };
-        }
-    };
-
     return (
         <>
             {Object.values(objects).map((object) => {
@@ -38,11 +19,31 @@ export const MapEditorObjects = () => {
 
                 return (
                     // @ts-ignore
-                    <Component {...props}>
+                    <Component {...props} key={object._id}>
                         <MapEditorPopup object={object} />
                     </Component>
                 );
             })}
         </>
     );
+};
+
+const getProps = (object: EditorObject) => {
+    const { _id, type, selected, readonly, coordinates } = object;
+
+    const common: Record<string, any> = {
+        pathOptions: getColorOptions(selected, readonly),
+        eventHandlers: {
+            click: () => !selected && editorModel.toggleObjectSelect(_id),
+        },
+    };
+
+    switch (type) {
+        case 'Point':
+            return { ...common, radius: 16, center: coordinates, Component: Circle };
+        case 'PolyLine':
+            return { ...common, weight: 7, positions: coordinates, Component: Polyline };
+        case 'Polygon':
+            return { ...common, positions: coordinates, Component: Polygon };
+    }
 };

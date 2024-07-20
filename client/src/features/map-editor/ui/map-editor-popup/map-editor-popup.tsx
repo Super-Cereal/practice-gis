@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Popup } from 'react-leaflet';
 import { useUnit } from 'effector-react';
 
@@ -16,11 +16,13 @@ interface Props {
 }
 
 /** Рендерит попап для черновиковых обьектов на карте */
-export const MapEditorPopup = (props: Props) => (
-    <Popup>
-        <Content {...props} />
-    </Popup>
-);
+export const MapEditorPopup = (props: Props) => {
+    return (
+        <Popup>
+            <Content {...props} />
+        </Popup>
+    );
+};
 
 /** Выделяем отдельно, чтобы не рендерить, пока попап скрыт */
 const Content = ({ object }: Props) => {
@@ -50,6 +52,7 @@ const Content = ({ object }: Props) => {
     //     geoObjectFormModel.setSelectedEditorObject({ _id, type });
     //     geoObjectFormModel.setIsAspectsModalOpen(true);
     // };
+
     return (
         <>
             <h3>

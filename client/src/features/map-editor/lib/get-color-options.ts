@@ -1,5 +1,4 @@
 import type { PathOptions } from 'leaflet';
-import { EditorObject } from './types';
 
 export const defaultOptions: PathOptions = {
     fillColor: 'gray',

@@ -1,37 +1,42 @@
-import { GeometryGeoJSON, GeoObject } from "../../../entities/geoobject";
-import { EditorObject } from "../../map-editor";
+import type { LatLngTuple } from 'leaflet';
+
+import { type GeoObject, getGeometry } from '../../../entities/geoobject';
+import type { EditorObject } from '../../map-editor';
 
 export const mapGeoObjectToEditorObject = (geoObject: GeoObject): EditorObject => {
-  const geometry = JSON.parse(geoObject.geometry.borderGeocodes) as GeometryGeoJSON;
+    const geometry = getGeometry(geoObject);
 
-  let coordinates: [number, number][] = [];
+    if (!geometry) {
+        throw new Error(`У обьекта поломана геометрия`);
+    }
 
-  if (geometry.type === 'Point') {
-    coordinates = [[geometry.coordinates[0], geometry.coordinates[1]]];
-  } else if (geometry.type === 'PolyLine' || geometry.type === 'Polygon') {
-    coordinates = geometry.coordinates;
-  }
+    let coordinates: LatLngTuple[] = [];
 
-  if (geometry.type === 'Point') {
-    return {
-      _id: geoObject.id,
-      type: 'Point',
-      coordinates: coordinates[0],
-    };
-  } else if (geometry.type === 'PolyLine') {
-    return {
-      _id: geoObject.id,
-      type: 'PolyLine',
-      coordinates,
-    };
-  } else if (geometry.type === 'Polygon') {
-    return {
-      _id: geoObject.id,
-      type: 'Polygon',
-      coordinates,
-    };
-  }
+    if (geometry.type === 'Point') {
+        coordinates = [[geometry.coordinates[0], geometry.coordinates[1]]];
+    } else if (geometry.type === 'PolyLine' || geometry.type === 'Polygon') {
+        coordinates = geometry.coordinates;
+    }
 
-  throw new Error(`Unsupported geometry type: ${geometry.type}`);
+    if (geometry.type === 'Point') {
+        return {
+            _id: geoObject.id,
+            type: 'Point',
+            coordinates: coordinates[0],
+        };
+    } else if (geometry.type === 'PolyLine') {
+        return {
+            _id: geoObject.id,
+            type: 'PolyLine',
+            coordinates,
+        };
+    } else if (geometry.type === 'Polygon') {
+        return {
+            _id: geoObject.id,
+            type: 'Polygon',
+            coordinates,
+        };
+    }
+
+    throw new Error(`Unsupported geometry type: ${geometry.type}`);
 };
-

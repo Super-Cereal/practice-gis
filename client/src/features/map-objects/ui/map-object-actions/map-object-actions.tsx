@@ -16,15 +16,14 @@ export const MapObjectActions = () => {
     const selectedAspect = useUnit(mapModel.$mapAspect);
 
     //from update
-    const handleUpdateModalFormOpen = () =>{
-        geoObjectFormModel.setIsUpdateModalOpen(true)
-    }
+    const handleUpdateModalFormOpen = () => {
+        geoObjectFormModel.setIsUpdateModalOpen(true);
+    };
     //form child
-    const handleChildModalFormOpen= ()=>{
-        geoObjectFormModel.setIsChildModalOpen(true)
+    const handleChildModalFormOpen = () => {
+        geoObjectFormModel.setIsChildModalOpen(true);
         console.log(geoObjectFormModel.$isChildModalOpen.getState());
-        
-    }
+    };
 
     if (!selectedGeoobject) {
         return <h3>Нажмите на геообьект, чтобы редактировать его</h3>;
@@ -39,8 +38,7 @@ export const MapObjectActions = () => {
     const { type } = geometry;
 
     const handleDelete = async (id: string) => {
-     await geoObjectModel.deleteGeoObjectFx(id)
-
+        await geoObjectModel.deleteGeoObjectFx(id);
     };
 
     return (
@@ -52,11 +50,13 @@ export const MapObjectActions = () => {
 
             <div className={styles.btns}>
                 {selectedAspect ? (
-                    <Button /* onClick={handleUpdateModalFormOpen} */>Создать {selectedAspect.title} для геообъекта</Button>
+                    <Button /* onClick={handleUpdateModalFormOpen} */>
+                        Создать {selectedAspect.title} для геообъекта
+                    </Button>
                 ) : (
                     <>
-                        <Button  onClick={handleUpdateModalFormOpen} >Изменить родительский геообъект</Button>
-                        <Button  onClick={handleChildModalFormOpen} >Создать дочерний геообъект</Button>
+                        <Button onClick={handleUpdateModalFormOpen}>Изменить родительский геообъект</Button>
+                        <Button onClick={handleChildModalFormOpen}>Создать дочерний геообъект</Button>
                     </>
                 )}
 

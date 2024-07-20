@@ -1,7 +1,21 @@
+.title {
+    min-width: 200px;
+}
+
 .content {
     font-size: 16px;
 }
 
+.bottom,
+.bottomBlock {
+    display: flex;
+    flex-direction: column;
+}
+
 .bottom {
     margin-top: 12px;
+}
+
+.bottomBlock {
+    margin: 8px 0;
 }

@@ -85,7 +85,10 @@ export const editorModel = {
     unitePointsTo,
 };
 
-/** Когда загрузились сохраненные обьекты, то на границе  */
+/**
+ * Когда загрузились сохраненные обьекты или переключилась настройка,
+ * то на углах полигонов и линий ставим точки для создания границ
+ */
 sample({
     clock: [mapModel.$editorPointsOnCorners, geoObjectModel.$geoObjects],
     source: {
