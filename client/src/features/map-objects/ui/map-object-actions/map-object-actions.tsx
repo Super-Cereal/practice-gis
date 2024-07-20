@@ -8,11 +8,17 @@ import { mapModel } from '../../../../entities/map';
 import styles from './map-object-actions.module.css';
 import { getGeometry } from '../../../../entities/geoobject';
 import { MapObjectIdWithCopy } from '../map-object-id-with-copy/map-object-id-with-copy';
+import { geoObjectFormModel } from '../../../geoobject-form';
 
 /** Рендерит возможные действия с геообьектом */
 export const MapObjectActions = () => {
     const selectedGeoobject = useUnit(mapObjectsModel.$selectedGeoobject);
     const selectedAspect = useUnit(mapModel.$mapAspect);
+
+    //from update
+    const handleUpdateModalFormOpen = () =>{
+        geoObjectFormModel.setIsUpdateModalOpen(true)
+    }
 
     if (!selectedGeoobject) {
         return <h3>Нажмите на геообьект, чтобы редактировать его</h3>;
@@ -37,10 +43,10 @@ export const MapObjectActions = () => {
 
             <div className={styles.btns}>
                 {selectedAspect ? (
-                    <Button /* onClick={handleModalFormOpen} */>Создать {selectedAspect.title} для геообъекта</Button>
+                    <Button /* onClick={handleUpdateModalFormOpen} */>Создать {selectedAspect.title} для геообъекта</Button>
                 ) : (
                     <>
-                        <Button /* onClick={handleModalFormOpen} */>Изменить родительский геообъект</Button>
+                        <Button  onClick={handleUpdateModalFormOpen} >Изменить родительский геообъект</Button>
                         <Button /* onClick={handleModalFormOpen} */>Создать дочерний геообъект</Button>
                     </>
                 )}

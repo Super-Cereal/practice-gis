@@ -8,7 +8,7 @@ import { geoObjectModel } from '../../entities/geoobject';
 import { InfoPlate } from '../../features/info-plate';
 import { Aspects } from '../../features/aspects';
 import { MapEditorActions, MapEditorObjects } from '../../features/map-editor';
-import { geoObjectFormModel, GeoobjectForm, GeoaspectsList } from '../../features/geoobject-form';
+import { geoObjectFormModel, GeoobjectForm, GeoaspectsList, GeoobjectEditFrom } from '../../features/geoobject-form';
 import { MapObjectActions, MapObjects } from '../../features/map-objects';
 
 import { aspects } from './lib/mocks';
@@ -21,6 +21,7 @@ export const Map = () => {
 
     const isModalFormOpen = useUnit(geoObjectFormModel.$isGeoObjectModalOpen);
     const isModalAspectsOpen = useUnit(geoObjectFormModel.$isAspectsModalOpen);
+    const isUpdateModalsOpen = useUnit(geoObjectFormModel.$isUpdateModalOpen);
 
     const mapEditable = $mapMode === 'edit';
 
@@ -51,7 +52,7 @@ export const Map = () => {
 
                 <aside className={styles.actions}>{mapEditable ? <MapEditorActions /> : <MapObjectActions />}</aside>
             </div>
-
+            {isUpdateModalsOpen && <GeoobjectEditFrom/>}
             {isModalFormOpen && <GeoobjectForm />}
             {isModalAspectsOpen && <GeoaspectsList />}
         </>
