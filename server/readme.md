@@ -61,7 +61,33 @@
 И заново создайте ее.
 `dotnet ef database update -s ./GISServer.API -p ./GISServer.Infrastructure`.
 
-> ↑↑↑ В любой непонятной ситуации с сервером сносите базу данных и создавайте ее заново ↑↑↑
+### Если ошибка что какой-то таблицы не существует
+
+Посмотрите список миграций
+`dotnet ef migrations -s .\GISServer.API\ -p .\GISServer.Infrastructure\ list`
+
+В полученном списке ***только одна миграция***(желательно последняя) должна быть вот так отмечена словом ***(Pending)***
+> ...
+> 20240718182923_migr1807
+> 20240721105337_migr2107 (Pending)
+
+Если у вас несколько таких помечаных миграций, то нужно оставить самую последнюю, а остальные помечанные удалить(вместе с его же файлом .Designer.cs).
+
+Я пользовался командой dotnet для этого(и вам советую), которая удаляет самую последнюю миграцию из того списка. Соответственно надо повторить ее столько раз сколько было помечано миграций).
+`dotnet ef migrations remove -s .\GISServer.API\ -p .\GISServer.Infrastructure\`.
+
+После удаления надо создать новую миграцию.
+`dotnet ef migrations add [name_migration] -s .\GISServer.API\ -p .\GISServer.Infrastructure\`.
+
+> Для проверки. После команды вывода списка миграций только ваша новая миграция должна быть помечана (Pendgin).
+
+Чистим базу данных.
+
+`dotnet ef database drop -s .\GISServer.API\ -p .\GISServer.Infrastructure\`.
+
+И создаем ее заново.
+
+`dotnet ef database update -s .\GISServer.API\ -p .\GISServer.Infrastructure\`
 
 ## Пример структуры объекта
 
