@@ -39,5 +39,18 @@ namespace GISServer.API.Service
                 return null;
             }
         }
+
+        public async Task<(bool, string)> DeleteGeoObjectClassifier(Guid geoObjectId, Guid classifierId)
+        {
+            try
+            {
+                return await _repository.DeleteGeoObjectClassifier(geoObjectId, classifierId);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"An error occured. Error Message: {ex.Message}");
+            }
+        }
+        
     }
 }

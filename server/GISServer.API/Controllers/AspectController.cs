@@ -18,7 +18,7 @@ namespace GISServer.API.Controllers
             _aspectService = aspectService;
         }
 
-        [HttpGet("Aspect")]
+        [HttpGet]
         public async Task<ActionResult> GetAspect()
         {
             var dbAspects = await _aspectService.GetAspects();
@@ -29,7 +29,7 @@ namespace GISServer.API.Controllers
             return StatusCode(StatusCodes.Status200OK, dbAspects);
         }
 
-        [HttpPost("Aspect")]
+        [HttpPost]
         public async Task<ActionResult> PostAspect(AspectDTO aspectDTO)
         {
             aspectDTO.Id = Guid.NewGuid();
@@ -43,7 +43,7 @@ namespace GISServer.API.Controllers
             return CreatedAtAction("GetAspect", new { aspectDTO });
         }
 
-        [HttpGet("Aspect/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult> GetAspect(Guid id)
         {
             var dbAspect = await _aspectService.GetAspect(id);

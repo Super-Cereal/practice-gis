@@ -18,7 +18,7 @@ namespace GISServer.API.Controllers
             _classifierService = classifierService;
         }
 
-        [HttpGet("Classifier")]
+        [HttpGet]
         public async Task<ActionResult> GetClassifier()
         {
             var getClassifiers = await _classifierService.GetClassifiers();
@@ -30,7 +30,7 @@ namespace GISServer.API.Controllers
             return StatusCode(StatusCodes.Status200OK, getClassifiers);
         }
 
-        [HttpGet("Classifier/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult> GetClassifier(Guid id)
         {
             var classifier = await _classifierService.GetClassifier(id);
@@ -43,7 +43,7 @@ namespace GISServer.API.Controllers
             return StatusCode(StatusCodes.Status200OK, classifier);
         }
 
-        [HttpPost("Classifier")]
+        [HttpPost]
         public async Task<ActionResult<ClassifierDTO>> PostClassifier(ClassifierDTO classifierDTO)
         {
             try{

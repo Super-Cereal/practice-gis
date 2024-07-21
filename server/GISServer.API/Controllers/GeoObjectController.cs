@@ -11,10 +11,14 @@ namespace GISServer.API.Controllers
     public class GeoObjectController : ControllerBase
     {
         private readonly IGeoObjectService _geoObjectService;
+        private readonly IGeoObjectClassifiersService _geoObjectClassifierService;
 
-        public GeoObjectController(IGeoObjectService service)
+        public GeoObjectController(
+                IGeoObjectService service, 
+                IGeoObjectClassifiersService geoObjectClassifierService)
         {
             _geoObjectService = service;
+            _geoObjectClassifierService = geoObjectClassifierService;
         }
 
         [HttpGet]
@@ -114,6 +118,20 @@ namespace GISServer.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
             }
         }
+
+        [HttpDelete("DeleteClassifier")]
+        public async Task<IActionResult> DeleteGeoObject(Guid geoObjectId, Guid classifierId)
+        {
+            (bool status, string message) = await _geoObjectClassifierService.DeleteGeoObjectClassifier(geoObjectId, classifierId);
+
+            if (status == false)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
+            }
+
+            return NoContent();
+        }
+
       
         [HttpGet("GetAspects/{id}")]
         public async Task<ActionResult> GetGeoObjectAspects(Guid geoObjectId)
