@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useUnit } from 'effector-react';
 
@@ -14,8 +14,7 @@ import { mapDataToGeoobject } from '../../lib/map-data-to-geoobject';
 
 import styles from './geoobject-form.module.css';
 import { editorModel } from '../../../map-editor/lib/editor.model';
-
-//нужно получить с бэка список классификаторов
+import { ClassifierForm } from '../classifier-form/classifier-form';
 
 const typeToLabel = {
     Point: 'точки',
@@ -25,9 +24,11 @@ const typeToLabel = {
 
 /** Пока что только сохраняет черновики */
 export const GeoobjectForm = () => {
-    //нужно получить с бэка список классификаторов
-    const geoClassifiers = mockedClassifiers;
-    //нужно получить с бэка список классификаторов
+    
+    const [GeoObjectId, setGeoObjectId] =  useState('')
+    const isClassifierFormOpen = useUnit(geoObjectFormModel.$isClassifierFormOpen)
+
+    // поля для формы
     const {
         register,
         handleSubmit,
@@ -35,6 +36,7 @@ export const GeoobjectForm = () => {
         reset,
     } = useForm<FormFields>();
 
+    //черновая геометрия
     const editorObject = useUnit(geoObjectFormModel.$selectedEditorObject);
 
     if (!editorObject) {
@@ -42,13 +44,18 @@ export const GeoobjectForm = () => {
     }
 
     const handleSave = async (data: FormFields) => {
-        await geoObjectModel.saveGeoObjectFx(mapDataToGeoobject(data, editorObject));
+        const response = await geoObjectModel.saveGeoObjectFx(mapDataToGeoobject(data, editorObject));
 
+        // Сохраняем id геообъекта в состояние приложения
+        setGeoObjectId(response.id);
+        // Отображаем блок для добавления классификатора
+        geoObjectFormModel.setIsClassifierFormOpen(true)
+    
         // После успешного сохранения удаляем выбранный обьект
         editorModel.deleteObject(editorObject._id);
 
-        geoObjectFormModel.setIsGeoObjectModalOpen(false);
-        reset();
+        /* geoObjectFormModel.setIsGeoObjectModalOpen(false);
+        reset(); */
     };
 
     const handleClose = () => {
@@ -91,17 +98,6 @@ export const GeoobjectForm = () => {
                     placeholder="Описание"
                     {...register('description', { required: true })}
                 />
-
-                <div className={styles.classifierGroup}>
-                    <label>Код классификатора: </label>
-                    <select className={styles.classifierSelect} {...register('classCode', { required: true })}>
-                        {geoClassifiers.map((cl) => (
-                            <option className={styles.aspectOption} key={cl.code} value={cl.code}>
-                                {cl.code} - {cl.commonInfo}
-                            </option>
-                        ))}
-                    </select>
-                </div>
                 <div>
                     <label>Статус: </label>
                     <select
@@ -135,6 +131,11 @@ export const GeoobjectForm = () => {
                     </Button>
                 </div>
             </form>
+            {
+                isClassifierFormOpen && <>
+                <ClassifierForm geoObjectId={GeoObjectId}/>
+                </>
+            }
         </Modal>
     );
 };

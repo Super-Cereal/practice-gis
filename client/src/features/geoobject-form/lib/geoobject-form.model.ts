@@ -13,6 +13,11 @@ const $selectedGeoObject = createStore<GeoObject | null>(null);
 const setSelectedGeoObject = createEvent<GeoObject | null>();
 sample({ clock: setSelectedGeoObject, target: $selectedGeoObject });
 
+// Создаем стор для выбранного геообъекта ID
+const $selectedGeoObjectId = createStore<string | null>(null);
+const setSelectedGeoObjectId = createEvent<string | null>();
+sample({ clock: setSelectedGeoObject, target: $selectedGeoObject });
+
 //form
 const $isGeoObjectModalOpen = createStore(false);
 const setIsGeoObjectModalOpen = createEvent<boolean>();
@@ -32,6 +37,11 @@ sample({ clock: setIsUpdateModalOpen, target: $isUpdateModalOpen });
 const $isChildModalOpen = createStore(false);
 const setIsChildModalOpen = createEvent<boolean>();
 sample({ clock: setIsChildModalOpen, target: $isChildModalOpen });
+
+//classifier
+const $isClassifierFormOpen = createStore(false);
+const setIsClassifierFormOpen = createEvent<boolean>();
+sample({ clock: setIsClassifierFormOpen, target: $isClassifierFormOpen  });
 
 
 
@@ -53,4 +63,11 @@ export const geoObjectFormModel = {
 
     $isChildModalOpen,
     setIsChildModalOpen,
+
+    $isClassifierFormOpen,
+    setIsClassifierFormOpen,
+
+    $selectedGeoObjectId,
+    setSelectedGeoObjectId
+
 };

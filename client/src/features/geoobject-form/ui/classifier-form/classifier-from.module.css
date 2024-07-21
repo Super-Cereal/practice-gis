@@ -1,0 +1,25 @@
+.btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+.btn {
+    max-width: 150px;
+    margin-top: 20px;
+}
+.classifierGroup{
+    display: flex;
+    flex-direction: column;
+}
+.classifierSelect{
+    margin-top: 8px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #265178;
+    background-color: white;
+    outline: none;
+    font-size: 1em;
+    max-width: 100%;
+
+}

@@ -54,9 +54,7 @@ interface GeoObjectInfo {
 }
 
 export interface Classifier {
-
-   
-
+    id?: string;
     /** Имя классификатора */
     name?: string;
 
@@ -66,6 +64,15 @@ export interface Classifier {
     /** О чем этот классификатор */
     commonInfo?: string;
 }
+
+export interface GeoObjectsClassifier {
+
+    geoObjectId?: string;
+
+    classifierId?: string;
+}
+
+
  export interface ParentChildObjectLink  {
     ParentGeoObjectId: string;
     ChildGeoObjectId: string;
