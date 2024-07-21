@@ -35,14 +35,13 @@ namespace GISServer.API.Controllers
             Guid guid = Guid.NewGuid();
             topologyLinkDTO.Id = guid;
 
-            var dbTopologyLink = await _topologyService.AddTopologyLink(topologyLinkDTO);
+            var dbTopologyLinkDTO = await _topologyService.AddTopologyLink(topologyLinkDTO);
 
-            if (dbTopologyLink == null)
+            if (dbTopologyLinkDTO == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
             }
-
-            return CreatedAtAction("GetTopologyLinks", new { topologyLinkDTO });
+            return StatusCode(StatusCodes.Status200OK, dbTopologyLinkDTO);
         }
 
         [HttpDelete("{id}")]

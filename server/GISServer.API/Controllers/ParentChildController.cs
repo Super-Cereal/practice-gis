@@ -18,7 +18,7 @@ namespace GISServer.API.Controllers
             _parentChildService = parentChildService;
         }
 
-        [HttpGet("GetParentChildLinks")]
+        [HttpGet("Link")]
         public async Task<ActionResult> GetParentChildLinks()
         {
             var dbParentChildLinks = await _parentChildService.GetParentChildLinks();
@@ -30,20 +30,19 @@ namespace GISServer.API.Controllers
             return StatusCode(StatusCodes.Status200OK, dbParentChildLinks);
         }
 
-        [HttpPost("AddParentChildLink")]
+        [HttpPost("Link")]
         public async Task<ActionResult> PostParentChildLinks(ParentChildObjectLinkDTO parentChildLinkDTO)
         {
             Guid guid = Guid.NewGuid();
             parentChildLinkDTO.Id = guid;
 
-            var dbParentChildLink = await _parentChildService.AddParentChildLink(parentChildLinkDTO);
+            var dbParentChildLinkDTO = await _parentChildService.AddParentChildLink(parentChildLinkDTO);
 
-            if (dbParentChildLink == null)
+            if (dbParentChildLinkDTO == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "The relationship could not be added.");
             }
-
-            return CreatedAtAction("GetParentChildLinks", new { parentChildLinkDTO });
+            return StatusCode(StatusCodes.Status200OK, dbParentChildLinkDTO);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteParentChildLink(Guid id)

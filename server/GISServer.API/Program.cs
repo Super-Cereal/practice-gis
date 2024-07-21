@@ -55,8 +55,8 @@ app.MapControllers();
 
 using (var myContext = new Context())
 {
-    var db = myContext.Classifiers.ToList();
-    if (db == null)
+    var dbClassifiers = myContext.Classifiers.ToList();
+    if (dbClassifiers == null)
     {
         await myContext.Classifiers
         .AddAsync(new Classifier
@@ -78,4 +78,30 @@ using (var myContext = new Context())
     }
 }
 
+using (var myContext = new Context())
+{
+    var dbAspects = myContext.Aspects.ToList();
+    if (dbAspects == null)
+    {
+        await myContext.Aspects
+        .AddAsync(new Aspect
+        {
+            Id = Guid.NewGuid(),
+            Type = "type1",
+            Code = "code",
+            CommonInfo = "common info",
+            EndPoint = "endpoint"
+        });
+        await myContext.Aspects
+        .AddAsync(new Aspect
+        {
+            Id = Guid.NewGuid(),
+            Type = "type2",
+            Code = "code",
+            CommonInfo = "common info",
+            EndPoint = "endpoint"
+        });
+        await myContext.SaveChangesAsync();
+    }
+}
 app.Run();
