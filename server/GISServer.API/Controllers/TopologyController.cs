@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using GISServer.API.Service;
 using GISServer.API.Model;
 using GISServer.Domain.Model;
@@ -17,7 +17,7 @@ namespace GISServer.API.Controllers
             _topologyService = topologyService;
         }
         
-        [HttpGet("TopologyLink")]
+        [HttpGet]
         public async Task<ActionResult> GetTopologyLinks()
         {
             var dbTopologyLinks = await _topologyService.GetTopologyLinks();
@@ -29,7 +29,7 @@ namespace GISServer.API.Controllers
             return StatusCode(StatusCodes.Status200OK, dbTopologyLinks);
         }
 
-        [HttpPost("TopologyLink")]
+        [HttpPost]
         public async Task<ActionResult> PostTopologyLink(TopologyLinkDTO topologyLinkDTO)
         {
             Guid guid = Guid.NewGuid();
