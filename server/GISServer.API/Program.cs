@@ -4,6 +4,7 @@ using GISServer.Domain.Model;
 using GISServer.Infrastructure.Data;
 using GISServer.Infrastructure.Service;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -51,4 +52,30 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+using (var myContext = new Context())
+{
+    var db = myContext.Classifiers.ToList();
+    if (db == null)
+    {
+        await myContext.Classifiers
+        .AddAsync(new Classifier
+        {
+            Id = Guid.NewGuid(),
+            Name = "Class1",
+            Code = "1",
+            CommonInfo = "string1"
+        });
+        await myContext.Classifiers
+            .AddAsync(new Classifier
+            {
+                Id = Guid.NewGuid(),
+                Name = "Class2",
+                Code = "2",
+                CommonInfo = "string2"
+            });
+        await myContext.SaveChangesAsync();
+    }
+}
+
 app.Run();

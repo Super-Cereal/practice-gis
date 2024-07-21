@@ -31,7 +31,6 @@ namespace GISServer.API.Service
             return topologyLinkDTO;
         }
 
-
         public async Task<TopologyLinkDTO> AddTopologyLink(TopologyLinkDTO topologyLinkDTO)
         {
             try
