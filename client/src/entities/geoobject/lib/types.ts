@@ -55,7 +55,7 @@ interface GeoObjectInfo {
 
 export interface Classifier {
 
-    id?: string;
+   
 
     /** Имя классификатора */
     name?: string;

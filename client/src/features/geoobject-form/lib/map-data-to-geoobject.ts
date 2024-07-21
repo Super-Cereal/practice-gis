@@ -28,15 +28,7 @@ export const mapDataToGeoobject = (
     geoObjectInfo: {
         language: 'Russian',
         commonInfo: description,
-        // классифаер - затычка с моковыми данными
-         classifiers: [
-            {
-                id: getClass(classCode)?.id,
-                code: getClass(classCode)?.code,
-                name:getClass(classCode)?.name,
-                commonInfo: getClass(classCode)?.commonInfo
-
-            },
-        ], 
+        // классифаер нельзя закинуть сразу при создании объекта
+        
     },
 });
