@@ -53,8 +53,14 @@ interface GeoObjectInfo {
     classifiers?: Classifier[];
 }
 
-export interface Classifier {
+export interface Classifier extends DraftClassifier {
+    
     id?: string;
+
+}
+
+export interface DraftClassifier {
+
     /** Имя классификатора */
     name?: string;
 
@@ -73,17 +79,17 @@ export interface GeoObjectsClassifier {
 }
 
 
- export interface ParentChildObjectLink  {
+export interface ParentChildObjectLink {
     ParentGeoObjectId: string;
     ChildGeoObjectId: string;
 
- }
+}
 export type GeometryGeoJSON =
     | {
-          type: 'Point';
-          coordinates: LatLngTuple;
-      }
+        type: 'Point';
+        coordinates: LatLngTuple;
+    }
     | {
-          type: 'PolyLine' | 'Polygon';
-          coordinates: LatLngTuple[];
-      };
+        type: 'PolyLine' | 'Polygon';
+        coordinates: LatLngTuple[];
+    };

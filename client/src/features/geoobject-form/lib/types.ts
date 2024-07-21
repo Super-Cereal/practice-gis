@@ -7,3 +7,9 @@ export interface FormFields {
     classCode: string;
     status: DraftGeoObject['status'];
 }
+
+export interface FormFieldsForClassifier {
+    name: string;
+    code: string;
+    commonInfo: string;
+}

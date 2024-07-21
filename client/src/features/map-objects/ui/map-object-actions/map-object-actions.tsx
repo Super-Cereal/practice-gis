@@ -55,8 +55,8 @@ export const MapObjectActions = () => {
                     </Button>
                 ) : (
                     <>
-                        <Button onClick={handleUpdateModalFormOpen}>Изменить родительский геообъект</Button>
-                        <Button onClick={handleChildModalFormOpen}>Создать дочерний геообъект</Button>
+                        <Button mix={styles.btn}  onClick={handleUpdateModalFormOpen}>Изменить геообъект</Button>
+                        <Button mix={styles.btn} onClick={handleChildModalFormOpen}>Создать дочерний геообъект</Button>
                     </>
                 )}
 

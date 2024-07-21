@@ -1,5 +1,5 @@
 import { get, post, put, del } from '../../../shared/lib/fetch';
-import type { GeoObject, DraftGeoObject, ParentChildObjectLink, Classifier, GeoObjectsClassifier } from '../lib/types';
+import type { GeoObject, DraftGeoObject, ParentChildObjectLink, Classifier, GeoObjectsClassifier, DraftClassifier } from '../lib/types';
 
 export const getGeoObjectsRequest = async () => {
     const data = await get<GeoObject[]>('/api/GeoObject');
@@ -38,7 +38,7 @@ export const getClassifiersRequest = async () => {
 
 
 
-export const saveClassifierRequest = async (classifier: Classifier) => {
+export const saveClassifierRequest = async (classifier: DraftClassifier) => {
     try {
         const response = await post<Classifier, Classifier>('/api/Classifier', classifier);
         if (!response) {

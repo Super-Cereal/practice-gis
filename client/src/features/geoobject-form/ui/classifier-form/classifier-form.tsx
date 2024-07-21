@@ -1,11 +1,11 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useUnit } from 'effector-react';
+import { useForm } from 'react-hook-form';
 import styles from './classifier-from.module.css';
 import { geoObjectModel } from '../../../../entities/geoobject';
 import { Button } from '../../../../shared/ui/button';
 import { Classifier, GeoObjectsClassifier } from '../../../../entities/geoobject/lib/types';
-
-
+import { FormFieldsForClassifier } from '../../lib/types';
 
 interface ClassifierFormProps {
   geoObjectId: string;
@@ -41,15 +41,25 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObjectId }) => {
 
   };
 
- //создание нового класса
-  const handleCreateNewClassifier = async () => {
-    const newClassifier = {
-      name: 'New Classifier',
-      code: 'NEW',
-      commonInfo: 'This is a new classifier',
-    };
-    await saveClassifierFx(newClassifier);
-  };
+  // поля для формы
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid },
+    reset,
+  } = useForm<FormFieldsForClassifier>();
+
+
+  //создание нового класса
+  const handleSaveClassifier = (async (data: FormFieldsForClassifier) => {
+    await saveClassifierFx(data);
+
+    setIsCreateClassifierFormOpen(false)
+    reset();
+
+  });
+
+  const [isCreateClassifierFormOpen, setIsCreateClassifierFormOpen] = useState(false);
 
   return (
     <>
@@ -74,10 +84,38 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObjectId }) => {
         <Button mix={styles.btn} onClick={handleAddClassifierToObject} disabled={!selectedClassifier}>
           Добавить классификатор объекту
         </Button>
-        <Button mix={styles.btn} onClick={handleCreateNewClassifier}>
+        <Button mix={styles.btn} onClick={() => setIsCreateClassifierFormOpen(true)}>
           Создать новый классификатор
         </Button>
       </div>
+      {isCreateClassifierFormOpen && (
+        <form onSubmit={handleSubmit(handleSaveClassifier)} className={styles.form}>
+          <label>
+            Имя классификатора:
+            <input
+              className={styles.input}
+              type="text"
+              {...register("name", { required: true })} />
+          </label>
+          <label>
+            Код классификатора:
+            <input
+              className={styles.input}
+              type="text"
+              {...register("code", { required: true })} />
+          </label>
+          <label>
+            Описание классификатора:
+            <input
+              className={styles.input}
+              type="text"
+              {...register("commonInfo", { required: true })} />
+          </label>
+          <Button mix={styles.btn} >
+            Создать классификатор
+          </Button>
+        </form>
+      )}
     </>
   );
 };
