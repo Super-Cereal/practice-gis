@@ -95,7 +95,7 @@ namespace GISServer.API.Service
 
             for (int i = 0; i < borderGeoCodesObjectIn.coordinates.Count; ++i)
             {
-                coordsIn.Add(new Coordinate  // <-- Изменено на Add
+                coordsIn.Add(new Coordinate 
                 {
                     X = borderGeoCodesObjectIn.coordinates[i][0],
                     Y = borderGeoCodesObjectIn.coordinates[i][1]
@@ -104,7 +104,7 @@ namespace GISServer.API.Service
 
             for (int i = 0; i < borderGeoCodesObjectOut.coordinates.Count; ++i)
             {
-                coordsOut.Add(new Coordinate  // <-- Изменено на Add
+                coordsOut.Add(new Coordinate  
                 {
                     X = borderGeoCodesObjectOut.coordinates[i][0],
                     Y = borderGeoCodesObjectOut.coordinates[i][1]
@@ -115,14 +115,18 @@ namespace GISServer.API.Service
             var polygonOut = geometryFactory.CreatePolygon(coordsOut.ToArray());
 
             var intersection = polygonIn.Intersection(polygonOut);
-
-            border.type = intersection.GeometryType;
-            foreach (var item in intersection.Coordinates)
+            
+            if (intersection.GeometryType == "LineString")
             {
-                border.coordinates.Add(new double[] { item.X, item.Y });
-            }
+                border.type = intersection.GeometryType;
+                
+                foreach (var item in intersection.Coordinates)
+                {
+                    border.coordinates.Add(new double[] { item.X, item.Y });
+                }
 
-            topologyLinkDTO.CommonBorder = JsonSerializer.Serialize(border);
+                topologyLinkDTO.CommonBorder = JsonSerializer.Serialize(border);
+            }
 
             return topologyLinkDTO;
         }
