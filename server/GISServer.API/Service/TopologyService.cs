@@ -1,8 +1,13 @@
 ﻿using GISServer.API.Model;
 using GISServer.Domain.Model;
+using GISServer.API.Service.AdditionalClasses;
+using GISServer.API.Mapper;
+using System.Text.Json;
+using NetTopologySuite.Geometries;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
-using GISServer.API.Mapper;
+using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow.CopyAnalysis;
 
 
 namespace GISServer.API.Service
@@ -10,12 +15,14 @@ namespace GISServer.API.Service
     public class TopologyService : ITopologyService 
     {
         private readonly ITopologyRepository _repository;
+        private readonly IGeoObjectRepository _geoObjectrepository;
         private readonly TopologyMapper _topologyMapper;
 
-        public TopologyService(ITopologyRepository repository, TopologyMapper topologyMapper)
+        public TopologyService(ITopologyRepository repository, IGeoObjectRepository geoObjectrepository ,TopologyMapper topologyMapper)
         {
             _repository = repository;
             _topologyMapper = topologyMapper;
+            _geoObjectrepository = geoObjectrepository;
         }
 
         public TopologyLinkDTO CreateGuid(TopologyLinkDTO topologyLinkDTO)
@@ -30,7 +37,11 @@ namespace GISServer.API.Service
             try
             {
                 topologyLinkDTO = CreateGuid(topologyLinkDTO);
+
+                topologyLinkDTO = await GetCommonBorder(topologyLinkDTO);
+
                 TopologyLink topologyLink = await _topologyMapper.DTOToTopologyLink(topologyLinkDTO);
+
                 return await _topologyMapper.TopologyLinkToDTO(await _repository.AddTopologyLink(topologyLink));
             }
             catch (Exception ex)
@@ -68,6 +79,53 @@ namespace GISServer.API.Service
             {
                 return (false, $"An error occured. Error Message: {ex.Message}");
             }
+        }
+
+        public async Task<TopologyLinkDTO> GetCommonBorder(TopologyLinkDTO topologyLinkDTO)
+        {
+            CommonBorder border = new CommonBorder();
+            var geometryFactory = new GeometryFactory();
+            var objectIn = await _geoObjectrepository.GetGeoObject((Guid)topologyLinkDTO.GeographicalObjectInId);
+            var objectOut = await _geoObjectrepository.GetGeoObject((Guid)topologyLinkDTO.GeographicalObjectOutId);
+
+            BorderGeocodes borderGeoCodesObjectIn = JsonSerializer.Deserialize<BorderGeocodes>(objectIn.Geometry.BorderGeocodes);
+            BorderGeocodes borderGeoCodesObjectOut = JsonSerializer.Deserialize<BorderGeocodes>(objectOut.Geometry.BorderGeocodes);
+
+            List<Coordinate> coordsIn = new List<Coordinate>(); 
+            List<Coordinate> coordsOut = new List<Coordinate>();
+
+            for (int i = 0; i < borderGeoCodesObjectIn.coordinates.Count; ++i)
+            {
+                coordsIn.Add(new Coordinate  // <-- Изменено на Add
+                {
+                    X = borderGeoCodesObjectIn.coordinates[i][0],
+                    Y = borderGeoCodesObjectIn.coordinates[i][1]
+                });
+            }
+
+            for (int i = 0; i < borderGeoCodesObjectOut.coordinates.Count; ++i)
+            {
+                coordsOut.Add(new Coordinate  // <-- Изменено на Add
+                {
+                    X = borderGeoCodesObjectOut.coordinates[i][0],
+                    Y = borderGeoCodesObjectOut.coordinates[i][1]
+                });
+            }
+
+            var polygonIn = geometryFactory.CreatePolygon(coordsIn.ToArray());  
+            var polygonOut = geometryFactory.CreatePolygon(coordsOut.ToArray());
+
+            var intersection = polygonIn.Intersection(polygonOut);
+
+            border.type = intersection.GeometryType;
+            foreach (var item in intersection.Coordinates)
+            {
+                border.coordinates.Add(new double[] { item.X, item.Y });
+            }
+
+            topologyLinkDTO.CommonBorder = JsonSerializer.Serialize(border);
+
+            return topologyLinkDTO;
         }
     }
 }

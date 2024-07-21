@@ -99,7 +99,6 @@ namespace GISServer.Infrastructure.Service
 
         public async Task UpdateAsync(GeoObject geoObject)
         {
-
             var existgeoObject = GetGeoObject(geoObject.Id).Result;
             if (existgeoObject != null)
             {

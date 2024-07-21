@@ -10,5 +10,7 @@ namespace GISServer.API.Service
         public Task<TopologyLinkDTO> AddTopologyLink(TopologyLinkDTO topologyLinkDTO);
         public Task<List<TopologyLinkDTO>> GetTopologyLinks();
         public Task<(bool, string)> DeleteTopologyLink(Guid id);
+        public Task<TopologyLinkDTO> GetCommonBorder(TopologyLinkDTO topologyLinkDTO);
+
     }
 }

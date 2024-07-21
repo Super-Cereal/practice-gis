@@ -47,7 +47,6 @@ namespace GISServer.Infrastructure.Service
         // TopologyRepository
         public async Task<TopologyLink> AddTopologyLink(TopologyLink topologyLink)
         {
-
             await _context.TopologyLinks.AddAsync(topologyLink);
             await _context.SaveChangesAsync();
             return await GetTopologyLink(topologyLink.Id);
