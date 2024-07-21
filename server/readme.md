@@ -61,7 +61,7 @@
 И заново создайте ее.
 `dotnet ef database update -s ./GISServer.API -p ./GISServer.Infrastructure`.
 
-### Если ошибка что какой-то таблицы не существует
+## ***Если ошибка что какой-то таблицы не существует***
 
 Посмотрите список миграций
 `dotnet ef migrations -s .\GISServer.API\ -p .\GISServer.Infrastructure\ list`
