@@ -55,8 +55,11 @@ export const addGeoObjectClassifierRequest = async (GeoObjectsClassifier: GeoObj
     try {
         const response = await post<GeoObjectsClassifier, GeoObjectsClassifier>(
             '/api/GeoObject/AddClassifier',
-            GeoObjectsClassifier
-        );
+            {
+              geoObjectId: GeoObjectsClassifier.geoObjectId,
+              classifierId: GeoObjectsClassifier.classifierId
+            }
+          );
         if (!response) {
             throw new Error('The relationship could not be added.');
         }

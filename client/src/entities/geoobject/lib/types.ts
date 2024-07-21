@@ -21,10 +21,13 @@ export interface DraftGeoObject {
 }
 
 interface GeoNameFeature {
+    id?: string;
     /** гео код*/
-    GeoNameFeature: string;
+    geoNamesFeatureCode?: string;
     /** Любой комментарий */
-    commentsRu?: string;
+    commentsEn?: string;
+    /** название кода */
+    FeatureKindNameRu?: string;
 }
 
 interface Geometry {
@@ -54,7 +57,7 @@ interface GeoObjectInfo {
 }
 
 export interface Classifier extends DraftClassifier {
-    
+
     id?: string;
 
 }

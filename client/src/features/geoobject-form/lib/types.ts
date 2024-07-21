@@ -5,6 +5,7 @@ export interface FormFields {
     aspect: string;
     description: string;
     classCode: string;
+    geoNamesFeatureCode: string; 
     status: DraftGeoObject['status'];
 }
 

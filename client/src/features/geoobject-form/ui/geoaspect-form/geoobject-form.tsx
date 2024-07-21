@@ -15,6 +15,7 @@ import { mapDataToGeoobject } from '../../lib/map-data-to-geoobject';
 import styles from './geoobject-form.module.css';
 import { editorModel } from '../../../map-editor/lib/editor.model';
 import { ClassifierForm } from '../classifier-form/classifier-form';
+import { mockedGeoNames } from '../../lib/geoNames';
 
 const typeToLabel = {
     Point: 'точки',
@@ -24,8 +25,8 @@ const typeToLabel = {
 
 /** Пока что только сохраняет черновики */
 export const GeoobjectForm = () => {
-    
-    const [GeoObjectId, setGeoObjectId] =  useState('')
+    const geoCodes = mockedGeoNames
+    const [GeoObjectId, setGeoObjectId] = useState('')
     const isClassifierFormOpen = useUnit(geoObjectFormModel.$isClassifierFormOpen)
 
     // поля для формы
@@ -50,7 +51,7 @@ export const GeoobjectForm = () => {
         setGeoObjectId(response.id);
         // Отображаем блок для добавления классификатора
         geoObjectFormModel.setIsClassifierFormOpen(true)
-    
+
         // После успешного сохранения удаляем выбранный обьект
         editorModel.deleteObject(editorObject._id);
 
@@ -88,6 +89,16 @@ export const GeoobjectForm = () => {
                         {aspects.map((aspect) => (
                             <option className={styles.aspectOption} key={aspect.id} value={aspect.title}>
                                 {aspect.title}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label>Код географического объекта: </label>
+                    <select className={styles.aspectSelect} {...register('geoNamesFeatureCode', { required: true })}>
+                        {geoCodes.map((geoCode) => (
+                            <option className={styles.aspectOption} key={geoCode.id} value={geoCode.geoNamesFeatureCode}>
+                             {geoCode.geoNamesFeatureCode}  -  {geoCode.featureNameEn} 
                             </option>
                         ))}
                     </select>
@@ -133,7 +144,7 @@ export const GeoobjectForm = () => {
             </form>
             {
                 isClassifierFormOpen && <>
-                <ClassifierForm geoObjectId={GeoObjectId}/>
+                    <ClassifierForm geoObjectId={GeoObjectId} />
                 </>
             }
         </Modal>
