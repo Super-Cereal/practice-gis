@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GISServer.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240721105337_migr2107")]
-    partial class migr2107
+    [Migration("20240721205530_main")]
+    partial class main
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

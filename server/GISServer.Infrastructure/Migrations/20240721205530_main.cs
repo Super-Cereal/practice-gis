@@ -5,7 +5,7 @@
 namespace GISServer.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class migr2107 : Migration
+    public partial class main : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

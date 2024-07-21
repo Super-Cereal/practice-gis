@@ -62,3 +62,27 @@
     max-width: 100%;
 
 }
+.relationTable {
+    margin: 15px  0 15px 0;
+    width: 100%;
+    border-collapse: collapse;
+   border-radius: 8px;
+    overflow: hidden;
+    background-color: #ffffff;
+  }
+  
+  .relationTable th,
+  .relationTable td {
+    
+    padding: 5px;
+    text-align: left;
+    border: 1px solid  #f2f2f2;
+  }
+  
+  .relationTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+
+  

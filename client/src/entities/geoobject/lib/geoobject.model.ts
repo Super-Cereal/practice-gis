@@ -2,11 +2,25 @@ import { createStore, sample, createEffect, createEvent } from 'effector';
 import { status } from 'patronum/status';
 import { debounce } from 'patronum/debounce';
 
-import { deleteGeoObjectRequest, getGeoObjectsRequest, saveGeoObjectRequest, updateGeoObjectRequest } from '../api/requests';
+import {
+    deleteGeoObjectRequest,
+    getGeoObjectsRequest,
+    saveGeoObjectRequest,
+    updateGeoObjectRequest,
+    getClassifiersRequest,
+    saveClassifierRequest,
+    addGeoObjectClassifierRequest,
+} from '../api/requests';
 import type { GeoObject } from './types';
+import type { Classifier } from './types';
+import type { GeoObjectsClassifier } from './types';
 
 // Создаем стор
 const $geoObjects = createStore<GeoObject[]>([]);
+
+// стоит перенести классы и аспекты в отдельный стор?
+const $classifiers = createStore<Classifier[]>([]);
+
 
 // Запрос за всеми геообьектами
 const getGeoObjects = createEvent();
@@ -37,8 +51,37 @@ const $updateGeoObjectLoading = status(updateGeoObjectFx);
 const deleteGeoObjectFx = createEffect(deleteGeoObjectRequest);
 const $deleteGeoObjectLoading = status(deleteGeoObjectFx);
 
+// Запрос за всеми классификаторами
+const getClassifiers = createEvent();
+const getClassifiersFx = createEffect(getClassifiersRequest);
+const $getClassifiersLoading = status({ effect: getClassifiersFx });
+
+sample({
+    clock: getClassifiers,
+    source: $getClassifiersLoading,
+    filter: (loading) => loading !== 'pending',
+    target: getClassifiersFx,
+});
+
+sample({ clock: getClassifiersFx.doneData, target: $classifiers });
+
+// Создать классификатор
+const saveClassifierFx = createEffect(saveClassifierRequest);
+const $saveClassifierLoading = status(saveClassifierFx);
+
+sample({ clock: saveClassifierFx.doneData, target: getClassifiersFx });
+
+// Добавить классификатор геообьекту
+const addGeoObjectClassifierFx = createEffect<GeoObjectsClassifier, GeoObjectsClassifier>(({ geoObjectId, classifierId }) =>
+    addGeoObjectClassifierRequest({ geoObjectId, classifierId })
+  );
+  
+const $addGeoObjectClassifierLoading = status(addGeoObjectClassifierFx);
+
+
 export const geoObjectModel = {
     $geoObjects,
+    $classifiers,
 
     $getGeoObjectsLoading,
     getGeoObjects,
@@ -52,4 +95,14 @@ export const geoObjectModel = {
 
     $deleteGeoObjectLoading,
     deleteGeoObjectFx,
+
+    $getClassifiersLoading,
+    getClassifiers,
+    getClassifiersFx,
+
+    $saveClassifierLoading,
+    saveClassifierFx,
+
+    $addGeoObjectClassifierLoading,
+    addGeoObjectClassifierFx,
 };

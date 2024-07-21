@@ -5,5 +5,12 @@ export interface FormFields {
     aspect: string;
     description: string;
     classCode: string;
+    geoNamesFeatureCode: string; 
     status: DraftGeoObject['status'];
+}
+
+export interface FormFieldsForClassifier {
+    name: string;
+    code: string;
+    commonInfo: string;
 }

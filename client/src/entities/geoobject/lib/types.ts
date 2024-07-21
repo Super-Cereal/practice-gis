@@ -21,10 +21,13 @@ export interface DraftGeoObject {
 }
 
 interface GeoNameFeature {
+    id?: string;
     /** гео код*/
-    GeoNameFeature: string;
+    geoNamesFeatureCode?: string;
     /** Любой комментарий */
-    commentsRu?: string;
+    commentsEn?: string;
+    /** название кода */
+    FeatureKindNameRu?: string;
 }
 
 interface Geometry {
@@ -53,9 +56,13 @@ interface GeoObjectInfo {
     classifiers?: Classifier[];
 }
 
-export interface Classifier {
+export interface Classifier extends DraftClassifier {
 
     id?: string;
+
+}
+
+export interface DraftClassifier {
 
     /** Имя классификатора */
     name?: string;
@@ -66,17 +73,26 @@ export interface Classifier {
     /** О чем этот классификатор */
     commonInfo?: string;
 }
- export interface ParentChildObjectLink  {
+
+export interface GeoObjectsClassifier {
+
+    geoObjectId?: string;
+
+    classifierId?: string;
+}
+
+
+export interface ParentChildObjectLink {
     ParentGeoObjectId: string;
     ChildGeoObjectId: string;
 
- }
+}
 export type GeometryGeoJSON =
     | {
-          type: 'Point';
-          coordinates: LatLngTuple;
-      }
+        type: 'Point';
+        coordinates: LatLngTuple;
+    }
     | {
-          type: 'PolyLine' | 'Polygon';
-          coordinates: LatLngTuple[];
-      };
+        type: 'PolyLine' | 'Polygon';
+        coordinates: LatLngTuple[];
+    };

@@ -38,7 +38,13 @@ const Content = ({ object, geometry: { type, coordinates } }: Props) => {
             <MapObjectIdWithCopy id={id} />
 
             <div className={styles.content}>
-                <span>{geoObjectInfo?.commonInfo}</span>
+                <span>Описание: {geoObjectInfo?.commonInfo}</span>
+            </div>
+            <div className={styles.content}>
+                <span>Классификаторы: - </span>
+            </div>
+            <div className={styles.content}>
+                <span>Геокоды: - </span>
             </div>
 
             <div className={styles.bottom}>

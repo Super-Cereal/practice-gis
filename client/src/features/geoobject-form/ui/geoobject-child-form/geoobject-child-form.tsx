@@ -32,7 +32,7 @@ export const GeoobjectСhildForm = () => {
     //нужно получить с бэка список классификаторов
 
     //родитель
-    const parentGeoObject = useUnit(mapObjectsModel.$selectedGeoobject)  
+    const parentGeoObject = useUnit(mapObjectsModel.$selectedGeoobject)
 
     const {
         register,
@@ -47,21 +47,22 @@ export const GeoobjectСhildForm = () => {
     //геометрия родитея
     const editorObject = mapGeoObjectToEditorObject(parentGeoObject);
 
-   
     const [showCreateRelationship, setShowCreateRelationship] = useState(false);
     const [parentId, setParentId] = useState('');
     const [childId, setChildId] = useState('');
+    const [childName, setChildName] = useState('');
 
 
     const handleSave = async (data: FormFields) => {
         const childGeoobject = await geoObjectModel.saveGeoObjectFx(mapDataToGeoobject(data, editorObject));
-        
-        setParentId(parentGeoObject.id);
-        setChildId(childGeoobject.id); 
-        setShowCreateRelationship(true); 
-        
 
-        
+        setParentId(parentGeoObject.id);
+        setChildId(childGeoobject.id);
+        setChildName(childGeoobject.name);
+        setShowCreateRelationship(true);
+
+
+
     };
     const handleCreateRelationship = async () => {
         await addParentChildLinkRequest({ ParentGeoObjectId: parentId, ChildGeoObjectId: childId });
@@ -84,7 +85,7 @@ export const GeoobjectСhildForm = () => {
                     Создание дочернего геообъекта на основе &nbsp;
                     {parentGeoObject?.name}
                 </label>
-                <label>ID родителя: {editorObject._id}</label>
+                <label>ID родителя: {parentGeoObject.id}</label>
             </div>
 
             <form className={styles.form} onSubmit={handleSubmit(handleSave)}>
@@ -155,9 +156,28 @@ export const GeoobjectСhildForm = () => {
             </form>
             {showCreateRelationship && (
                 <div>
-                    <p>
-                        Создать связь между родителем (ID: {parentId}) и ребенком (ID: {childId})?
-                    </p>
+                    <table className={styles.relationTable}>
+                      
+                        <tbody>
+                            <tr>
+                                <td>Родительский ID</td>
+                                <td>{parentId}</td>
+                            </tr>
+                            <tr>
+                                <td>Имя родителя</td>
+                                <td>{parentGeoObject.name}</td>
+                            </tr>
+                            <tr>
+                                <td>Дочерний ID</td>
+                                <td>{childId}</td>
+                            </tr>
+                            <tr>
+                                <td>Имя ребенка</td>
+                                <td>{childName}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                     <Button onClick={handleCreateRelationship}>Создать связь</Button>
                 </div>
             )}
