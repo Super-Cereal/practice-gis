@@ -82,63 +82,79 @@ namespace GISServer.API.Service
 
         public async Task<TopologyLinkDTO> GetCommonBorder(TopologyLinkDTO topologyLinkDTO)
         {
-            CommonBorder border = new CommonBorder();
-            var geometryFactory = new GeometryFactory();
-            var objectIn = await _geoObjectrepository.GetGeoObject((Guid)topologyLinkDTO.GeographicalObjectInId);
-            var objectOut = await _geoObjectrepository.GetGeoObject((Guid)topologyLinkDTO.GeographicalObjectOutId);
-
-            BorderGeocodes borderGeoCodesObjectIn = JsonSerializer.Deserialize<BorderGeocodes>(objectIn.Geometry.BorderGeocodes);
-            BorderGeocodes borderGeoCodesObjectOut = JsonSerializer.Deserialize<BorderGeocodes>(objectOut.Geometry.BorderGeocodes);
-
-            List<Coordinate> coordsIn = new List<Coordinate>(); 
-            List<Coordinate> coordsOut = new List<Coordinate>();
-
-            for (int i = 0; i < borderGeoCodesObjectIn.coordinates.Count; ++i)
+            try
             {
-                coordsIn.Add(new Coordinate 
+                CommonBorder border = new CommonBorder();
+                var geometryFactory = new GeometryFactory();
+                var objectIn = await _geoObjectrepository.GetGeoObject((Guid)topologyLinkDTO.GeographicalObjectInId);
+                var objectOut = await _geoObjectrepository.GetGeoObject((Guid)topologyLinkDTO.GeographicalObjectOutId);
+
+                BorderGeocodes borderGeoCodesObjectIn = JsonSerializer.Deserialize<BorderGeocodes>(objectIn.Geometry.BorderGeocodes);
+                BorderGeocodes borderGeoCodesObjectOut = JsonSerializer.Deserialize<BorderGeocodes>(objectOut.Geometry.BorderGeocodes);
+
+                List<Coordinate> coordsIn = new List<Coordinate>();
+                List<Coordinate> coordsOut = new List<Coordinate>();
+
+
+                for (int i = 0; i < borderGeoCodesObjectIn.coordinates.Count; ++i)
                 {
-                    X = borderGeoCodesObjectIn.coordinates[i][0],
-                    Y = borderGeoCodesObjectIn.coordinates[i][1]
-                });
-            }
-            coordsIn.Add(new Coordinate 
-            {
-                X = borderGeoCodesObjectIn.coordinates[0][0],
-                Y = borderGeoCodesObjectIn.coordinates[0][1]
-            });
-
-            for (int i = 0; i < borderGeoCodesObjectOut.coordinates.Count; ++i)
-            {
-                coordsOut.Add(new Coordinate  
-                {
-                    X = borderGeoCodesObjectOut.coordinates[i][0],
-                    Y = borderGeoCodesObjectOut.coordinates[i][1]
-                });
-            }
-            coordsOut.Add(new Coordinate  
-            {
-                X = borderGeoCodesObjectOut.coordinates[0][0],
-                Y = borderGeoCodesObjectOut.coordinates[0][1]
-            });
-
-            var polygonIn = geometryFactory.CreatePolygon(coordsIn.ToArray());  
-            var polygonOut = geometryFactory.CreatePolygon(coordsOut.ToArray());
-
-            var intersection = polygonIn.Intersection(polygonOut);
-            
-            if (intersection.GeometryType == "LineString")
-            {
-                border.type = intersection.GeometryType;
-                
-                foreach (var item in intersection.Coordinates)
-                {
-                    border.coordinates.Add(new double[] { item.X, item.Y });
+                    coordsIn.Add(new Coordinate
+                    {
+                        X = borderGeoCodesObjectIn.coordinates[i][0],
+                        Y = borderGeoCodesObjectIn.coordinates[i][1]
+                    });
                 }
 
-                topologyLinkDTO.CommonBorder = JsonSerializer.Serialize(border);
-            }
+                for (int i = 0; i < borderGeoCodesObjectOut.coordinates.Count; ++i)
+                {
+                    coordsOut.Add(new Coordinate
+                    {
+                        X = borderGeoCodesObjectOut.coordinates[i][0],
+                        Y = borderGeoCodesObjectOut.coordinates[i][1]
+                    });
+                }
 
-            return topologyLinkDTO;
+                if (coordsIn[0] != coordsIn[coordsIn.Count - 1])
+                {
+                    coordsIn.Add(new Coordinate
+                    {
+                        X = borderGeoCodesObjectIn.coordinates[0][0],
+                        Y = borderGeoCodesObjectIn.coordinates[0][1]
+                    });
+                }
+
+                if (coordsOut[0] != coordsOut[coordsOut.Count - 1])
+                {
+                    coordsOut.Add(new Coordinate
+                    {
+                        X = borderGeoCodesObjectOut.coordinates[0][0],
+                        Y = borderGeoCodesObjectOut.coordinates[0][1]
+                    });
+                }
+
+                var polygonIn = geometryFactory.CreatePolygon(coordsIn.ToArray());
+                var polygonOut = geometryFactory.CreatePolygon(coordsOut.ToArray());
+
+                var intersection = polygonIn.Intersection(polygonOut);
+
+                if (intersection.GeometryType == "LineString")
+                {
+                    border.type = intersection.GeometryType;
+
+                    foreach (var item in intersection.Coordinates)
+                    {
+                        border.coordinates.Add(new double[] { item.X, item.Y });
+                    }
+
+                    topologyLinkDTO.CommonBorder = JsonSerializer.Serialize(border);
+                }
+
+                return topologyLinkDTO;
+            }
+            catch (Exception ex)
+            {
+                return topologyLinkDTO;
+            }
         }
     }
 }

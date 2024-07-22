@@ -116,9 +116,8 @@ namespace GISServer.API.Service
         {
             try
             {
-                geoObjectDTO = InitGeoObject(geoObjectDTO);
                 GeoObject geoObject = await _geoObjectMapper.DTOToObject(geoObjectDTO);
-                await _geoObjectRepository.UpdateGeoObject(geoObject);
+                await _geoObjectRepository.UpdateAsync(geoObject);
                 return geoObjectDTO;
             }
             catch (Exception ex)
@@ -154,13 +153,10 @@ namespace GISServer.API.Service
 
                 await _geoObjectRepository.AddGeoObjectsClassifiers(geoObjectClassifiers);
 
-                Console.WriteLine("\n\nPROBLEMO\n\n");
-
                 return geoObjectsClassifiersDTO;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("\n\nPROBLEMO EX EX EX!\n\n");
                 Console.WriteLine($"An error occured. Error Message: {ex.Message}");
                 return null;
             }
