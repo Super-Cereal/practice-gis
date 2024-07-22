@@ -5,7 +5,7 @@ import { Spoiler } from '../../../../shared/ui/spoiler';
 import { TextWithCopy } from '../../../../shared/ui/text-with-copy';
 import { Button } from '../../../../shared/ui/button';
 import { mapModel } from '../../../../entities/map';
-import { type GeoObject, geoObjectModel, getGeometry, topologyModel } from '../../../../entities/geoobject';
+import { Classifier, classifiersModel, type GeoObject, geoObjectModel, getGeometry, topologyModel } from '../../../../entities/geoobject';
 import { geoObjectFormModel } from '../../../geoobject-form';
 
 import { mapObjectsModel } from '../../lib/map-objects.model';
@@ -16,13 +16,24 @@ import styles from './map-object-actions.module.css';
 export const MapObjectActions = () => {
     const selectedGeoobject = useUnit(mapObjectsModel.$selectedGeoobject);
     const selectedAspect = useUnit(mapModel.$mapAspect);
+    const geoObjects = useUnit(geoObjectModel.$geoObjects);
+    const geoObjectClassifiers = useUnit(classifiersModel.$GeoObjectclassifiers);
+    const classifiers = useUnit(classifiersModel.$classifiers); 
+
     const parentChildLinks = useUnit(topologyModel.$parentChildLinks);
 
     useEffect(() => {
-        topologyModel.getParentChildLinksFx();
-    }, []);
+        if (selectedGeoobject) {
+            classifiersModel.getClassifiersFx();
+            topologyModel.getParentChildLinksFx();
+            classifiersModel.getGeoObjectClassifiersFx(selectedGeoobject.id);
+            
+        }
+    }, [selectedGeoobject]);
 
-    const geoObjects = useUnit(geoObjectModel.$geoObjects);
+    const geoObjectClassifierObjects = geoObjectClassifiers.map((classifierId) => {
+        return classifiers.find((classifier) => classifier.id === classifierId);
+      }).filter((classifier): classifier is Classifier => !!classifier);
 
     const childGeoObjects = parentChildLinks.filter(
         (link) => link.parentGeographicalObjectId === selectedGeoobject?.id
@@ -65,6 +76,7 @@ export const MapObjectActions = () => {
                 parentGeoObjects={parentGeoObjects}
                 geoObject={selectedGeoobject}
                 childGeoObjects={childGeoObjects}
+                geoObjectClassifierObjects={geoObjectClassifierObjects}
             />
 
             <div className={styles.btns}>
@@ -98,9 +110,10 @@ interface MapObjectDescriptionProps {
     geoObject: GeoObject;
     childGeoObjects?: (GeoObject | undefined)[];
     parentGeoObjects?: (GeoObject | undefined)[];
+    geoObjectClassifierObjects?: Classifier[];
 }
 
-const MapObjectDescription = ({ geoObject, childGeoObjects, parentGeoObjects, }: MapObjectDescriptionProps) => {
+const MapObjectDescription = ({ geoObject, childGeoObjects, parentGeoObjects, geoObjectClassifierObjects }: MapObjectDescriptionProps) => {
 
     const geometry = getGeometry(geoObject);
 
@@ -117,24 +130,31 @@ const MapObjectDescription = ({ geoObject, childGeoObjects, parentGeoObjects, }:
             </h3>
             <TextWithCopy title="ID" text={geoObject.id} />
 
-            <Spoiler mix={styles.spoiler} title="Классы" badgeText="К" color="gray">
-                <div className={styles.classes}>
-                    {geoObject.geoObjectInfo?.classifiers?.map(({ id, code, commonInfo }) => (
+            {geoObjectClassifierObjects && geoObjectClassifierObjects.length > 0 ? (
+                <Spoiler mix={styles.spoiler} title="Классификаторы" badgeText="К" color="gray">
+                    <div className={styles.classes}>
+                        {geoObjectClassifierObjects.map(({name, code, id}) =>
+                   
                         <div key={id} className={styles.class}>
                             <TextWithCopy title="id" text={id} />
-                            <TextWithCopy title="code" text={code} />
-                            <p className={styles.classInfo}>{commonInfo}</p>
+                            <TextWithCopy title="код" text={code} />
+                            <p className={styles.classInfo}>  {name}</p>
                         </div>
-                    ))}
-                </div>
-            </Spoiler>
+                       
+                        )}
+                    </div>
+                </Spoiler>
+            ) : (
+                <div className={styles.noObject}>Классификаторы не найдены</div>
+            )}
 
+         
             <Spoiler mix={styles.spoiler} title="Топологии" badgeText="Т" color="gray">
                 <div className={styles.classes}>
                     {geoObject.geoObjectInfo?.classifiers?.map(({ id, code, commonInfo }) => (
                         <div key={id} className={styles.class}>
                             <TextWithCopy title="id" text={id} />
-                            <TextWithCopy title="code" text={code} />
+                            <TextWithCopy title="код" text={code} />
                             <p className={styles.classInfo}>{commonInfo}</p>
                         </div>
                     ))}
@@ -147,7 +167,7 @@ const MapObjectDescription = ({ geoObject, childGeoObjects, parentGeoObjects, }:
                             child ? (
                                 <div key={child.id} className={styles.class}>
                                     <TextWithCopy title="id" text={child.id} />
-                                    <TextWithCopy title="name" text={child.name} />
+                                    <p className={styles.classInfo}> {child.name}</p>
                                 </div>
                             ) : null
                         )}
@@ -164,7 +184,7 @@ const MapObjectDescription = ({ geoObject, childGeoObjects, parentGeoObjects, }:
                             parent ? (
                                 <div key={parent.id} className={styles.class}>
                                     <TextWithCopy title="id" text={parent.id} />
-                                    <TextWithCopy title="name" text={parent.name} />
+                                    <p className={styles.classInfo}> {parent.name}</p>
                                 </div>
                             ) : null
                         )}

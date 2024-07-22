@@ -1,11 +1,12 @@
 import { createStore, sample, createEffect, createEvent } from 'effector';
 import { status } from 'patronum/status';
 
-import { getClassifiersRequest, saveClassifierRequest, addGeoObjectClassifierRequest } from '../../api/classifiers';
+import { getClassifiersRequest, saveClassifierRequest, addGeoObjectClassifierRequest, getGeoObjectClassifiersRequest } from '../../api/classifiers';
 
 import type { Classifier, GeoObjectsClassifier } from './types';
 
 const $classifiers = createStore<Classifier[]>([]);
+const $GeoObjectclassifiers = createStore<string[]>([]);
 
 // Запрос за всеми классификаторами
 const getClassifiers = createEvent();
@@ -20,6 +21,23 @@ sample({
 });
 
 sample({ clock: getClassifiersFx.doneData, target: $classifiers });
+
+// Запрос за классификаторами у объекта
+const getGeoObjectClassifiers = createEvent<string>();
+const getGeoObjectClassifiersFx = createEffect<string, string[]>(getGeoObjectClassifiersRequest);
+const $getGeoObjectClassifiersLoading = status({ effect: getGeoObjectClassifiersFx });
+
+sample({
+    clock: getGeoObjectClassifiers,
+    source: $getGeoObjectClassifiersLoading,
+    filter: (loading) => loading !== 'pending',
+    target: getGeoObjectClassifiersFx,
+});
+
+sample({
+    clock: getGeoObjectClassifiersFx.doneData,
+    target: $GeoObjectclassifiers,
+});
 
 // Создать классификатор
 const saveClassifierFx = createEffect(saveClassifierRequest);
@@ -43,4 +61,11 @@ export const classifiersModel = {
 
     $addGeoObjectClassifierLoading,
     addGeoObjectClassifierFx,
+
+    getGeoObjectClassifiers,
+    getGeoObjectClassifiersFx,
+    $getGeoObjectClassifiersLoading,
+    
+    $GeoObjectclassifiers
+
 };
