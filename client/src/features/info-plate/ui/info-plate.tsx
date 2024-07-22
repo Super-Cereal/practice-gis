@@ -9,13 +9,10 @@ import type { MapMode } from '../../../entities/map/lib/types';
 import { aspectsModel, classifiersModel } from '../../../entities/geoobject';
 
 import styles from './info-plate.module.css';
-import { createEvent, createStore, sample } from 'effector';
-import { infoPlateModel } from '../lib';
 
 /** Настройки страницы и карты (выбор режима просмотра) */
 export const InfoPlate = () => {
     const mapMode = useUnit(mapModel.$mapMode);
-    const showArchiveObjects = useUnit(infoPlateModel.$showArchiveObjects);
     const [searchParams, setSearchParams] = useSearchParams();
 
     useMount(() => {
@@ -42,7 +39,6 @@ export const InfoPlate = () => {
         mapModel.setEditorPointsOnCorners(e.target.checked);
     };
 
-
     return (
         <div className={styles.plate}>
             <div className={styles.settings}>
@@ -53,13 +49,7 @@ export const InfoPlate = () => {
                         <option value="edit">Создание новых геообьектов</option>
                     </select>
                 </label>
-                <label>
-                    <span>Архивные элементы:</span>
-                    <input 
-                    type="checkbox"
-                     onChange={(e) => infoPlateModel.showArchiveObjectsChanged(e.target.checked)} 
-                     checked={showArchiveObjects} />
-                </label>
+
                 {mapMode === 'edit' && (
                     <label>
                         <span>Точки на углах:</span>
@@ -68,9 +58,13 @@ export const InfoPlate = () => {
                 )}
             </div>
 
-            <div className={styles.groupBtns} >
-                <Button mix={styles.btn} onClick={() => classifiersModel.setIsNewClassModalOpen(true)}>Создать класс</Button>
-                <Button mix={styles.btn} onClick={() => aspectsModel.setIsNewAspectModalOpen(true)}>Создать аспект</Button>
+            <div className={styles.groupBtns}>
+                <Button mix={styles.btn} onClick={() => classifiersModel.setIsNewClassModalOpen(true)}>
+                    Создать классификатор
+                </Button>
+                <Button mix={styles.btn} onClick={() => aspectsModel.setIsNewAspectModalOpen(true)}>
+                    Создать аспект
+                </Button>
             </div>
         </div>
     );

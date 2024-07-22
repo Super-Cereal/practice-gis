@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 
 import { aspectsModel, type DraftAspect } from '../../../../entities/geoobject';
 import { Modal } from '../../../../shared/ui/modal';
-import { Button } from '../../../../shared/ui/button';
 
 import styles from './new-aspect-form.module.css';
 import { Form } from '../../../../shared/ui/form';

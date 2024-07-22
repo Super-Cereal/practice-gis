@@ -5,13 +5,7 @@ import cx from 'classnames';
 import { Spoiler } from '../../../../shared/ui/spoiler';
 import { TextWithCopy } from '../../../../shared/ui/text-with-copy';
 import { Button } from '../../../../shared/ui/button';
-import {
-    aspectsModel,
-    getGeometry,
-    type GeoObject,
-    type Classifier,
-    topologyModel,
-} from '../../../../entities/geoobject';
+import { aspectsModel, getGeometry, type GeoObject, topologyModel } from '../../../../entities/geoobject';
 import { TopologyDescription } from '../../../topology';
 import { geoObjectFormModel } from '../../../geoobject-form';
 
@@ -21,18 +15,13 @@ interface MapObjectDescriptionProps {
     geoObject: GeoObject;
     childGeoObjects?: (GeoObject | undefined)[];
     parentGeoObjects?: (GeoObject | undefined)[];
-  /*   geoObjectClassifierObjects?: Classifier[]; */
 }
 
-export const MapObjectDescription = ({
-    geoObject,
-    childGeoObjects, 
-    parentGeoObjects,
-
-}: MapObjectDescriptionProps) => {
+export const MapObjectDescription = ({ geoObject, childGeoObjects, parentGeoObjects }: MapObjectDescriptionProps) => {
     const uniqueAspects = useUnit(aspectsModel.$uniqueAspects);
 
-    const geoObjectClassifierObjects = geoObject.geoObjectInfo?.classifiers
+    const geoobjectClassifiers = geoObject.geoObjectInfo?.classifiers;
+
     const geoobjectTopologies = useUnit(topologyModel.$topologies).filter(
         ({ geographicalObjectInId, geographicalObjectOutId }) =>
             geographicalObjectInId === geoObject.id || geographicalObjectOutId === geoObject.id,
@@ -47,30 +36,24 @@ export const MapObjectDescription = ({
         return <h3>Ошибка: выбран обьект с неизвестной геометрией</h3>;
     }
 
-    const { type } = geometry;
+    const handleAddClassFormOpen = () => geoObjectFormModel.setIsUpdateModalOpen(true);
 
-    //from topology
-    const handleTopologyFormOpen = () => {
-        geoObjectFormModel.setIsTopologyFormOpen(true);
-    };
+    const handleTopologyFormOpen = () => geoObjectFormModel.setIsTopologyFormOpen(true);
 
-    const handleAspectsFormOpen = () => {
-        geoObjectFormModel.setIsAssignAspectModalOpen(true);
-    };
-
+    const handleAspectsFormOpen = () => geoObjectFormModel.setIsAssignAspectModalOpen(true);
     const handleNewAspectFormOpen = () => aspectsModel.setIsNewAspectModalOpen(true);
 
     return (
         <>
             <h3 className={styles.title}>
-                {type}: {geoObject.name}
+                {geometry.type}: {geoObject.name}
             </h3>
             <TextWithCopy title="ID" text={geoObject.id} />
 
-            {geoObjectClassifierObjects && geoObjectClassifierObjects.length > 0 ? (
-                <Spoiler mix={styles.spoiler} title="Классы" badgeText="К">
+            <Spoiler mix={styles.spoiler} title="Классификаторы" badgeText="К">
+                {geoobjectClassifiers?.length ? (
                     <div className={styles.spoilerList}>
-                        {geoObject.geoObjectInfo?.classifiers?.map(({ id, code, commonInfo }) => (
+                        {geoobjectClassifiers.map(({ id, code, commonInfo }) => (
                             <div key={id} className={styles.class}>
                                 <TextWithCopy title="id" text={id} />
                                 <TextWithCopy title="code" text={code} />
@@ -78,23 +61,31 @@ export const MapObjectDescription = ({
                             </div>
                         ))}
                     </div>
-                </Spoiler>
-            ) : (
-                <div className={styles.noObject}>Классификаторы не найдены</div>
-            )}
+                ) : (
+                    <div className={styles.noObject}>Классификаторов пока нет</div>
+                )}
+
+                <Button mix={styles.btn} onClick={handleAddClassFormOpen}>
+                    Добавить обьекту классификатор
+                </Button>
+            </Spoiler>
 
             <Spoiler mix={styles.spoiler} title="Аспекты" badgeText="А">
-                <div className={styles.spoilerList}>
-                    {geoobjectAspects.map(({ id, code, commonInfo, endPoint }) => (
-                        <div key={id} className={styles.class}>
-                            <TextWithCopy title="id связи" text={id} />
-                            <TextWithCopy title="code аспекта" text={code} />
-                            <p className={cx(styles.listItem, styles.aspectInfo)}>{commonInfo}</p>
+                {geoobjectAspects.length ? (
+                    <div className={styles.spoilerList}>
+                        {geoobjectAspects.map(({ id, code, commonInfo, endPoint }) => (
+                            <div key={id} className={styles.class}>
+                                <TextWithCopy title="id связи" text={id} />
+                                <TextWithCopy title="code аспекта" text={code} />
+                                <p className={cx(styles.listItem, styles.aspectInfo)}>{commonInfo}</p>
 
-                            <p className={cx(styles.listItem, styles.endPoint)}>{endPoint}</p>
-                        </div>
-                    ))}
-                </div>
+                                <p className={cx(styles.listItem, styles.endPoint)}>{endPoint}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className={styles.noObject}>Аспектов пока нет</div>
+                )}
 
                 {uniqueAspects.length ? (
                     <Button mix={styles.btn} onClick={handleAspectsFormOpen}>
@@ -108,17 +99,20 @@ export const MapObjectDescription = ({
             </Spoiler>
 
             <Spoiler mix={styles.spoiler} title="Топологии" badgeText="Т">
-                <div className={styles.spoilerList}>
-                    {geoobjectTopologies.map((topology) => (
-                        <TopologyDescription key={topology.id} topology={topology} />
-                    ))}
-                </div>
+                {geoobjectTopologies.length ? (
+                    <div className={styles.spoilerList}>
+                        {geoobjectTopologies.map((topology) => (
+                            <TopologyDescription key={topology.id} topology={topology} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className={styles.noObject}>Топологий пока нет</div>
+                )}
 
                 <Button mix={styles.btn} onClick={handleTopologyFormOpen}>
                     Добавить топологию
                 </Button>
             </Spoiler>
-
             {childGeoObjects && childGeoObjects?.length > 0 ? (
                 <Spoiler mix={styles.spoiler} title="Дети" badgeText="Д" color="gray">
                     <div className={styles.classes}>
@@ -135,7 +129,6 @@ export const MapObjectDescription = ({
             ) : (
                 <div className={styles.noObject}>Нет дочерних элементов</div>
             )}
-
             {parentGeoObjects && parentGeoObjects.length > 0 ? (
                 <Spoiler mix={styles.spoiler} title="Родители" badgeText="Р" color="gray">
                     <div className={styles.classes}>

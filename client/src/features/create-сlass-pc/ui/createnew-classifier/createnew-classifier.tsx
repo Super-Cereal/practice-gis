@@ -1,19 +1,15 @@
-import React, { useEffect } from 'react'
-import styles from './createnew-classifier.module.css'
-import { useUnit } from 'effector-react';
-import { classifiersModel } from '../../../../entities/geoobject';
-import { FormFieldsForClassifier } from '../../../geoobject-form/lib/types';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import cx from 'classnames';
+
 import { Button } from '../../../../shared/ui/button';
 import { Modal } from '../../../../shared/ui/modal';
+import { classifiersModel } from '../../../../entities/geoobject';
+import { FormFieldsForClassifier } from '../../../geoobject-form/lib/types';
+
+import styles from './createnew-classifier.module.css';
 
 export const CreatenewClassifier = () => {
-
-    useEffect(() => {
-        classifiersModel.getClassifiers();
-    }, []);
-
     // поля для формы создания Нового классификатора
     const {
         register,
@@ -26,19 +22,18 @@ export const CreatenewClassifier = () => {
     const handleSaveClassifier = async (data: FormFieldsForClassifier) => {
         await classifiersModel.saveClassifierFx(data);
 
-        classifiersModel.setIsNewClassModalOpen(false)
+        classifiersModel.setIsNewClassModalOpen(false);
         reset();
     };
+
     const handleClose = () => {
-        classifiersModel.setIsNewClassModalOpen(false)
-    }
+        classifiersModel.setIsNewClassModalOpen(false);
+    };
+
     return (
         <Modal onClose={handleClose}>
             <h3 className={styles.title}>Добавление нового классификатора</h3>
-            <form
-                onSubmit={handleSubmit(handleSaveClassifier)}
-                className={cx(styles.form, styles.newClassifierForm)}
-            >
+            <form onSubmit={handleSubmit(handleSaveClassifier)} className={cx(styles.form, styles.newClassifierForm)}>
                 <label>
                     Имя классификатора:
                     <input className={styles.input} type="text" {...register('name', { required: true })} />
@@ -59,7 +54,7 @@ export const CreatenewClassifier = () => {
                         color="orange"
                         onClick={(e) => {
                             e.preventDefault();
-                            handleClose()
+                            handleClose();
                         }}
                     >
                         Закрыть форму
@@ -67,6 +62,5 @@ export const CreatenewClassifier = () => {
                 </div>
             </form>
         </Modal>
-
-    )
-}
+    );
+};

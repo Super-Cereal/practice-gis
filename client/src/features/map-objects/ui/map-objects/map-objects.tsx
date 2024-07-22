@@ -1,7 +1,6 @@
 import React from 'react';
 import { useUnit } from 'effector-react';
 import { Circle, Polygon, Polyline } from 'react-leaflet';
-import type { LatLngTuple } from 'leaflet';
 
 import { MapObjectPopup } from '../map-object-popup/map-object-popup';
 import {
@@ -13,15 +12,12 @@ import {
 } from '../../../../entities/geoobject';
 
 import { mapObjectsModel } from '../../lib/map-objects.model';
-import { infoPlateModel } from '../../../info-plate/lib';
 import { mapModel } from '../../../../entities/map';
 
 export const MapObjects = () => {
     let geoObjects = useUnit(geoObjectModel.$geoObjects);
     const selectedObject = useUnit(mapObjectsModel.$selectedGeoobject);
 
-    const showArchiveObjects = useUnit(infoPlateModel.$showArchiveObjects);
-    const filteredGeoObjects = showArchiveObjects ? geoObjects : geoObjects.filter(obj => obj.status !== 100);
     const selectedAspect = useUnit(mapModel.$mapAspect);
     const assignedAspects = useUnit(aspectsModel.$assignedAspects);
 
@@ -42,7 +38,7 @@ export const MapObjects = () => {
 
     return (
         <>
-            {filteredGeoObjects.map((object) => {
+            {geoObjects.map((object) => {
                 const geometry = getGeometry(object);
 
                 if (!geometry) {

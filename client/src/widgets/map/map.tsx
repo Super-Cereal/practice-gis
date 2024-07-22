@@ -44,6 +44,8 @@ export const Map = () => {
 
         aspectsModel.getAspectsFx();
 
+        classifiersModel.getClassifiers();
+
         topologyModel.getTopologies();
         topologyModel.getParentChildLinks();
     });

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useUnit } from 'effector-react';
 import { useForm } from 'react-hook-form';
 
@@ -7,6 +7,7 @@ import { type GeoObject, classifiersModel, type Classifier, geoObjectModel } fro
 import { FormFieldsForClassifier } from '../../lib/types';
 
 import { Form } from '../../../../shared/ui/form';
+import { geoObjectFormModel } from '../../lib/geoobject-form.model';
 
 interface ClassifierFormProps {
     geoObject: GeoObject;
@@ -16,13 +17,9 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObject }) => {
     //классы с бэка
     const geoClassifiers = useUnit(classifiersModel.$classifiers);
 
-    useEffect(() => {
-        classifiersModel.getClassifiers();
-    }, []);
-
     //выбранный класс
     const [selectedClassifier, setSelectedClassifier] = useState<Classifier | null>(
-        geoObject.geoObjectInfo?.classifiers?.[0] || null,
+        geoObject.geoObjectInfo?.classifiers?.[0] || geoClassifiers[0] || null,
     );
 
     const handleSelectClassifier = (classifier: Classifier) => {
@@ -35,8 +32,12 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObject }) => {
             return;
         }
 
-        const classifierId = selectedClassifier.id;
-        await classifiersModel.addGeoObjectClassifierFx({ geoObjectId: geoObject.id, classifierId });
+        await classifiersModel.addGeoObjectClassifierFx({
+            geoObjectId: geoObject.id,
+            classifierId: selectedClassifier.id,
+        });
+
+        geoObjectFormModel.setIsClassifierFormOpen(false);
     };
 
     // поля для формы создания Нового классификатора
@@ -67,20 +68,16 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObject }) => {
                         value: selectedClassifier?.code,
                         onChange: (e) => {
                             const selectedClassifier = geoClassifiers.find((cl) => cl.code === e.target.value);
+
                             if (selectedClassifier) {
                                 handleSelectClassifier(selectedClassifier);
                             }
                         },
-                        options: [
-                            ...geoClassifiers.map(({ code, name }) => ({ name: `${code} - ${name}`, value: code! })),
-                        ],
+                        options: geoClassifiers.map(({ code, name }) => ({ name: `${code} - ${name}`, value: code! })),
                     },
                 ]}
                 buttons={[
-                    {
-                        children: 'Добавить классификатор объекту',
-                        disabled: !selectedClassifier || !selectedClassifier?.code,
-                    },
+                    { children: 'Добавить классификатор объекту' },
                     {
                         children: 'Создать новый классификатор',
                         onClick: (e) => {
@@ -89,7 +86,10 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObject }) => {
                         },
                     },
                 ]}
-                onSubmit={handleAddClassifierToObject}
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleAddClassifierToObject();
+                }}
             />
 
             {isCreateClassifierFormOpen && (

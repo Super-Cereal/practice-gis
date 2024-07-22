@@ -11,9 +11,10 @@ import { geoObjectFormModel } from '../../lib/geoobject-form.model';
 import { mapDataToGeoobject } from '../../lib/map-data-to-geoobject';
 import { CommonForm } from '../common-form/common-form';
 
-import styles from './new-geoobject-form.module.css';
 import { mapModel } from '../../../../entities/map';
 import { mapObjectsModel } from '../../../map-objects';
+
+import styles from './new-geoobject-form.module.css';
 
 const typeToLabel = {
     Point: 'точки',

@@ -9,7 +9,7 @@ import styles from './form.module.css';
 interface Props {
     fields: (Field | Field[])[];
     buttons: React.ComponentProps<typeof Button>[];
-    onSubmit: () => void;
+    onSubmit: (e: React.FormEvent) => void;
 }
 
 export const Form = ({ fields, buttons, onSubmit }: Props) => {

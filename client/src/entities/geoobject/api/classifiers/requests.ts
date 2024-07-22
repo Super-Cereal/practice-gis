@@ -55,8 +55,7 @@ export const addGeoObjectClassifierRequest = async ({ geoObjectId, classifierId 
 
         return response;
     } catch (error) {
-        toast('The relationship could not be added.', { type: 'error' });
+        toast('У этого обьекта уже есть этот класс', { type: 'info' });
         console.error(error);
-        throw error;
     }
 };

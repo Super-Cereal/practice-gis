@@ -13,6 +13,7 @@ export const mapDataToGeoobject = (
     { type, coordinates }: EditorObject,
 ): DraftGeoObject => {
     const geoCodeObj = getgeoNamesFeatureCode(geoNamesFeatureCode);
+
     return {
         name,
         // status,
@@ -30,12 +31,11 @@ export const mapDataToGeoobject = (
             commonInfo: description,
         },
         //с геокодами при отправке дает ошибку
-        /*      geoNameFeature: {
-            id: geoCodeObj?.id,
-            FeatureKindNameRu: geoCodeObj?.featureNameEn,
-            commentsEn: geoCodeObj?.commentsEn,
-            geoNamesFeatureCode: geoCodeObj?.geoNamesFeatureCode,
-        }
-           */
+        // geoNameFeature: {
+        //     id: geoCodeObj?.id,
+        //     FeatureKindNameRu: geoCodeObj?.featureNameEn,
+        //     commentsEn: geoCodeObj?.commentsEn,
+        //     geoNamesFeatureCode: geoCodeObj?.geoNamesFeatureCode,
+        // },
     };
 };

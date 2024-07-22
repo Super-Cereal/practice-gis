@@ -8,6 +8,8 @@ import {
     addTopologyRequest,
 } from '../../api/topology';
 
+import { geoObjectModel } from '../geoobject.model';
+
 import type { ParentChildObjectLink, TopologyLink } from './types';
 
 //стор для родительских связей
@@ -48,6 +50,9 @@ sample({ clock: getTopologiesFx.doneData, target: $topologies });
 // добавить топологическую связь
 const addTopologyFx = createEffect(addTopologyRequest);
 sample({ clock: addTopologyFx.done, target: getTopologies });
+
+// При удалении обьекта может пропасть топология
+sample({ clock: geoObjectModel.deleteGeoObjectFx.done, target: getTopologies });
 
 export const topologyModel = {
     $parentChildLinks,

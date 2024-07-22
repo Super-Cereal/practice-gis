@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useUnit } from 'effector-react';
 
 import { Button } from '../../../../shared/ui/button';
-import { mapModel } from '../../../../entities/map';
 import { topologyModel, geoObjectModel } from '../../../../entities/geoobject';
 import { geoObjectFormModel } from '../../../geoobject-form';
 
@@ -14,7 +13,6 @@ import styles from './map-object-actions.module.css';
 /** Рендерит возможные действия с геообьектом */
 export const MapObjectActions = () => {
     const selectedGeoobject = useUnit(mapObjectsModel.$selectedGeoobject);
-    const selectedAspect = useUnit(mapModel.$mapAspect);
     const geoObjects = useUnit(geoObjectModel.$geoObjects);
 
     const parentChildLinks = useUnit(topologyModel.$parentChildLinks);
@@ -55,25 +53,16 @@ export const MapObjectActions = () => {
                 parentGeoObjects={parentGeoObjects}
                 geoObject={selectedGeoobject}
                 childGeoObjects={childGeoObjects}
-                /* geoObjectClassifierObjects={geoObjectClassifierObjects} */
             />
 
             <div className={styles.btns}>
-                {selectedAspect ? (
-                    <Button /* onClick={handleUpdateModalFormOpen} */>
-                        Создать {selectedAspect.type} для геообъекта
-                    </Button>
-                ) : (
-                    <>
-                        <Button mix={styles.btn} onClick={handleUpdateModalFormOpen}>
-                            Изменить геообъект
-                        </Button>
+                <Button mix={styles.btn} onClick={handleUpdateModalFormOpen}>
+                    Изменить геообъект
+                </Button>
 
-                        <Button mix={styles.btn} onClick={handleChildModalFormOpen}>
-                            Создать дочерний геообъект
-                        </Button>
-                    </>
-                )}
+                <Button mix={styles.btn} onClick={handleChildModalFormOpen}>
+                    Создать дочерний геообъект
+                </Button>
 
                 <Button onClick={handleDelete} color="orange">
                     Удалить

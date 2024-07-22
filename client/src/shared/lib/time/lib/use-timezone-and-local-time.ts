@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useUnit } from 'effector-react';
 import type { LatLngTuple } from 'leaflet';
 

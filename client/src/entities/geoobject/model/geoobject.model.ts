@@ -8,6 +8,7 @@ import {
     updateGeoObjectRequest,
 } from '../api/requests';
 import type { GeoObject } from './types';
+import { classifiersModel } from './classifiers';
 
 // Создаем стор
 const $geoObjects = createStore<GeoObject[]>([]);
@@ -40,8 +41,13 @@ const $deleteGeoObjectLoading = status(deleteGeoObjectFx);
 
 // Перезапрашиваем геообьекты после изменения данных
 sample({
-    clock: [saveGeoObjectFx.done, updateGeoObjectFx.done, deleteGeoObjectFx.done],
-    target: getGeoObjectsFx,
+    clock: [
+        saveGeoObjectFx.done,
+        updateGeoObjectFx.done,
+        deleteGeoObjectFx.done,
+        classifiersModel.addGeoObjectClassifierFx.done,
+    ],
+    target: getGeoObjects,
 });
 
 export const geoObjectModel = {
