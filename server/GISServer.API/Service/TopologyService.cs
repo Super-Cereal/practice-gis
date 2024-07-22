@@ -101,6 +101,11 @@ namespace GISServer.API.Service
                     Y = borderGeoCodesObjectIn.coordinates[i][1]
                 });
             }
+            coordsIn.Add(new Coordinate 
+            {
+                X = borderGeoCodesObjectIn.coordinates[0][0],
+                Y = borderGeoCodesObjectIn.coordinates[0][1]
+            });
 
             for (int i = 0; i < borderGeoCodesObjectOut.coordinates.Count; ++i)
             {
@@ -110,6 +115,11 @@ namespace GISServer.API.Service
                     Y = borderGeoCodesObjectOut.coordinates[i][1]
                 });
             }
+            coordsOut.Add(new Coordinate  
+            {
+                X = borderGeoCodesObjectOut.coordinates[0][0],
+                Y = borderGeoCodesObjectOut.coordinates[0][1]
+            });
 
             var polygonIn = geometryFactory.CreatePolygon(coordsIn.ToArray());  
             var polygonOut = geometryFactory.CreatePolygon(coordsOut.ToArray());
