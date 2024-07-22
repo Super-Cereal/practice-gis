@@ -4,43 +4,44 @@ import cx from 'classnames';
 import { useMount } from 'react-use';
 
 import { MapView, mapModel } from '../../entities/map';
-import { geoObjectModel } from '../../entities/geoobject';
+import { aspectsModel, geoObjectModel } from '../../entities/geoobject';
 import { InfoPlate } from '../../features/info-plate';
-import { Aspects } from '../../features/aspects';
+import { Aspects, NewAspectForm } from '../../features/aspects';
 import { MapEditorActions, MapEditorObjects } from '../../features/map-editor';
 import {
     geoObjectFormModel,
     NewGeoobjectForm,
-    GeoaspectsList,
+    AssignAspectForm,
     GeoobjectEditFrom,
     GeoobjectСhildForm,
     TopologyForm,
 } from '../../features/geoobject-form';
 import { MapObjectActions, MapObjects } from '../../features/map-objects';
 
-import { aspects } from './lib/mocks';
-
 import styles from './map.module.css';
 
 /** Рендерит карту и все ее настройки и действия */
 export const Map = () => {
-    const $mapMode = useUnit(mapModel.$mapMode);
+    const mapMode = useUnit(mapModel.$mapMode);
 
-    const isModalFormOpen = useUnit(geoObjectFormModel.$isGeoObjectModalOpen);
-    const isModalAspectsOpen = useUnit(geoObjectFormModel.$isAspectsModalOpen);
+    const isNewGeoobjectModalOpen = useUnit(geoObjectFormModel.$isGeoObjectModalOpen);
     const isUpdateModalOpen = useUnit(geoObjectFormModel.$isUpdateModalOpen);
+
     const isChildModalOpen = useUnit(geoObjectFormModel.$isChildModalOpen);
     const isTopologyFormOpen = useUnit(geoObjectFormModel.$isTopologyFormOpen);
 
-    const mapEditable = $mapMode === 'edit';
+    const isNewAspectModalOpen = useUnit(aspectsModel.$isNewAspectModalOpen);
+    const isAssignAspectModalOpen = useUnit(geoObjectFormModel.$isAssignAspectModalOpen);
+
+    const mapEditable = mapMode === 'edit';
 
     useMount(() => {
         geoObjectModel.getGeoObjects();
+        aspectsModel.getAspectsFx();
     });
 
     const requestStatus = useUnit(geoObjectModel.$getGeoObjectsLoading);
 
-    console.log(isUpdateModalOpen);
     return (
         <>
             <div className={cx(styles.container)}>
@@ -49,7 +50,7 @@ export const Map = () => {
                 </aside>
 
                 <div className={styles.aspects}>
-                    <Aspects aspects={aspects} />
+                    <Aspects />
                 </div>
 
                 <div className={styles.map}>
@@ -64,10 +65,11 @@ export const Map = () => {
             </div>
             {isUpdateModalOpen && <GeoobjectEditFrom />}
             {isChildModalOpen && <GeoobjectСhildForm />}
-            {isModalFormOpen && <NewGeoobjectForm />}
-            {isModalFormOpen && <NewGeoobjectForm />}
+            {isNewGeoobjectModalOpen && <NewGeoobjectForm />}
             {isTopologyFormOpen && <TopologyForm />}
-            {/*  {isModalAspectsOpen && <GeoaspectsList />} */}
+
+            {isNewAspectModalOpen && <NewAspectForm />}
+            {/* {isAssignAspectModalOpen && <AssignAspectForm />} */}
         </>
     );
 };

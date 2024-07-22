@@ -1,4 +1,7 @@
 .plate {
+    display: flex;
+    justify-content: space-between;
+
     background: var(--block);
     padding: 12px;
     border-radius: 8px;

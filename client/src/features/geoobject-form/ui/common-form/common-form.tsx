@@ -2,13 +2,14 @@ import React from 'react';
 import type { UseFormRegister } from 'react-hook-form';
 
 import { Button } from '../../../../shared/ui/button';
-import { aspects } from '../../../../widgets/map/lib/mocks';
 
 import type { FormFields } from '../../lib/types';
 
 import { mockedGeoNames } from '../../lib/geoNames';
 
 import styles from './common-form.module.css';
+import { useUnit } from 'effector-react';
+import { aspectsModel } from '../../../../entities/geoobject';
 
 export const CommonForm = ({
     onClose,
@@ -22,6 +23,8 @@ export const CommonForm = ({
     register: UseFormRegister<FormFields>;
     isValid: boolean;
 }) => {
+    const aspects = useUnit(aspectsModel.$uniqueAspects);
+
     const geoCodes = mockedGeoNames;
 
     return (
@@ -35,8 +38,8 @@ export const CommonForm = ({
                 <label>Аспект: </label>
                 <select className={styles.aspectSelect} {...register('aspect', { required: true })}>
                     {aspects.map((aspect) => (
-                        <option className={styles.aspectOption} key={aspect.id} value={aspect.title}>
-                            {aspect.title}
+                        <option className={styles.aspectOption} key={aspect.code} value={aspect.type}>
+                            {aspect.type}
                         </option>
                     ))}
                 </select>

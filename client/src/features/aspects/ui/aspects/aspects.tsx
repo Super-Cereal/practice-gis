@@ -2,42 +2,41 @@ import React, { useState } from 'react';
 import cx from 'classnames';
 import { useUnit } from 'effector-react';
 
-import { mapModel, type Aspect } from '../../entities/map';
+import { mapModel } from '../../../../entities/map';
+import { aspectsModel } from '../../../../entities/geoobject';
+
 import styles from './aspects.module.css';
 
-interface Props {
-    aspects: Aspect[];
-}
-
 /** Рендерит список радио-кнопок с выбором аспекта геообьектов */
-export const Aspects = ({ aspects }: Props) => {
-    const $mapAspect = useUnit(mapModel.$mapAspect);
+export const Aspects = () => {
+    const mapAspect = useUnit(mapModel.$mapAspect);
+    const aspects = useUnit(aspectsModel.$uniqueAspects);
 
     return (
         <div aria-label="Аспекты" role="radiogroup" className={cx(styles.list, 'a11y')}>
             <button
                 role="radio"
-                aria-checked={!$mapAspect}
-                className={cx(styles.aspect, { [styles.selected!]: !$mapAspect })}
+                aria-checked={!mapAspect}
+                className={cx(styles.aspect, { [styles.selected!]: !mapAspect })}
                 onClick={() => mapModel.setMapAspect(null)}
             >
-                Не выбран
+                Аспект не выбран
             </button>
 
             {aspects.map((aspect) => {
-                const { id, title } = aspect;
+                const { code, type } = aspect;
 
-                const isSelected = $mapAspect?.id === id;
+                const isSelected = mapAspect?.code === code;
 
                 return (
                     <button
                         role="radio"
                         aria-checked={isSelected}
                         className={cx(styles.aspect, { [styles.selected!]: isSelected })}
-                        key={id}
+                        key={code}
                         onClick={() => mapModel.setMapAspect(isSelected ? null : aspect)}
                     >
-                        {title}
+                        {type}
                     </button>
                 );
             })}

@@ -16,7 +16,7 @@ interface Props {
 
 const b = bem('spoiler');
 
-export const Spoiler = ({ title, badgeText, defaultExpanded, children, mix, color = 'white' }: Props) => {
+export const Spoiler = ({ title, badgeText, defaultExpanded, children, mix, color = 'gray' }: Props) => {
     const [expanded, setExpanded] = React.useState(defaultExpanded ?? false);
 
     const handleExpand = () => {

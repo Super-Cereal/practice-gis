@@ -4,9 +4,8 @@ import { useUnit } from 'effector-react';
 
 import { Modal } from '../../../../shared/ui/modal';
 import { Button } from '../../../../shared/ui/button';
-import { GEO_OBJECT_STATUS, geoObjectModel } from '../../../../entities/geoobject';
+import { aspectsModel, GEO_OBJECT_STATUS, geoObjectModel } from '../../../../entities/geoobject';
 import { topologyModel } from '../../../../entities/geoobject';
-import { aspects } from '../../../../widgets/map/lib/mocks';
 import { mapObjectsModel } from '../../../map-objects/lib/map-objects.model';
 
 import type { FormFields } from '../../lib/types';
@@ -17,7 +16,7 @@ import { mapGeoObjectToEditorObject } from '../../lib/map-geoobject-to-data';
 
 import styles from './geoobject-child-form.module.css';
 
-//создаем новый объект а затем связь ребенок - родитель
+// создаем новый объект а затем связь ребенок - родитель
 
 const typeToLabel = {
     Point: 'точки',
@@ -29,6 +28,8 @@ export const GeoobjectСhildForm = () => {
     //нужно получить с бэка список классификаторов
     const geoClassifiers = mockedClassifiers;
     //нужно получить с бэка список классификаторов
+
+    const aspects = useUnit(aspectsModel.$uniqueAspects);
 
     //родитель
     const parentGeoObject = useUnit(mapObjectsModel.$selectedGeoobject);
@@ -96,8 +97,8 @@ export const GeoobjectСhildForm = () => {
                     <label>Аспект: </label>
                     <select className={styles.aspectSelect} {...register('aspect', { required: true })}>
                         {aspects.map((aspect) => (
-                            <option className={styles.aspectOption} key={aspect.id} value={aspect.title}>
-                                {aspect.title}
+                            <option className={styles.aspectOption} key={aspect.code} value={aspect.type}>
+                                {aspect.type}
                             </option>
                         ))}
                     </select>

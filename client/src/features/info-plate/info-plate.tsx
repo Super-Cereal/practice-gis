@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { useUnit } from 'effector-react';
 import { useSearchParams } from 'react-router-dom';
+import { useMount } from 'react-use';
 
+import { Button } from '../../shared/ui/button';
 import { mapModel } from '../../entities/map';
 import type { MapMode } from '../../entities/map/lib/types';
+import { aspectsModel } from '../../entities/geoobject';
 
 import styles from './info-plate.module.css';
-import { useMount } from 'react-use';
 
 /** Настройки страницы и карты (выбор режима просмотра) */
 export const InfoPlate = () => {
@@ -55,6 +57,10 @@ export const InfoPlate = () => {
                         <input type="checkbox" onChange={handlePointsOnCornersChange} checked={editorPointsOnCorners} />
                     </label>
                 )}
+            </div>
+
+            <div>
+                <Button onClick={() => aspectsModel.setIsNewAspectModalOpen(true)}>Создать аспект</Button>
             </div>
         </div>
     );

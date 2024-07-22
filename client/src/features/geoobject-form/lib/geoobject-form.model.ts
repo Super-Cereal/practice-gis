@@ -23,11 +23,6 @@ const $isGeoObjectModalOpen = createStore(false);
 const setIsGeoObjectModalOpen = createEvent<boolean>();
 sample({ clock: setIsGeoObjectModalOpen, target: $isGeoObjectModalOpen });
 
-//aspects list
-const $isAspectsModalOpen = createStore(false);
-const setIsAspectsModalOpen = createEvent<boolean>();
-sample({ clock: setIsAspectsModalOpen, target: $isAspectsModalOpen });
-
 //form update
 const $isUpdateModalOpen = createStore(false);
 const setIsUpdateModalOpen = createEvent<boolean>();
@@ -43,10 +38,15 @@ const $isClassifierFormOpen = createStore(false);
 const setIsClassifierFormOpen = createEvent<boolean>();
 sample({ clock: setIsClassifierFormOpen, target: $isClassifierFormOpen });
 
-//classifier
+//topology
 const $isTopologyFormOpen = createStore(false);
 const setIsTopologyFormOpen = createEvent<boolean>();
 sample({ clock: setIsTopologyFormOpen, target: $isTopologyFormOpen });
+
+//aspects
+const $isAssignAspectModalOpen = createStore(false);
+const setIsAssignAspectModalOpen = createEvent<boolean>();
+sample({ clock: setIsAssignAspectModalOpen, target: $isAssignAspectModalOpen });
 
 export const geoObjectFormModel = {
     $selectedEditorObject,
@@ -57,9 +57,6 @@ export const geoObjectFormModel = {
 
     $isGeoObjectModalOpen,
     setIsGeoObjectModalOpen,
-
-    $isAspectsModalOpen,
-    setIsAspectsModalOpen,
 
     $isUpdateModalOpen,
     setIsUpdateModalOpen,
@@ -73,6 +70,6 @@ export const geoObjectFormModel = {
     $isTopologyFormOpen,
     setIsTopologyFormOpen,
 
-    $selectedGeoObjectId,
-    setSelectedGeoObjectId,
+    $isAssignAspectModalOpen,
+    setIsAssignAspectModalOpen,
 };

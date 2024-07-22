@@ -1,7 +1,9 @@
 import type { Map } from 'leaflet';
 import { createStore, createEvent, sample } from 'effector';
 
-import type { MapMode, Aspect } from './types';
+import type { DraftAspect } from '../../geoobject/';
+
+import type { MapMode } from './types';
 
 const $map = createStore<Map | null>(null);
 const setMap = createEvent<Map>();
@@ -11,12 +13,12 @@ const $mapMode = createStore<MapMode>('view');
 const setMapMode = createEvent<MapMode>();
 sample({ clock: setMapMode, target: $mapMode });
 
-const $editorPointsOnCorners = createStore<boolean>(false);
+const $editorPointsOnCorners = createStore<boolean>(true);
 const setEditorPointsOnCorners = createEvent<boolean>();
 sample({ clock: setEditorPointsOnCorners, target: $editorPointsOnCorners });
 
-const $mapAspect = createStore<Aspect | null>(null);
-const setMapAspect = createEvent<Aspect | null>();
+const $mapAspect = createStore<DraftAspect | null>(null);
+const setMapAspect = createEvent<DraftAspect | null>();
 sample({ clock: setMapAspect, target: $mapAspect });
 
 export const mapModel = {

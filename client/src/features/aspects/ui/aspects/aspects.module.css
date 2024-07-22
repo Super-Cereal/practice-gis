@@ -24,9 +24,9 @@
 }
 
 .aspect:hover {
-    transform: scale(1.05);
+    transform: scaleY(1.07);
     z-index: 1000;
-    box-shadow: 0 0 3px var(--border);
+    box-shadow: 0 0 4px var(--border);
 }
 
 .aspect:first-child {
@@ -34,4 +34,8 @@
 }
 .aspect:last-child {
     border-top-right-radius: 12px;
+}
+
+.create {
+    background-color: #6bbaff;
 }
