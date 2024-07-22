@@ -32,7 +32,8 @@
 
     border-radius: 12px;
 
-    max-height: calc(80vh + 28px);
+    height: calc(80vh + 24px);
+    max-height: 800px;
     box-sizing: border-box;
 
     overflow-y: scroll;

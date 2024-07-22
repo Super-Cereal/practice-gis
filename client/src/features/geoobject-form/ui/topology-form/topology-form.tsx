@@ -71,6 +71,7 @@ export const TopologyForm = () => {
                     <input
                         className={styles.input}
                         type="text"
+                        readOnly={true}
                         {...register('geographicalObjectInId', { required: true })}
                     />
                 </div>
@@ -85,7 +86,9 @@ export const TopologyForm = () => {
                 </div>
 
                 <div className={styles.btns}>
-                    <Button mix={styles.btn}>Создать связь</Button>
+                    <Button mix={styles.btn} disabled={!isValid}>
+                        Создать связь
+                    </Button>
                     <Button
                         mix={styles.btn}
                         color="orange"

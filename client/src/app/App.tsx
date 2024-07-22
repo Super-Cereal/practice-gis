@@ -22,7 +22,7 @@ export const App = () => {
                     </Routes>
                 </BrowserRouter>
 
-                <ToastContainer />
+                <ToastContainer theme="colored" />
             </ErrorBoundary>
         </React.StrictMode>
     );

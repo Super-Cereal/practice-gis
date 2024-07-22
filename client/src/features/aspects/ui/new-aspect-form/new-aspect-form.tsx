@@ -42,7 +42,7 @@ export const NewAspectForm = () => {
 
                 <div>
                     <label>Описание: </label>
-                    <input className={styles.input} type="text" {...register('commonInfo', { required: true })} />
+                    <textarea className={styles.textarea} {...register('commonInfo', { required: true })} />
                 </div>
 
                 <div className={styles.btns}>

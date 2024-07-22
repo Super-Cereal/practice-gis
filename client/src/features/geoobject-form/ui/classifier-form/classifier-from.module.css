@@ -49,3 +49,8 @@
     padding: 8px;
     border: 1px solid var(--border);
 }
+.textarea {
+    resize: vertical;
+    max-height: 100px;
+    height: 40%;
+}

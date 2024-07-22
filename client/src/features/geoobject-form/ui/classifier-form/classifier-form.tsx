@@ -76,7 +76,7 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObject }) => {
                     <option value="">Выберите классификатор</option>
                     {geoClassifiers.map((cl) => (
                         <option className={styles.aspectOption} key={cl.code} value={cl.code}>
-                            {cl.code} - {cl.commonInfo}
+                            {cl.code} - {cl.name}
                         </option>
                     ))}
                 </select>
@@ -104,7 +104,7 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObject }) => {
                     </label>
                     <label>
                         Описание классификатора:
-                        <input className={styles.input} type="text" {...register('commonInfo', { required: true })} />
+                        <textarea className={styles.textarea} {...register('commonInfo', { required: true })} />
                     </label>
 
                     <div className={cx(styles.btns, styles.reversed)}>

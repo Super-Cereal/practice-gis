@@ -16,6 +16,9 @@ export const createAspectRequest = async (aspect: DraftAspect) => {
         if (!response) {
             throw new Error();
         }
+
+        toast(`Аспект создан`, { type: 'success' });
+
         return response;
     } catch (error) {
         toast(`Не получилось создать аспект ${aspect.type}`, { type: 'error' });
@@ -30,6 +33,9 @@ export const assignAspectRequest = async (aspect: Omit<AssignedAspect, 'id'>) =>
         if (!response) {
             throw new Error();
         }
+
+        toast(`Обьекту добавлен аспект`, { type: 'success' });
+
         return response;
     } catch (error) {
         toast(`Не получилось назначить обьекту аспект ${aspect.type}`, { type: 'error' });

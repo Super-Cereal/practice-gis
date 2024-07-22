@@ -6,50 +6,71 @@ import { Modal } from '../../../../shared/ui/modal';
 import { Button } from '../../../../shared/ui/button';
 
 import styles from './assign-aspect-form.module.css';
+import { useUnit } from 'effector-react';
+import { geoObjectFormModel } from '../../lib/geoobject-form.model';
+import { mapObjectsModel } from '../../../map-objects';
 
-type Fields = Omit<AssignedAspect, 'id'>;
+type Fields = Pick<AssignedAspect, 'endPoint' | 'geographicalObjectId' | 'code'>;
 
 export const AssignAspectForm = () => {
+    const selectedGeoobject = useUnit(mapObjectsModel.$selectedGeoobject);
+
     const {
         register,
         handleSubmit,
         formState: { isValid },
         reset,
-    } = useForm<Fields>({});
+    } = useForm<Fields>({ defaultValues: { geographicalObjectId: selectedGeoobject?.id } });
+
+    const aspects = useUnit(aspectsModel.$uniqueAspects);
 
     const handleSave = async (data: Fields) => {
-        await aspectsModel.assignAspectFx(data);
+        const selectedAspect = aspects.find(({ code }) => code === data.code)!;
+
+        await aspectsModel.assignAspectFx({ ...data, ...selectedAspect });
+
         handleClose();
     };
 
     const handleClose = () => {
-        aspectsModel.setIsNewAspectModalOpen(false);
+        geoObjectFormModel.setIsAssignAspectModalOpen(false);
         reset();
     };
 
     return (
         <Modal onClose={handleClose}>
-            <h3 className={styles.title}>Добавление нового аспекта</h3>
+            <h3 className={styles.title}>Добавить аспект геообьекту</h3>
 
             <form className={styles.form} onSubmit={handleSubmit(handleSave)}>
                 <div>
+                    <label>ID геообьекта: </label>
+                    <input
+                        className={styles.input}
+                        readOnly={true}
+                        type="text"
+                        {...register('geographicalObjectId', { required: true })}
+                    />
+                </div>
+
+                <div>
                     <label>Код аспекта: </label>
-                    <input className={styles.input} type="text" {...register('code', { required: true })} />
+                    <select className={styles.aspectSelect} {...register('code', { required: true })}>
+                        {aspects.map((aspect) => (
+                            <option className={styles.aspectOption} key={aspect.code} value={aspect.code}>
+                                {aspect.code} - {aspect.type}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div>
-                    <label>Название: </label>
-                    <input className={styles.input} type="text" {...register('type', { required: true })} />
-                </div>
-
-                <div>
-                    <label>Описание: </label>
-                    <input className={styles.input} type="text" {...register('commonInfo', { required: true })} />
+                    <label>Описание геообьекта для аспекта: </label>
+                    <textarea className={styles.textarea} {...register('endPoint', { required: true })} />
                 </div>
 
                 <div className={styles.btns}>
                     <Button mix={styles.btn} disabled={!isValid}>
-                        Создать
+                        Добавить
                     </Button>
                     <Button
                         mix={styles.btn}

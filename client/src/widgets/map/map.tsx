@@ -69,7 +69,7 @@ export const Map = () => {
             {isTopologyFormOpen && <TopologyForm />}
 
             {isNewAspectModalOpen && <NewAspectForm />}
-            {/* {isAssignAspectModalOpen && <AssignAspectForm />} */}
+            {isAssignAspectModalOpen && <AssignAspectForm />}
         </>
     );
 };
