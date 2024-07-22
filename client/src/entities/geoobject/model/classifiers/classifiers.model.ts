@@ -45,9 +45,12 @@ const $saveClassifierLoading = status(saveClassifierFx);
 
 sample({ clock: saveClassifierFx.doneData, target: getClassifiersFx });
 
-// Добавить классификатор геообьекту
-const addGeoObjectClassifierFx = createEffect(addGeoObjectClassifierRequest);
-const $addGeoObjectClassifierLoading = status(addGeoObjectClassifierFx);
+
+
+// модальное окно для создания нового класса
+const $isNewClassModalOpen = createStore(false);
+const setIsNewClassModalOpen = createEvent<boolean>();
+sample({ clock: setIsNewClassModalOpen, target: $isNewClassModalOpen });
 
 export const classifiersModel = {
     $classifiers,
@@ -59,13 +62,14 @@ export const classifiersModel = {
     $saveClassifierLoading,
     saveClassifierFx,
 
-    $addGeoObjectClassifierLoading,
-    addGeoObjectClassifierFx,
-
     getGeoObjectClassifiers,
     getGeoObjectClassifiersFx,
     $getGeoObjectClassifiersLoading,
     
-    $GeoObjectclassifiers
+    $GeoObjectclassifiers,
+
+    $isNewClassModalOpen,
+    setIsNewClassModalOpen
+
 
 };

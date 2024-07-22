@@ -4,12 +4,10 @@
     gap: 20px;
 }
 
-.btns.reversed {
-    justify-content: flex-start;
-}
+
 
 .btn {
-    max-width: 250px;
+    max-width: 150px;
     margin-top: 20px;
 }
 .classifierGroup {
@@ -44,8 +42,7 @@
     border-radius: 3px;
 }
 
-.newClassifierForm {
-    margin-top: 12px;
-    padding: 8px;
-    border: 1px solid var(--border);
+
+.title {
+    margin-bottom: 16px;
 }

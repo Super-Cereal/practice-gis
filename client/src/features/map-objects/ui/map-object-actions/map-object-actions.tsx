@@ -16,24 +16,13 @@ export const MapObjectActions = () => {
     const selectedGeoobject = useUnit(mapObjectsModel.$selectedGeoobject);
     const selectedAspect = useUnit(mapModel.$mapAspect);
     const geoObjects = useUnit(geoObjectModel.$geoObjects);
-    const geoObjectClassifiers = useUnit(classifiersModel.$GeoObjectclassifiers);
-    const classifiers = useUnit(classifiersModel.$classifiers);
+  
 
     const parentChildLinks = useUnit(topologyModel.$parentChildLinks);
 
     useEffect(() => {
-        if (selectedGeoobject) {
-            classifiersModel.getClassifiersFx();
-            topologyModel.getParentChildLinksFx();
-            classifiersModel.getGeoObjectClassifiersFx(selectedGeoobject.id);
-        }
+        topologyModel.getParentChildLinksFx();
     }, [selectedGeoobject]);
-
-    const geoObjectClassifierObjects = geoObjectClassifiers
-        .map((classifierId) => {
-            return classifiers.find((classifier) => classifier.id === classifierId);
-        })
-        .filter((classifier): classifier is Classifier => !!classifier);
 
     const childGeoObjects = parentChildLinks
         .filter((link) => link.parentGeographicalObjectId === selectedGeoobject?.id)
@@ -44,6 +33,7 @@ export const MapObjectActions = () => {
         .filter((link) => link.childGeographicalObjectId === selectedGeoobject?.id)
         .map((link) => link.parentGeographicalObjectId)
         .flatMap((id) => geoObjects.find((geoObject) => geoObject.id === id));
+    
     //from update
     const handleUpdateModalFormOpen = () => {
         geoObjectFormModel.setIsUpdateModalOpen(true);
@@ -71,7 +61,7 @@ export const MapObjectActions = () => {
                 parentGeoObjects={parentGeoObjects}
                 geoObject={selectedGeoobject}
                 childGeoObjects={childGeoObjects}
-                geoObjectClassifierObjects={geoObjectClassifierObjects}
+            /* geoObjectClassifierObjects={geoObjectClassifierObjects} */
             />
 
             <div className={styles.btns}>

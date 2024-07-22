@@ -14,17 +14,18 @@ interface MapObjectDescriptionProps {
     geoObject: GeoObject;
     childGeoObjects?: (GeoObject | undefined)[];
     parentGeoObjects?: (GeoObject | undefined)[];
-    geoObjectClassifierObjects?: Classifier[];
+  /*   geoObjectClassifierObjects?: Classifier[]; */
 }
 
 export const MapObjectDescription = ({
     geoObject,
-    childGeoObjects,
+    childGeoObjects, 
     parentGeoObjects,
-    geoObjectClassifierObjects,
+
 }: MapObjectDescriptionProps) => {
     const uniqueAspects = useUnit(aspectsModel.$uniqueAspects);
 
+    const geoObjectClassifierObjects = geoObject.geoObjectInfo?.classifiers
     const geoobjectAspects = useUnit(aspectsModel.$assignedAspects).filter(
         ({ geographicalObjectId }) => geographicalObjectId === geoObject.id,
     );

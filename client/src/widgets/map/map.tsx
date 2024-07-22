@@ -4,7 +4,7 @@ import cx from 'classnames';
 import { useMount } from 'react-use';
 
 import { MapView, mapModel } from '../../entities/map';
-import { aspectsModel, geoObjectModel } from '../../entities/geoobject';
+import { aspectsModel, classifiersModel, geoObjectModel } from '../../entities/geoobject';
 import { InfoPlate } from '../../features/info-plate';
 import { Aspects, NewAspectForm } from '../../features/aspects';
 import { MapEditorActions, MapEditorObjects } from '../../features/map-editor';
@@ -19,6 +19,7 @@ import {
 import { MapObjectActions, MapObjects } from '../../features/map-objects';
 
 import styles from './map.module.css';
+import { CreatenewClassifier } from '../../features/create-сlass-pc/ui/createnew-classifier/createnew-classifier';
 
 /** Рендерит карту и все ее настройки и действия */
 export const Map = () => {
@@ -26,6 +27,8 @@ export const Map = () => {
 
     const isNewGeoobjectModalOpen = useUnit(geoObjectFormModel.$isGeoObjectModalOpen);
     const isUpdateModalOpen = useUnit(geoObjectFormModel.$isUpdateModalOpen);
+
+    const isNewClassModalOpen = useUnit(classifiersModel.$isNewClassModalOpen);
 
     const isChildModalOpen = useUnit(geoObjectFormModel.$isChildModalOpen);
     const isTopologyFormOpen = useUnit(geoObjectFormModel.$isTopologyFormOpen);
@@ -69,6 +72,7 @@ export const Map = () => {
             {isTopologyFormOpen && <TopologyForm />}
 
             {isNewAspectModalOpen && <NewAspectForm />}
+            {isNewClassModalOpen && <CreatenewClassifier />}
             {isAssignAspectModalOpen && <AssignAspectForm />}
         </>
     );

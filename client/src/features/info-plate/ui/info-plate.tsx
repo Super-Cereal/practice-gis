@@ -6,7 +6,7 @@ import { useMount } from 'react-use';
 import { Button } from '../../../shared/ui/button';
 import { mapModel } from '../../../entities/map';
 import type { MapMode } from '../../../entities/map/lib/types';
-import { aspectsModel } from '../../../entities/geoobject';
+import { aspectsModel, classifiersModel } from '../../../entities/geoobject';
 
 import styles from './info-plate.module.css';
 import { createEvent, createStore, sample } from 'effector';
@@ -54,7 +54,7 @@ export const InfoPlate = () => {
                     </select>
                 </label>
                 <label>
-                    <span>Показать архивные элементы:</span>
+                    <span>Архивные элементы:</span>
                     <input 
                     type="checkbox"
                      onChange={(e) => infoPlateModel.showArchiveObjectsChanged(e.target.checked)} 
@@ -62,14 +62,15 @@ export const InfoPlate = () => {
                 </label>
                 {mapMode === 'edit' && (
                     <label>
-                        <span>Включить отображение точек на углах:</span>
+                        <span>Точки на углах:</span>
                         <input type="checkbox" onChange={handlePointsOnCornersChange} checked={editorPointsOnCorners} />
                     </label>
                 )}
             </div>
 
-            <div>
-                <Button onClick={() => aspectsModel.setIsNewAspectModalOpen(true)}>Создать аспект</Button>
+            <div className={styles.groupBtns} >
+                <Button mix={styles.btn} onClick={() => classifiersModel.setIsNewClassModalOpen(true)}>Создать класс</Button>
+                <Button mix={styles.btn} onClick={() => aspectsModel.setIsNewAspectModalOpen(true)}>Создать аспект</Button>
             </div>
         </div>
     );

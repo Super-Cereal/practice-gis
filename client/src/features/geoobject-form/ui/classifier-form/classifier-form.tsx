@@ -3,7 +3,7 @@ import { useUnit } from 'effector-react';
 import { useForm } from 'react-hook-form';
 import cx from 'classnames';
 
-import { type GeoObject, classifiersModel, type Classifier } from '../../../../entities/geoobject';
+import { type GeoObject, classifiersModel, type Classifier, geoObjectModel } from '../../../../entities/geoobject';
 import { Button } from '../../../../shared/ui/button';
 
 import { FormFieldsForClassifier } from '../../lib/types';
@@ -38,7 +38,8 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObject }) => {
         }
 
         const classifierId = selectedClassifier.id;
-        await classifiersModel.addGeoObjectClassifierFx({ geoObjectId: geoObject.id, classifierId });
+        await geoObjectModel.addGeoObjectClassifierFx({ geoObjectId: geoObject.id, classifierId });
+
     };
 
     // поля для формы создания Нового классификатора

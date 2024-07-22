@@ -17,3 +17,10 @@
 .settings label {
     gap: 4px;
 }
+.groupBtns{
+    display: flex;
+}
+.btn{
+    width: 140px;
+    margin-left: 10px;
+}
