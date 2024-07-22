@@ -59,9 +59,10 @@ interface GeoObjectInfo {
 }
 
 export interface ParentChildObjectLink {
-    ParentGeoObjectId: string;
-    ChildGeoObjectId: string;
+    parentGeographicalObjectId: string;
+    childGeographicalObjectId: string;
 }
+
 export type GeometryGeoJSON =
     | {
           type: 'Point';

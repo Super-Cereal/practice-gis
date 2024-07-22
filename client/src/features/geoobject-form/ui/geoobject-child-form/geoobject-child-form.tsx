@@ -60,14 +60,14 @@ export const GeoobjectСhildForm = () => {
         setShowCreateRelationship(true);
     };
     const handleCreateRelationship = async () => {
-        await topologyModel.addParentChildLinkFx({ ParentGeoObjectId: parentId, ChildGeoObjectId: childId });
-
+        await topologyModel.addParentChildLinkFx({ parentGeographicalObjectId: parentId, childGeographicalObjectId: childId });
+    
         setShowCreateRelationship(false);
-
+    
         geoObjectFormModel.setIsChildModalOpen(false);
         reset();
     };
-
+    
     const handleClose = () => {
         geoObjectFormModel.setIsChildModalOpen(false);
         reset();
