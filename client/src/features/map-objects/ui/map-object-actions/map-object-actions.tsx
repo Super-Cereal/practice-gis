@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useUnit } from 'effector-react';
 
 import { Spoiler } from '../../../../shared/ui/spoiler';
 import { TextWithCopy } from '../../../../shared/ui/text-with-copy';
 import { Button } from '../../../../shared/ui/button';
 import { mapModel } from '../../../../entities/map';
-import { type GeoObject, geoObjectModel, getGeometry } from '../../../../entities/geoobject';
+import { type GeoObject, geoObjectModel, getGeometry, topologyModel } from '../../../../entities/geoobject';
 import { geoObjectFormModel } from '../../../geoobject-form';
 
 import { mapObjectsModel } from '../../lib/map-objects.model';
@@ -16,7 +16,25 @@ import styles from './map-object-actions.module.css';
 export const MapObjectActions = () => {
     const selectedGeoobject = useUnit(mapObjectsModel.$selectedGeoobject);
     const selectedAspect = useUnit(mapModel.$mapAspect);
+    const parentChildLinks = useUnit(topologyModel.$parentChildLinks);
 
+    useEffect(() => {
+        topologyModel.getParentChildLinksFx();
+    }, []);
+
+    const geoObjects = useUnit(geoObjectModel.$geoObjects);
+
+    const childGeoObjects = parentChildLinks.filter(
+        (link) => link.parentGeographicalObjectId === selectedGeoobject?.id
+    ).map((link) => link.childGeographicalObjectId).flatMap((id) =>
+        geoObjects.find((geoObject) => geoObject.id === id)
+    );
+
+    const parentGeoObjects = parentChildLinks.filter(
+        (link) => link.childGeographicalObjectId === selectedGeoobject?.id
+    ).map((link) => link.parentGeographicalObjectId).flatMap((id) =>
+        geoObjects.find((geoObject) => geoObject.id === id)
+    );
     //from update
     const handleUpdateModalFormOpen = () => {
         geoObjectFormModel.setIsUpdateModalOpen(true);
@@ -43,7 +61,11 @@ export const MapObjectActions = () => {
 
     return (
         <div>
-            <MapObjectDescription geoObject={selectedGeoobject} />
+            <MapObjectDescription
+                parentGeoObjects={parentGeoObjects}
+                geoObject={selectedGeoobject}
+                childGeoObjects={childGeoObjects}
+            />
 
             <div className={styles.btns}>
                 {selectedAspect ? (
@@ -72,12 +94,20 @@ export const MapObjectActions = () => {
     );
 };
 
-const MapObjectDescription = ({ geoObject }: { geoObject: GeoObject }) => {
+interface MapObjectDescriptionProps {
+    geoObject: GeoObject;
+    childGeoObjects?: (GeoObject | undefined)[];
+    parentGeoObjects?: (GeoObject | undefined)[];
+}
+
+const MapObjectDescription = ({ geoObject, childGeoObjects, parentGeoObjects, }: MapObjectDescriptionProps) => {
+
     const geometry = getGeometry(geoObject);
 
     if (!geometry) {
         return <h3>Ошибка: выбран обьект с неизвестной геометрией</h3>;
     }
+
     const { type } = geometry;
 
     return (
@@ -110,6 +140,40 @@ const MapObjectDescription = ({ geoObject }: { geoObject: GeoObject }) => {
                     ))}
                 </div>
             </Spoiler>
+            {childGeoObjects && childGeoObjects.length > 0 ? (
+                <Spoiler mix={styles.spoiler} title="Дети" badgeText="Д" color="gray">
+                    <div className={styles.classes}>
+                        {childGeoObjects.map((child) =>
+                            child ? (
+                                <div key={child.id} className={styles.class}>
+                                    <TextWithCopy title="id" text={child.id} />
+                                    <TextWithCopy title="name" text={child.name} />
+                                </div>
+                            ) : null
+                        )}
+                    </div>
+                </Spoiler>
+            ) : (
+                <div className={styles.noObject}>Нет дочерних элементов</div>
+            )}
+
+            {parentGeoObjects && parentGeoObjects.length > 0 ? (
+                <Spoiler mix={styles.spoiler} title="Родители" badgeText="Р" color="gray">
+                    <div className={styles.classes}>
+                        {parentGeoObjects.map((parent) =>
+                            parent ? (
+                                <div key={parent.id} className={styles.class}>
+                                    <TextWithCopy title="id" text={parent.id} />
+                                    <TextWithCopy title="name" text={parent.name} />
+                                </div>
+                            ) : null
+                        )}
+                    </div>
+                </Spoiler>
+            ) : (
+                <div className={styles.noObject}>Нет родительских элементов</div>
+            )}
+
         </>
     );
 };

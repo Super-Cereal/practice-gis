@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-import { post } from '../../../../shared/lib/fetch';
+import { get, post } from '../../../../shared/lib/fetch';
 import type { ParentChildObjectLink } from '../../model/types';
 
 export const addParentChildLinkRequest = async (params: {
@@ -15,6 +15,13 @@ export const addParentChildLinkRequest = async (params: {
         console.error(error);
     }
 };
+
+export const getParentChildLinksRequest = async (): Promise<ParentChildObjectLink[] > => {
+      const data = await get<ParentChildObjectLink[]>('/api/ParentChild/Link');
+      return data;
+   
+  };
+  
 
 export const addTopologyRequest = async (params: {
     geographicalObjectInId: string;

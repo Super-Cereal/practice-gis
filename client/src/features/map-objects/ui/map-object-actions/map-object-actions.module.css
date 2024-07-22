@@ -35,3 +35,13 @@
 .btn {
     white-space: normal !important;
 }
+
+.noObject{
+    margin-top: 10px;
+    text-align: center;
+font-size: 16px;
+color: #4141419f;
+padding: 5px;
+border: 1px solid   #41414156;
+border-radius: 12px;
+}

@@ -21,8 +21,8 @@ export const TextWithCopy = ({
         }
     };
 
-    const value = text ? text.slice(0, 10) : '-';
-    const dots = text && text.length > 10 && '...';
+    const value = text ? text.slice(0, 15) : '-';
+    const dots = text && text.length > 15 && '...';
 
     return (
         <div className={cx(styles.box, color === 'black' && styles.black)}>
