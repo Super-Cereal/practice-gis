@@ -7,10 +7,12 @@ namespace GISServer.Infrastructure.Service
     public class GeoObjectRepository : IGeoObjectRepository
     {
         private readonly Context _context;
+        private readonly IGeoObjectsClassifiersRepository _gocRepository;
 
-        public GeoObjectRepository(Context context)
+        public GeoObjectRepository(Context context, IGeoObjectsClassifiersRepository gocRepository)
         {
             _context = context;
+            _gocRepository = gocRepository;
         }
 
         public async Task<List<GeoObject>> GetGeoObjects()
@@ -103,6 +105,9 @@ namespace GISServer.Infrastructure.Service
             if (existgeoObject != null)
             {
                 _context.Entry(existgeoObject).CurrentValues.SetValues(geoObject);
+
+                ////////// InputTopologyLinks ///////////
+                Console.WriteLine("\n\n////////// InputTopologyLinks ///////////");
                 foreach (var InputTopologylink in geoObject.InputTopologyLinks)
                 {
                     var existInputTopologylink = existgeoObject.InputTopologyLinks.FirstOrDefault(l => l.Id == InputTopologylink.Id);
@@ -122,6 +127,8 @@ namespace GISServer.Infrastructure.Service
                         _context.Remove(existInputlink);
                     }
                 }
+                ////////// InputTopologyLinks ///////////
+                Console.WriteLine("\n\n////////// OutputTopologyLinks ///////////");
                 foreach (var OutputTopologylink in geoObject.OutputTopologyLinks)
                 {
                     var existOutputTopologylink = existgeoObject.OutputTopologyLinks.FirstOrDefault(l => l.Id == OutputTopologylink.Id);
@@ -141,33 +148,134 @@ namespace GISServer.Infrastructure.Service
                         _context.Remove(existOutputlink);
                     }
                 }
-
+                ////////// Classifier ///////////
+                Console.WriteLine("\n\n////////// Classifier ///////////");
+                foreach (var classifier in geoObject.GeoObjectInfo.Classifiers)
+                {
+                    var existClassifier = existgeoObject.GeoObjectInfo.Classifiers.FirstOrDefault(l => l.Id == classifier.Id);
+                    if (existClassifier == null)
+                    {
+                        existgeoObject.GeoObjectInfo.Classifiers.Add(classifier);
+                    }
+                    else
+                    {
+                        _context.Entry(existClassifier).CurrentValues.SetValues(classifier);
+                    }
+                }
+                foreach (var existClassifier in existgeoObject.GeoObjectInfo.Classifiers)
+                {
+                    if (!geoObject.GeoObjectInfo.Classifiers.Any(l => l.Id == existClassifier.Id))
+                    {
+                        _context.Remove(existClassifier);
+                    }
+                }
+                ////////// Aspect ///////////
+                Console.WriteLine("\n\n////////// Aspect ///////////");
+                foreach (var aspect in geoObject.Aspects)
+                {
+                    var existAspect = existgeoObject.Aspects.FirstOrDefault(l => l.Id == aspect.Id);
+                    if (existAspect == null)
+                    {
+                        existgeoObject.Aspects.Add(aspect);
+                    }
+                    else
+                    {
+                        _context.Entry(existAspect).CurrentValues.SetValues(aspect);
+                    }
+                }
+                foreach (var existAspect in existgeoObject.Aspects)
+                {
+                    if (!geoObject.Aspects.Any(l => l.Id == existAspect.Id))
+                    {
+                        _context.Remove(existAspect);
+                    }
+                }
+                ////////// ParentChild ///////////
+                Console.WriteLine("\n\n////////// ParentChild ///////////");
+                foreach (var parent in geoObject.ParentGeoObjects)
+                {
+                    var existParent = existgeoObject.ParentGeoObjects.FirstOrDefault(l => l.Id == parent.Id);
+                    if (existParent == null)
+                    {
+                        existgeoObject.ParentGeoObjects.Add(parent);
+                    }
+                    else
+                    {
+                        _context.Entry(existParent).CurrentValues.SetValues(parent);
+                    }
+                }
+                foreach (var existParent in existgeoObject.ParentGeoObjects)
+                {
+                    if (!geoObject.ParentGeoObjects.Any(l => l.Id == existParent.Id))
+                    {
+                        _context.Remove(existParent);
+                    }
+                }
+                foreach (var child in geoObject.ChildGeoObjects)
+                {
+                    var existChild = existgeoObject.ChildGeoObjects.FirstOrDefault(l => l.Id == child.Id);
+                    if (existChild == null)
+                    {
+                        existgeoObject.ChildGeoObjects.Add(child);
+                    }
+                    else
+                    {
+                        _context.Entry(existChild).CurrentValues.SetValues(child);
+                    }
+                }
+                foreach (var existChild in existgeoObject.ChildGeoObjects)
+                {
+                    if (!geoObject.ChildGeoObjects.Any(l => l.Id == existChild.Id))
+                    {
+                        _context.Remove(existChild);
+                    }
+                }
             }
             await _context.SaveChangesAsync();
-
-            /* var existGeoObject = GetGeoObject(geoObject.Id).Result;
-             if (existGeoObject != null)
-             {
-                 _context.Entry(existGeoObject).CurrentValues.SetValues(geoObject);
-             }*/
-
         }
-        /*public async void UnionObjects(Guid id_A, Guid id_B)
-        {
-            var geoObjectA = GetGeoObject(
-        }*/
 
-        public async Task<(bool, string)> DeleteGeoObject(Guid id)
-        {
+            public async Task<(bool, string)> DeleteGeoObject(Guid id)
+            {
 
+                var dbGeoObject = await GetGeoObject(id);
+                if (dbGeoObject == null)
+                {
+                    return (false, "GeoObeject could not be found");
+                }
+                //TpologyLinks
+                foreach (var inputTopologyLink in dbGeoObject.InputTopologyLinks)
+                {
+                    _context.TopologyLinks.Remove(inputTopologyLink);
+                }
+                foreach (var outputTopologyLink in dbGeoObject.OutputTopologyLinks)
+                {
+                    _context.TopologyLinks.Remove(outputTopologyLink);
+                }
+                //ParentChildLinks
+                foreach(var parent in dbGeoObject.ParentGeoObjects)
+                {
+                    _context.ParentChildObjectLinks.Remove(parent);
+                }
+                foreach (var child in dbGeoObject.ChildGeoObjects)
+                {
+                    _context.ParentChildObjectLinks.Remove(child);
+                }
+                _context.GeoObjects.Remove(dbGeoObject);
+                await _context.SaveChangesAsync();
+                return (true, "GeoObject got deleted");
+            }
+
+        public async Task<(bool, string)> Archive(Guid id)
+        {
             var dbGeoObject = await GetGeoObject(id);
+
             if (dbGeoObject == null)
             {
                 return (false, "GeoObeject could not be found");
             }
-            _context.GeoObjects.Remove(dbGeoObject);
+            dbGeoObject.Status = Status.Archive;
             await _context.SaveChangesAsync();
-            return (true, "GeoObject got deleted");
+            return (true, "GeoObject got archived");
         }
 
         public async Task<GeoObject> AddGeoObjectAspect(Guid geoObjectId, Guid aspectId)
