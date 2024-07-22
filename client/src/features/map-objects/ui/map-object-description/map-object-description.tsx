@@ -5,7 +5,14 @@ import cx from 'classnames';
 import { Spoiler } from '../../../../shared/ui/spoiler';
 import { TextWithCopy } from '../../../../shared/ui/text-with-copy';
 import { Button } from '../../../../shared/ui/button';
-import { aspectsModel, getGeometry, type GeoObject, type Classifier } from '../../../../entities/geoobject';
+import {
+    aspectsModel,
+    getGeometry,
+    type GeoObject,
+    type Classifier,
+    topologyModel,
+} from '../../../../entities/geoobject';
+import { TopologyDescription } from '../../../topology';
 import { geoObjectFormModel } from '../../../geoobject-form';
 
 import styles from './map-object-description.module.css';
@@ -25,7 +32,15 @@ export const MapObjectDescription = ({
 }: MapObjectDescriptionProps) => {
     const uniqueAspects = useUnit(aspectsModel.$uniqueAspects);
 
+<<<<<<< HEAD
     const geoObjectClassifierObjects = geoObject.geoObjectInfo?.classifiers
+=======
+    const geoobjectTopologies = useUnit(topologyModel.$topologies).filter(
+        ({ geographicalObjectInId, geographicalObjectOutId }) =>
+            geographicalObjectInId === geoObject.id || geographicalObjectOutId === geoObject.id,
+    );
+
+>>>>>>> 3386e292 (Отображение границы между топологиями)
     const geoobjectAspects = useUnit(aspectsModel.$assignedAspects).filter(
         ({ geographicalObjectId }) => geographicalObjectId === geoObject.id,
     );
@@ -77,28 +92,30 @@ export const MapObjectDescription = ({
                         <div key={id} className={styles.class}>
                             <TextWithCopy title="id связи" text={id} />
                             <TextWithCopy title="code аспекта" text={code} />
-                            <p className={styles.listItem}>{commonInfo}</p>
+                            <p className={cx(styles.listItem, styles.aspectInfo)}>{commonInfo}</p>
 
                             <p className={cx(styles.listItem, styles.endPoint)}>{endPoint}</p>
                         </div>
                     ))}
                 </div>
 
-                <div className={styles.btns}>
-                    {uniqueAspects.length ? (
-                        <Button mix={styles.btn} onClick={handleAspectsFormOpen}>
-                            Добавить обьекту аспект
-                        </Button>
-                    ) : (
-                        <Button mix={styles.btn} onClick={handleNewAspectFormOpen}>
-                            Создать новый аспект
-                        </Button>
-                    )}
-                </div>
+                {uniqueAspects.length ? (
+                    <Button mix={styles.btn} onClick={handleAspectsFormOpen}>
+                        Добавить обьекту аспект
+                    </Button>
+                ) : (
+                    <Button mix={styles.btn} onClick={handleNewAspectFormOpen}>
+                        Создать новый аспект
+                    </Button>
+                )}
             </Spoiler>
 
             <Spoiler mix={styles.spoiler} title="Топологии" badgeText="Т">
-                <div className={styles.spoilerList}></div>
+                <div className={styles.spoilerList}>
+                    {geoobjectTopologies.map((topology) => (
+                        <TopologyDescription key={topology.id} topology={topology} />
+                    ))}
+                </div>
 
                 <Button mix={styles.btn} onClick={handleTopologyFormOpen}>
                     Добавить топологию

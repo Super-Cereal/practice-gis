@@ -1,0 +1,6 @@
+.class {
+    border: 1px solid var(--border);
+    background-color: var(--block);
+    border-radius: 8px;
+    padding: 4px;
+}

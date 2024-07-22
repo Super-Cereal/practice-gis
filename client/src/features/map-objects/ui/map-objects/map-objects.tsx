@@ -1,19 +1,50 @@
 import React from 'react';
 import { useUnit } from 'effector-react';
 import { Circle, Polygon, Polyline } from 'react-leaflet';
+import type { LatLngTuple } from 'leaflet';
 
 import { MapObjectPopup } from '../map-object-popup/map-object-popup';
-import { geoObjectModel, getGeometry, type GeoObject, type GeometryGeoJSON } from '../../../../entities/geoobject';
+import {
+    aspectsModel,
+    geoObjectModel,
+    getGeometry,
+    type GeoObject,
+    type GeometryGeoJSON,
+} from '../../../../entities/geoobject';
 
 import { mapObjectsModel } from '../../lib/map-objects.model';
+<<<<<<< HEAD
 import { infoPlateModel } from '../../../info-plate/lib';
+=======
+import { mapModel } from '../../../../entities/map';
+>>>>>>> 3386e292 (Отображение границы между топологиями)
 
 export const MapObjects = () => {
-    const geoObjects = useUnit(geoObjectModel.$geoObjects);
+    let geoObjects = useUnit(geoObjectModel.$geoObjects);
     const selectedObject = useUnit(mapObjectsModel.$selectedGeoobject);
 
+<<<<<<< HEAD
     const showArchiveObjects = useUnit(infoPlateModel.$showArchiveObjects);
     const filteredGeoObjects = showArchiveObjects ? geoObjects : geoObjects.filter(obj => obj.status !== 100);
+=======
+    const selectedAspect = useUnit(mapModel.$mapAspect);
+    const assignedAspects = useUnit(aspectsModel.$assignedAspects);
+
+    if (selectedAspect) {
+        geoObjects = geoObjects.filter((geoObject) => {
+            const geoobjectAspectLink = assignedAspects.find(
+                ({ geographicalObjectId, code }) =>
+                    geoObject.id === geographicalObjectId && selectedAspect.code === code,
+            );
+
+            return Boolean(geoobjectAspectLink);
+        });
+
+        if (selectedObject && !geoObjects.includes(selectedObject)) {
+            mapObjectsModel.setSelectedGeoobject(null);
+        }
+    }
+>>>>>>> 3386e292 (Отображение границы между топологиями)
 
     return (
         <>

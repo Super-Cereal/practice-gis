@@ -4,7 +4,7 @@ import cx from 'classnames';
 import { useMount } from 'react-use';
 
 import { MapView, mapModel } from '../../entities/map';
-import { aspectsModel, classifiersModel, geoObjectModel } from '../../entities/geoobject';
+import { aspectsModel, classifiersModel, geoObjectModel, topologyModel } from '../../entities/geoobject';
 import { InfoPlate } from '../../features/info-plate';
 import { Aspects, NewAspectForm } from '../../features/aspects';
 import { MapEditorActions, MapEditorObjects } from '../../features/map-editor';
@@ -17,6 +17,7 @@ import {
     TopologyForm,
 } from '../../features/geoobject-form';
 import { MapObjectActions, MapObjects } from '../../features/map-objects';
+import { TopologyObjects } from '../../features/topology';
 
 import styles from './map.module.css';
 import { CreatenewClassifier } from '../../features/create-сlass-pc/ui/createnew-classifier/createnew-classifier';
@@ -41,6 +42,7 @@ export const Map = () => {
     useMount(() => {
         geoObjectModel.getGeoObjects();
         aspectsModel.getAspectsFx();
+        topologyModel.getTopologies();
     });
 
     const requestStatus = useUnit(geoObjectModel.$getGeoObjectsLoading);
@@ -59,6 +61,7 @@ export const Map = () => {
                 <div className={styles.map}>
                     <MapView loading={requestStatus === 'pending'}>
                         <MapObjects />
+                        <TopologyObjects />
 
                         {mapEditable && <MapEditorObjects />}
                     </MapView>

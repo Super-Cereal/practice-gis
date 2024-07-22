@@ -1,8 +1,14 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
-
-import { addParentChildLinkRequest, addTopologyRequest, getParentChildLinksRequest } from '../../api/topology';
-import { ParentChildObjectLink } from '../types';
 import { status } from 'patronum';
+
+import {
+    getParentChildLinksRequest,
+    addParentChildLinkRequest,
+    getTopologiesRequest,
+    addTopologyRequest,
+} from '../../api/topology';
+
+import type { ParentChildObjectLink, TopologyLink } from './types';
 
 //стор для родительских связей
 const $parentChildLinks = createStore<ParentChildObjectLink[]>([]);
@@ -23,13 +29,32 @@ sample({ clock: getParentChildLinksFx.doneData, target: $parentChildLinks });
 
 //добавить родитель-ребенок связь
 const addParentChildLinkFx = createEffect(addParentChildLinkRequest);
+
+const $topologies = createStore<TopologyLink[]>([]);
+
+// Запрос за всеми топологиями
+const getTopologies = createEvent<void>();
+const getTopologiesFx = createEffect(getTopologiesRequest);
+const $getTopologiesLoading = status({ effect: getParentChildLinksFx });
+
+sample({
+    clock: getTopologies,
+    source: $getTopologiesLoading,
+    filter: (loading) => loading !== 'pending',
+    target: getTopologiesFx,
+});
+sample({ clock: getTopologiesFx.doneData, target: $topologies });
+
 // добавить топологическую связь
 const addTopologyFx = createEffect(addTopologyRequest);
-
+sample({ clock: addTopologyFx.done, target: getTopologies });
 
 export const topologyModel = {
-  addParentChildLinkFx,
-  addTopologyFx,
-  getParentChildLinksFx,
-  $parentChildLinks,
+    $parentChildLinks,
+    getParentChildLinks,
+    addParentChildLinkFx,
+
+    $topologies,
+    getTopologies,
+    addTopologyFx,
 };

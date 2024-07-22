@@ -21,7 +21,15 @@ export const MapObjectActions = () => {
     const parentChildLinks = useUnit(topologyModel.$parentChildLinks);
 
     useEffect(() => {
+<<<<<<< HEAD
         topologyModel.getParentChildLinksFx();
+=======
+        if (selectedGeoobject) {
+            classifiersModel.getClassifiersFx();
+            topologyModel.getParentChildLinks();
+            classifiersModel.getGeoObjectClassifiersFx(selectedGeoobject.id);
+        }
+>>>>>>> 3386e292 (Отображение границы между топологиями)
     }, [selectedGeoobject]);
 
     const childGeoObjects = parentChildLinks

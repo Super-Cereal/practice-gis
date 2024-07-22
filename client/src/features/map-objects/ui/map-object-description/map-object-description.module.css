@@ -24,15 +24,8 @@
     font-size: 16px;
 }
 
-.btns {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    margin-top: 12px;
-}
-
 .btn {
+    margin-top: 12px;
     white-space: normal !important;
 }
 
@@ -48,4 +41,9 @@
 
 .endPoint {
     margin-top: 8px;
+}
+
+.aspectInfo {
+    font-size: 14px;
+    color: #888;
 }

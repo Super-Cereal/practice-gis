@@ -58,11 +58,6 @@ interface GeoObjectInfo {
     classifiers?: Classifier[];
 }
 
-export interface ParentChildObjectLink {
-    parentGeographicalObjectId: string;
-    childGeographicalObjectId: string;
-}
-
 export type GeometryGeoJSON =
     | {
           type: 'Point';
