@@ -6,6 +6,7 @@ import { Modal } from '../../../../shared/ui/modal';
 import { Button } from '../../../../shared/ui/button';
 
 import styles from './new-aspect-form.module.css';
+import { Form } from '../../../../shared/ui/form';
 
 export const NewAspectForm = () => {
     const {
@@ -27,40 +28,39 @@ export const NewAspectForm = () => {
 
     return (
         <Modal onClose={handleClose}>
-            <h3 className={styles.title}>Добавление нового аспекта</h3>
+            <h2 className={styles.title}>Добавление нового аспекта</h2>
 
-            <form className={styles.form} onSubmit={handleSubmit(handleSave)}>
-                <div>
-                    <label>Код аспекта: </label>
-                    <input className={styles.input} type="text" {...register('code', { required: true })} />
-                </div>
-
-                <div>
-                    <label>Название: </label>
-                    <input className={styles.input} type="text" {...register('type', { required: true })} />
-                </div>
-
-                <div>
-                    <label>Описание: </label>
-                    <textarea className={styles.textarea} {...register('commonInfo', { required: true })} />
-                </div>
-
-                <div className={styles.btns}>
-                    <Button mix={styles.btn} disabled={!isValid}>
-                        Создать
-                    </Button>
-                    <Button
-                        mix={styles.btn}
-                        onClick={(e) => {
+            <Form
+                fields={[
+                    {
+                        fieldType: 'input',
+                        label: 'Код аспекта',
+                        ...register('code', { required: true }),
+                    },
+                    {
+                        fieldType: 'input',
+                        label: 'Название',
+                        ...register('type', { required: true }),
+                    },
+                    {
+                        fieldType: 'textarea',
+                        label: 'Описание',
+                        ...register('commonInfo', { required: true }),
+                    },
+                ]}
+                buttons={[
+                    { children: 'Создать', disabled: !isValid },
+                    {
+                        children: 'Закрыть форму',
+                        onClick: (e) => {
                             e.preventDefault();
                             handleClose();
-                        }}
-                        color="orange"
-                    >
-                        Закрыть форму
-                    </Button>
-                </div>
-            </form>
+                        },
+                        color: 'orange',
+                    },
+                ]}
+                onSubmit={handleSubmit(handleSave)}
+            />
         </Modal>
     );
 };

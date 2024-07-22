@@ -8,7 +8,6 @@ import {
     updateGeoObjectRequest,
 } from '../api/requests';
 import type { GeoObject } from './types';
-import { addGeoObjectClassifierRequest } from '../api/classifiers';
 
 // Создаем стор
 const $geoObjects = createStore<GeoObject[]>([]);
@@ -31,9 +30,6 @@ sample({ clock: getGeoObjectsFx.doneData, target: $geoObjects });
 const saveGeoObjectFx = createEffect(saveGeoObjectRequest);
 const $saveGeoObjectLoading = status(saveGeoObjectFx);
 
-// Перезапрашиваем геообьекты после сохранения
-sample({ clock: saveGeoObjectFx.doneData, target: getGeoObjectsFx });
-
 // Обновить геообьект в бэк
 const updateGeoObjectFx = createEffect(updateGeoObjectRequest);
 const $updateGeoObjectLoading = status(updateGeoObjectFx);
@@ -42,13 +38,11 @@ const $updateGeoObjectLoading = status(updateGeoObjectFx);
 const deleteGeoObjectFx = createEffect(deleteGeoObjectRequest);
 const $deleteGeoObjectLoading = status(deleteGeoObjectFx);
 
-// Добавить классификатор геообьекту
-const addGeoObjectClassifierFx = createEffect(addGeoObjectClassifierRequest); // добавить этот эффект
-const $addGeoObjectClassifierLoading = status(addGeoObjectClassifierFx); // добавить этот стор
-
-// Перезапрашиваем геообьекты после добавления классификатора
-sample({ clock: addGeoObjectClassifierFx.doneData, target: getGeoObjectsFx }); // добавить этот sample
-
+// Перезапрашиваем геообьекты после изменения данных
+sample({
+    clock: [saveGeoObjectFx.done, updateGeoObjectFx.done, deleteGeoObjectFx.done],
+    target: getGeoObjectsFx,
+});
 
 export const geoObjectModel = {
     $geoObjects,
@@ -65,7 +59,4 @@ export const geoObjectModel = {
 
     $deleteGeoObjectLoading,
     deleteGeoObjectFx,
-
-    addGeoObjectClassifierFx,
-    $addGeoObjectClassifierLoading,
 };

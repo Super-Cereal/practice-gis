@@ -28,6 +28,8 @@ export function request<RETURNS>(path: string, method: Method, settings?: Settin
             throw new Error(response.statusText);
         }
 
-        return response.json();
+        if (response.statusText !== 'No Content') {
+            return response.json();
+        }
     });
 }

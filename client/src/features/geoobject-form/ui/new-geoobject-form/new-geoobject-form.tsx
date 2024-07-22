@@ -59,10 +59,7 @@ export const NewGeoobjectForm = () => {
 
     return (
         <Modal onClose={handleClose}>
-            {/* Описание + id полигона */}
-            <div className={styles.title}>
-                <label>Создание геообъекта на основе &nbsp;{typeToLabel[editorObject.type]}</label>
-            </div>
+            <h2 className={styles.title}>Создание геообъекта на основе &nbsp;{typeToLabel[editorObject.type]}</h2>
 
             <CommonForm
                 onClose={handleClose}

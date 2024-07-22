@@ -10,7 +10,9 @@ export const useTimezoneAndLocalTime = (point: LatLngTuple, id: string) => {
     const localTime = useFormattedTime(timezone);
 
     useEffect(() => {
-        timezoneModel.getTimezoneFx({ anyId: id, lat: point[0], long: point[1] });
+        if (!timezone) {
+            timezoneModel.getTimezoneFx({ anyId: id, lat: point[0], long: point[1] });
+        }
     }, []);
 
     return { timezone, localTime };

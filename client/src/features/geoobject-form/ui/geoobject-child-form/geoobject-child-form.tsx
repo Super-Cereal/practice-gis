@@ -15,6 +15,8 @@ import { mapDataToGeoobject } from '../../lib/map-data-to-geoobject';
 import { mapGeoObjectToEditorObject } from '../../lib/map-geoobject-to-data';
 
 import styles from './geoobject-child-form.module.css';
+import { TextWithCopy } from '../../../../shared/ui/text-with-copy';
+import { Form } from '../../../../shared/ui/form';
 
 // создаем новый объект а затем связь ребенок - родитель
 
@@ -61,14 +63,17 @@ export const GeoobjectСhildForm = () => {
         setShowCreateRelationship(true);
     };
     const handleCreateRelationship = async () => {
-        await topologyModel.addParentChildLinkFx({ parentGeographicalObjectId: parentId, childGeographicalObjectId: childId });
-    
+        await topologyModel.addParentChildLinkFx({
+            parentGeographicalObjectId: parentId,
+            childGeographicalObjectId: childId,
+        });
+
         setShowCreateRelationship(false);
-    
+
         geoObjectFormModel.setIsChildModalOpen(false);
         reset();
     };
-    
+
     const handleClose = () => {
         geoObjectFormModel.setIsChildModalOpen(false);
         reset();
@@ -76,81 +81,52 @@ export const GeoobjectСhildForm = () => {
 
     return (
         <Modal onClose={handleClose}>
-            {/* Описание + id полигона */}
-            <div className={styles.formGroup}>
-                <label>
+            <div className={styles.title}>
+                <h2>
                     Создание дочернего геообъекта на основе &nbsp;
                     {parentGeoObject?.name}
-                </label>
-                <label>ID родителя: {parentGeoObject.id}</label>
+                </h2>
+                <TextWithCopy title="ID родителя" text={parentGeoObject.id} />
             </div>
 
-            <form className={styles.form} onSubmit={handleSubmit(handleSave)}>
-                <input
-                    className={styles.input}
-                    type="text"
-                    placeholder="Название"
-                    {...register('name', { required: true })}
-                />
-
-                <div>
-                    <label>Аспект: </label>
-                    <select className={styles.aspectSelect} {...register('aspect', { required: true })}>
-                        {aspects.map((aspect) => (
-                            <option className={styles.aspectOption} key={aspect.code} value={aspect.type}>
-                                {aspect.type}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <textarea
-                    className={styles.textarea}
-                    placeholder="Описание"
-                    {...register('description', { required: true })}
-                />
-
-                <div className={styles.classifierGroup}>
-                    <label>Код классификатора: </label>
-                    <select className={styles.classifierSelect} {...register('classCode', { required: true })}>
-                        {geoClassifiers.map((cl) => (
-                            <option className={styles.aspectOption} key={cl.code} value={cl.code}>
-                                {cl.code} - {cl.commonInfo}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <label>Статус: </label>
-                    <select
-                        className={styles.aspectSelect}
-                        defaultValue={GEO_OBJECT_STATUS.actual}
-                        {...register('status', { required: true })}
-                    >
-                        {Object.keys(GEO_OBJECT_STATUS).map((key) => (
-                            // @ts-ignore
-                            <option value={GEO_OBJECT_STATUS[key]}>{key}</option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className={styles.btns} role="group">
-                    <Button disabled={!isValid} mix={styles.btn}>
-                        Сохранить
-                    </Button>
-
-                    <Button
-                        mix={styles.btn}
-                        onClick={(e) => {
+            <Form
+                fields={[
+                    {
+                        fieldType: 'input',
+                        label: 'Название',
+                        ...register('name', { required: true }),
+                    },
+                    {
+                        fieldType: 'select',
+                        label: 'Аспект',
+                        options: aspects.map(({ code, type }) => ({ name: type, value: code })),
+                        ...register('aspect', { required: true }),
+                    },
+                    {
+                        fieldType: 'textarea',
+                        label: 'Описание',
+                        ...register('description', { required: true }),
+                    },
+                    {
+                        fieldType: 'select',
+                        label: 'Код классификатора',
+                        options: geoClassifiers.map(({ code, name }) => ({ name: `${code} - ${name}`, value: code })),
+                    },
+                ]}
+                buttons={[
+                    { disabled: !isValid, children: 'Создать' },
+                    {
+                        onClick: (e) => {
                             e.preventDefault();
                             handleClose();
-                        }}
-                        color="orange"
-                    >
-                        Закрыть форму
-                    </Button>
-                </div>
-            </form>
+                        },
+                        color: 'orange',
+                        children: 'Закрыть форму',
+                    },
+                ]}
+                onSubmit={handleSubmit(handleSave)}
+            />
+
             {showCreateRelationship && (
                 <div>
                     <table className={styles.relationTable}>

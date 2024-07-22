@@ -58,12 +58,11 @@ export const GeoobjectEditFrom = () => {
 
     return (
         <Modal onClose={handleClose}>
-            {/* Описание + id полигона */}
-            <div className={styles.formGroup}>
-                <label>
+            <div className={styles.title}>
+                <h2>
                     Изменение сохраненного объекта &nbsp;
                     {selectedGeoobject.name}
-                </label>
+                </h2>
                 <TextWithCopy title="ID" text={selectedGeoobject.id} />
             </div>
 

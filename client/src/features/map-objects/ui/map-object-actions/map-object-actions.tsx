@@ -3,7 +3,7 @@ import { useUnit } from 'effector-react';
 
 import { Button } from '../../../../shared/ui/button';
 import { mapModel } from '../../../../entities/map';
-import { classifiersModel, topologyModel, geoObjectModel, type Classifier } from '../../../../entities/geoobject';
+import { topologyModel, geoObjectModel } from '../../../../entities/geoobject';
 import { geoObjectFormModel } from '../../../geoobject-form';
 
 import { MapObjectDescription } from '../map-object-description/map-object-description';
@@ -16,21 +16,8 @@ export const MapObjectActions = () => {
     const selectedGeoobject = useUnit(mapObjectsModel.$selectedGeoobject);
     const selectedAspect = useUnit(mapModel.$mapAspect);
     const geoObjects = useUnit(geoObjectModel.$geoObjects);
-  
 
     const parentChildLinks = useUnit(topologyModel.$parentChildLinks);
-
-    useEffect(() => {
-<<<<<<< HEAD
-        topologyModel.getParentChildLinksFx();
-=======
-        if (selectedGeoobject) {
-            classifiersModel.getClassifiersFx();
-            topologyModel.getParentChildLinks();
-            classifiersModel.getGeoObjectClassifiersFx(selectedGeoobject.id);
-        }
->>>>>>> 3386e292 (Отображение границы между топологиями)
-    }, [selectedGeoobject]);
 
     const childGeoObjects = parentChildLinks
         .filter((link) => link.parentGeographicalObjectId === selectedGeoobject?.id)
@@ -41,7 +28,7 @@ export const MapObjectActions = () => {
         .filter((link) => link.childGeographicalObjectId === selectedGeoobject?.id)
         .map((link) => link.parentGeographicalObjectId)
         .flatMap((id) => geoObjects.find((geoObject) => geoObject.id === id));
-    
+
     //from update
     const handleUpdateModalFormOpen = () => {
         geoObjectFormModel.setIsUpdateModalOpen(true);
@@ -50,17 +37,16 @@ export const MapObjectActions = () => {
     //form child
     const handleChildModalFormOpen = () => {
         geoObjectFormModel.setIsChildModalOpen(true);
-        console.log(geoObjectFormModel.$isChildModalOpen.getState());
     };
 
     if (!selectedGeoobject) {
         return <h3>Нажмите на геообьект, чтобы редактировать его</h3>;
     }
 
-    const { id, name } = selectedGeoobject;
+    const handleDelete = async () => {
+        await geoObjectModel.deleteGeoObjectFx(selectedGeoobject.id);
 
-    const handleDelete = () => {
-        geoObjectModel.deleteGeoObjectFx(id);
+        mapObjectsModel.setSelectedGeoobject(null);
     };
 
     return (
@@ -69,7 +55,7 @@ export const MapObjectActions = () => {
                 parentGeoObjects={parentGeoObjects}
                 geoObject={selectedGeoobject}
                 childGeoObjects={childGeoObjects}
-            /* geoObjectClassifierObjects={geoObjectClassifierObjects} */
+                /* geoObjectClassifierObjects={geoObjectClassifierObjects} */
             />
 
             <div className={styles.btns}>

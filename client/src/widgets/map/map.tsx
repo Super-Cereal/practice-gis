@@ -18,9 +18,9 @@ import {
 } from '../../features/geoobject-form';
 import { MapObjectActions, MapObjects } from '../../features/map-objects';
 import { TopologyObjects } from '../../features/topology';
+import { CreatenewClassifier } from '../../features/create-сlass-pc';
 
 import styles from './map.module.css';
-import { CreatenewClassifier } from '../../features/create-сlass-pc/ui/createnew-classifier/createnew-classifier';
 
 /** Рендерит карту и все ее настройки и действия */
 export const Map = () => {
@@ -41,8 +41,11 @@ export const Map = () => {
 
     useMount(() => {
         geoObjectModel.getGeoObjects();
+
         aspectsModel.getAspectsFx();
+
         topologyModel.getTopologies();
+        topologyModel.getParentChildLinks();
     });
 
     const requestStatus = useUnit(geoObjectModel.$getGeoObjectsLoading);

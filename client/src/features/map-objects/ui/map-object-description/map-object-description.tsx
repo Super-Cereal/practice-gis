@@ -32,15 +32,12 @@ export const MapObjectDescription = ({
 }: MapObjectDescriptionProps) => {
     const uniqueAspects = useUnit(aspectsModel.$uniqueAspects);
 
-<<<<<<< HEAD
     const geoObjectClassifierObjects = geoObject.geoObjectInfo?.classifiers
-=======
     const geoobjectTopologies = useUnit(topologyModel.$topologies).filter(
         ({ geographicalObjectInId, geographicalObjectOutId }) =>
             geographicalObjectInId === geoObject.id || geographicalObjectOutId === geoObject.id,
     );
 
->>>>>>> 3386e292 (Отображение границы между топологиями)
     const geoobjectAspects = useUnit(aspectsModel.$assignedAspects).filter(
         ({ geographicalObjectId }) => geographicalObjectId === geoObject.id,
     );

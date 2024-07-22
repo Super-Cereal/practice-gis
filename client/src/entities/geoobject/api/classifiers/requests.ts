@@ -37,6 +37,7 @@ export const saveClassifierRequest = async (classifier: DraftClassifier) => {
     } catch (error) {
         toast(`${classifier.name} could not be added.`, { type: 'error' });
         console.error(error);
+        throw error;
     }
 };
 
@@ -56,5 +57,6 @@ export const addGeoObjectClassifierRequest = async ({ geoObjectId, classifierId 
     } catch (error) {
         toast('The relationship could not be added.', { type: 'error' });
         console.error(error);
+        throw error;
     }
 };

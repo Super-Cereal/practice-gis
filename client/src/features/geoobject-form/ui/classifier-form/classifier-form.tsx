@@ -1,14 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useUnit } from 'effector-react';
 import { useForm } from 'react-hook-form';
-import cx from 'classnames';
 
 import { type GeoObject, classifiersModel, type Classifier, geoObjectModel } from '../../../../entities/geoobject';
-import { Button } from '../../../../shared/ui/button';
 
 import { FormFieldsForClassifier } from '../../lib/types';
 
-import styles from './classifier-from.module.css';
+import { Form } from '../../../../shared/ui/form';
 
 interface ClassifierFormProps {
     geoObject: GeoObject;
@@ -38,8 +36,7 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObject }) => {
         }
 
         const classifierId = selectedClassifier.id;
-        await geoObjectModel.addGeoObjectClassifierFx({ geoObjectId: geoObject.id, classifierId });
-
+        await classifiersModel.addGeoObjectClassifierFx({ geoObjectId: geoObject.id, classifierId });
     };
 
     // поля для формы создания Нового классификатора
@@ -48,7 +45,7 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObject }) => {
         handleSubmit,
         formState: { isValid },
         reset,
-    } = useForm<FormFieldsForClassifier>({});
+    } = useForm<FormFieldsForClassifier>();
 
     //создание нового класса
     const handleSaveClassifier = async (data: FormFieldsForClassifier) => {
@@ -62,66 +59,71 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObject }) => {
 
     return (
         <>
-            <div className={styles.classifierGroup}>
-                <label>Код классификатора: </label>
-                <select
-                    className={styles.classifierSelect}
-                    value={selectedClassifier?.code}
-                    onChange={(e) => {
-                        const selectedClassifier = geoClassifiers.find((cl) => cl.code === e.target.value);
-                        if (selectedClassifier) {
-                            handleSelectClassifier(selectedClassifier);
-                        }
-                    }}
-                >
-                    <option value="">Выберите классификатор</option>
-                    {geoClassifiers.map((cl) => (
-                        <option className={styles.aspectOption} key={cl.code} value={cl.code}>
-                            {cl.code} - {cl.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div className={styles.btns} role="group">
-                <Button mix={styles.btn} onClick={handleAddClassifierToObject} disabled={!selectedClassifier}>
-                    Добавить классификатор объекту
-                </Button>
-                <Button mix={styles.btn} onClick={() => setIsCreateClassifierFormOpen(true)}>
-                    Создать новый классификатор
-                </Button>
-            </div>
-            {isCreateClassifierFormOpen && (
-                <form
-                    onSubmit={handleSubmit(handleSaveClassifier)}
-                    className={cx(styles.form, styles.newClassifierForm)}
-                >
-                    <label>
-                        Имя классификатора:
-                        <input className={styles.input} type="text" {...register('name', { required: true })} />
-                    </label>
-                    <label>
-                        Код классификатора:
-                        <input className={styles.input} type="text" {...register('code', { required: true })} />
-                    </label>
-                    <label>
-                        Описание классификатора:
-                        <textarea className={styles.textarea} {...register('commonInfo', { required: true })} />
-                    </label>
+            <Form
+                fields={[
+                    {
+                        fieldType: 'select',
+                        label: 'Код классификатора',
+                        value: selectedClassifier?.code,
+                        onChange: (e) => {
+                            const selectedClassifier = geoClassifiers.find((cl) => cl.code === e.target.value);
+                            if (selectedClassifier) {
+                                handleSelectClassifier(selectedClassifier);
+                            }
+                        },
+                        options: [
+                            ...geoClassifiers.map(({ code, name }) => ({ name: `${code} - ${name}`, value: code! })),
+                        ],
+                    },
+                ]}
+                buttons={[
+                    {
+                        children: 'Добавить классификатор объекту',
+                        disabled: !selectedClassifier || !selectedClassifier?.code,
+                    },
+                    {
+                        children: 'Создать новый классификатор',
+                        onClick: (e) => {
+                            e.preventDefault();
+                            setIsCreateClassifierFormOpen(true);
+                        },
+                    },
+                ]}
+                onSubmit={handleAddClassifierToObject}
+            />
 
-                    <div className={cx(styles.btns, styles.reversed)}>
-                        <Button mix={styles.btn}>Создать классификатор</Button>
-                        <Button
-                            mix={styles.btn}
-                            color="orange"
-                            onClick={(e) => {
+            {isCreateClassifierFormOpen && (
+                <Form
+                    fields={[
+                        {
+                            fieldType: 'input',
+                            label: 'Имя классификатора',
+                            ...register('name', { required: true }),
+                        },
+                        {
+                            fieldType: 'input',
+                            label: 'Код классификатора',
+                            ...register('code', { required: true }),
+                        },
+                        {
+                            fieldType: 'textarea',
+                            label: 'Описание классификатора',
+                            ...register('commonInfo', { required: true }),
+                        },
+                    ]}
+                    buttons={[
+                        { disabled: !isValid, children: 'Создать классификатор' },
+                        {
+                            color: 'orange',
+                            onClick: (e) => {
                                 e.preventDefault();
                                 setIsCreateClassifierFormOpen(false);
-                            }}
-                        >
-                            Отменить создание
-                        </Button>
-                    </div>
-                </form>
+                            },
+                            children: 'Отменить создание',
+                        },
+                    ]}
+                    onSubmit={handleSubmit(handleSaveClassifier)}
+                />
             )}
         </>
     );

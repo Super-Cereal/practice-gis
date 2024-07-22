@@ -1,12 +1,10 @@
 import React from 'react';
 import type { UseFormRegister } from 'react-hook-form';
 
-import { Button } from '../../../../shared/ui/button';
+import { Form } from '../../../../shared/ui/form';
 
 import type { FormFields } from '../../lib/types';
 import { mockedGeoNames } from '../../lib/geoNames';
-
-import styles from './common-form.module.css';
 
 export const CommonForm = ({
     onClose,
@@ -23,59 +21,36 @@ export const CommonForm = ({
     const geoCodes = mockedGeoNames;
 
     return (
-        <form className={styles.form} onSubmit={handleSubmit}>
-            <div>
-                <label>Название: </label>
-                <input className={styles.input} type="text" {...register('name', { required: true })} />
-            </div>
-
-            <div>
-                <label>Код географического объекта: </label>
-                <select className={styles.aspectSelect} {...register('geoNamesFeatureCode', { required: true })}>
-                    {geoCodes.map((geoCode) => (
-                        <option className={styles.aspectOption} key={geoCode.id} value={geoCode.geoNamesFeatureCode}>
-                            {geoCode.geoNamesFeatureCode} - {geoCode.featureNameEn}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            <div>
-                <label>Описание: </label>
-                <textarea className={styles.textarea} {...register('description', { required: true })} />
-            </div>
-            {/* <div>
-                <label>Статус: </label>
-                <select
-                    className={styles.aspectSelect}
-                    defaultValue={GEO_OBJECT_STATUS.actual}
-                    {...register('status', { required: true })}
-                >
-                    {Object.keys(GEO_OBJECT_STATUS).map((key) => (
-                        // @ts-ignore
-                        <option key={key} value={GEO_OBJECT_STATUS[key]}>
-                            {key}
-                        </option>
-                    ))}
-                </select>
-            </div> */}
-
-            <div className={styles.btns} role="group">
-                <Button disabled={!isValid} mix={styles.btn}>
-                    Сохранить
-                </Button>
-
-                <Button
-                    mix={styles.btn}
-                    onClick={(e) => {
+        <Form
+            fields={[
+                { fieldType: 'input', label: 'Название', type: 'text', ...register('name', { required: true }) },
+                {
+                    fieldType: 'select',
+                    label: 'Код географического объекта',
+                    options: geoCodes.map(({ geoNamesFeatureCode, featureNameEn }) => ({
+                        name: `${geoNamesFeatureCode} - ${featureNameEn}`,
+                        value: geoNamesFeatureCode,
+                    })),
+                    ...register('geoNamesFeatureCode', { required: true }),
+                },
+                {
+                    fieldType: 'textarea',
+                    label: 'Описание',
+                    ...register('description', { required: true }),
+                },
+            ]}
+            buttons={[
+                { disabled: !isValid, children: 'Сохранить' },
+                {
+                    onClick: (e) => {
                         e.preventDefault();
                         onClose();
-                    }}
-                    color="orange"
-                >
-                    Закрыть форму
-                </Button>
-            </div>
-        </form>
+                    },
+                    color: 'orange',
+                    children: 'Закрыть форму',
+                },
+            ]}
+            onSubmit={handleSubmit}
+        />
     );
 };

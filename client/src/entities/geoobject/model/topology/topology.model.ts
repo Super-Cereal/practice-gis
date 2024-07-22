@@ -35,7 +35,7 @@ const $topologies = createStore<TopologyLink[]>([]);
 // Запрос за всеми топологиями
 const getTopologies = createEvent<void>();
 const getTopologiesFx = createEffect(getTopologiesRequest);
-const $getTopologiesLoading = status({ effect: getParentChildLinksFx });
+const $getTopologiesLoading = status({ effect: getTopologiesFx });
 
 sample({
     clock: getTopologies,

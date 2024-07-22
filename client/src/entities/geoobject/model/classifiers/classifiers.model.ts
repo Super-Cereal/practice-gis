@@ -1,9 +1,9 @@
 import { createStore, sample, createEffect, createEvent } from 'effector';
 import { status } from 'patronum/status';
 
-import { getClassifiersRequest, saveClassifierRequest, addGeoObjectClassifierRequest, getGeoObjectClassifiersRequest } from '../../api/classifiers';
+import { getClassifiersRequest, saveClassifierRequest, addGeoObjectClassifierRequest } from '../../api/classifiers';
 
-import type { Classifier, GeoObjectsClassifier } from './types';
+import type { Classifier } from './types';
 
 const $classifiers = createStore<Classifier[]>([]);
 const $GeoObjectclassifiers = createStore<string[]>([]);
@@ -22,35 +22,19 @@ sample({
 
 sample({ clock: getClassifiersFx.doneData, target: $classifiers });
 
-// Запрос за классификаторами у объекта
-const getGeoObjectClassifiers = createEvent<string>();
-const getGeoObjectClassifiersFx = createEffect<string, string[]>(getGeoObjectClassifiersRequest);
-const $getGeoObjectClassifiersLoading = status({ effect: getGeoObjectClassifiersFx });
-
-sample({
-    clock: getGeoObjectClassifiers,
-    source: $getGeoObjectClassifiersLoading,
-    filter: (loading) => loading !== 'pending',
-    target: getGeoObjectClassifiersFx,
-});
-
-sample({
-    clock: getGeoObjectClassifiersFx.doneData,
-    target: $GeoObjectclassifiers,
-});
-
 // Создать классификатор
 const saveClassifierFx = createEffect(saveClassifierRequest);
 const $saveClassifierLoading = status(saveClassifierFx);
 
 sample({ clock: saveClassifierFx.doneData, target: getClassifiersFx });
 
-
-
 // модальное окно для создания нового класса
 const $isNewClassModalOpen = createStore(false);
 const setIsNewClassModalOpen = createEvent<boolean>();
 sample({ clock: setIsNewClassModalOpen, target: $isNewClassModalOpen });
+
+// Добавить классификатор геообьекту
+const addGeoObjectClassifierFx = createEffect(addGeoObjectClassifierRequest);
 
 export const classifiersModel = {
     $classifiers,
@@ -62,14 +46,10 @@ export const classifiersModel = {
     $saveClassifierLoading,
     saveClassifierFx,
 
-    getGeoObjectClassifiers,
-    getGeoObjectClassifiersFx,
-    $getGeoObjectClassifiersLoading,
-    
     $GeoObjectclassifiers,
 
     $isNewClassModalOpen,
-    setIsNewClassModalOpen
+    setIsNewClassModalOpen,
 
-
+    addGeoObjectClassifierFx,
 };
