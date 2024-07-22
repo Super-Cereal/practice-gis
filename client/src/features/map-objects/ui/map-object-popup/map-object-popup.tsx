@@ -3,8 +3,7 @@ import { Popup } from 'react-leaflet';
 
 import { type GeoObject, type GeometryGeoJSON, getCenterByCoords } from '../../../../entities/geoobject';
 import { useTimezoneAndLocalTime } from '../../../../shared/lib/time';
-
-import { MapObjectIdWithCopy } from '../map-object-id-with-copy/map-object-id-with-copy';
+import { TextWithCopy } from '../../../../shared/ui/text-with-copy';
 
 import styles from './map-object-popup.module.css';
 
@@ -35,25 +34,23 @@ const Content = ({ object, geometry: { type, coordinates } }: Props) => {
             <h3 className={styles.title}>
                 {type}: {name}
             </h3>
-            <MapObjectIdWithCopy id={id} />
+            <TextWithCopy title="id" text={id} />
 
-            <div className={styles.content}>
-                <span>Описание: {geoObjectInfo?.commonInfo}</span>
-            </div>
-            <div className={styles.content}>
-                <span>Классификаторы: - </span>
-            </div>
-            <div className={styles.content}>
-                <span>Геокоды: - </span>
-            </div>
+            <div className={styles.content}>{geoObjectInfo?.commonInfo}</div>
 
             <div className={styles.bottom}>
-                <div className={styles.bottomBlock}>
-                    <span>Время: {localTime}</span>
-                    <span>Таймзона: {timezone}</span>
+                <div className={styles.textBlock}>
+                    <span>
+                        <b>Время:</b> {localTime}
+                    </span>
+                    <span>
+                        <b>Таймзона:</b> {timezone}
+                    </span>
                 </div>
 
-                <span>Язык: {geoObjectInfo?.language}</span>
+                <span>
+                    <b>Язык:</b> {geoObjectInfo?.language}
+                </span>
             </div>
         </>
     );

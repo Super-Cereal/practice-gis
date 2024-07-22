@@ -1,4 +1,6 @@
 import type { LatLngTuple } from 'leaflet';
+
+import type { Classifier } from './classifiers';
 import type { GEO_OBJECT_STATUS } from './constants';
 
 export interface GeoObject extends DraftGeoObject {
@@ -56,43 +58,16 @@ interface GeoObjectInfo {
     classifiers?: Classifier[];
 }
 
-export interface Classifier extends DraftClassifier {
-
-    id?: string;
-
-}
-
-export interface DraftClassifier {
-
-    /** Имя классификатора */
-    name?: string;
-
-    /** Код классификатора */
-    code?: string;
-
-    /** О чем этот классификатор */
-    commonInfo?: string;
-}
-
-export interface GeoObjectsClassifier {
-
-    geoObjectId?: string;
-
-    classifierId?: string;
-}
-
-
 export interface ParentChildObjectLink {
     ParentGeoObjectId: string;
     ChildGeoObjectId: string;
-
 }
 export type GeometryGeoJSON =
     | {
-        type: 'Point';
-        coordinates: LatLngTuple;
-    }
+          type: 'Point';
+          coordinates: LatLngTuple;
+      }
     | {
-        type: 'PolyLine' | 'Polygon';
-        coordinates: LatLngTuple[];
-    };
+          type: 'PolyLine' | 'Polygon';
+          coordinates: LatLngTuple[];
+      };

@@ -5,6 +5,9 @@ import { MainPage } from '../pages/main';
 import { ErrorBoundary } from '../shared/lib/error-boundary';
 import { Page } from '../shared/ui/page';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import './a11y.css';
 import './App.css';
 
@@ -18,6 +21,8 @@ export const App = () => {
                         <Route path="/main" element={<MainPage />} />
                     </Routes>
                 </BrowserRouter>
+
+                <ToastContainer />
             </ErrorBoundary>
         </React.StrictMode>
     );

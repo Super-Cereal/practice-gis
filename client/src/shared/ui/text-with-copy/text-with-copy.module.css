@@ -1,8 +1,11 @@
-.id {
-    margin-top: 4px;
+.box {
     font-size: 14px;
-    margin-bottom: 12px;
+
     color: #888;
+}
+
+.box.black {
+    color: unset;
 }
 
 .copy {

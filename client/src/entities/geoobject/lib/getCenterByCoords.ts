@@ -1,6 +1,6 @@
 import type { LatLngTuple } from 'leaflet';
 
-import type { GeometryGeoJSON } from './types';
+import type { GeometryGeoJSON } from '../model/types';
 
 const isCoordsOfPoint = (coords: GeometryGeoJSON['coordinates']): coords is LatLngTuple =>
     typeof coords[0] === 'number';

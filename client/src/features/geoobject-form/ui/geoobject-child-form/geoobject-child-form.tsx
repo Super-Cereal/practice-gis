@@ -5,18 +5,17 @@ import { useUnit } from 'effector-react';
 import { Modal } from '../../../../shared/ui/modal';
 import { Button } from '../../../../shared/ui/button';
 import { GEO_OBJECT_STATUS, geoObjectModel } from '../../../../entities/geoobject';
+import { topologyModel } from '../../../../entities/geoobject';
 import { aspects } from '../../../../widgets/map/lib/mocks';
+import { mapObjectsModel } from '../../../map-objects/lib/map-objects.model';
 
 import type { FormFields } from '../../lib/types';
 import { geoObjectFormModel } from '../../lib/geoobject-form.model';
 import { mockedClassifiers } from '../../lib/classifiers';
 import { mapDataToGeoobject } from '../../lib/map-data-to-geoobject';
+import { mapGeoObjectToEditorObject } from '../../lib/map-geoobject-to-data';
 
 import styles from './geoobject-child-form.module.css';
-import { editorModel } from '../../../map-editor/lib/editor.model';
-import { mapObjectsModel } from '../../../map-objects/lib/map-objects.model';
-import { addParentChildLinkRequest } from '../../../../entities/geoobject/api/requests';
-import { mapGeoObjectToEditorObject } from '../../lib/map-geoobject-to-data';
 
 //создаем новый объект а затем связь ребенок - родитель
 
@@ -32,7 +31,7 @@ export const GeoobjectСhildForm = () => {
     //нужно получить с бэка список классификаторов
 
     //родитель
-    const parentGeoObject = useUnit(mapObjectsModel.$selectedGeoobject)
+    const parentGeoObject = useUnit(mapObjectsModel.$selectedGeoobject);
 
     const {
         register,
@@ -52,7 +51,6 @@ export const GeoobjectСhildForm = () => {
     const [childId, setChildId] = useState('');
     const [childName, setChildName] = useState('');
 
-
     const handleSave = async (data: FormFields) => {
         const childGeoobject = await geoObjectModel.saveGeoObjectFx(mapDataToGeoobject(data, editorObject));
 
@@ -60,12 +58,10 @@ export const GeoobjectСhildForm = () => {
         setChildId(childGeoobject.id);
         setChildName(childGeoobject.name);
         setShowCreateRelationship(true);
-
-
-
     };
     const handleCreateRelationship = async () => {
-        await addParentChildLinkRequest({ ParentGeoObjectId: parentId, ChildGeoObjectId: childId });
+        await topologyModel.addParentChildLinkFx({ ParentGeoObjectId: parentId, ChildGeoObjectId: childId });
+
         setShowCreateRelationship(false);
 
         geoObjectFormModel.setIsChildModalOpen(false);
@@ -157,7 +153,6 @@ export const GeoobjectСhildForm = () => {
             {showCreateRelationship && (
                 <div>
                     <table className={styles.relationTable}>
-                      
                         <tbody>
                             <tr>
                                 <td>Родительский ID</td>

@@ -1,1 +1,0 @@
-export { Compas } from './compas';

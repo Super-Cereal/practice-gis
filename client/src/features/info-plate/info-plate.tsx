@@ -1,28 +1,36 @@
 import React, { useEffect } from 'react';
 import { useUnit } from 'effector-react';
+import { useSearchParams } from 'react-router-dom';
 
 import { mapModel } from '../../entities/map';
 import type { MapMode } from '../../entities/map/lib/types';
 
 import styles from './info-plate.module.css';
-import { useSearchParams } from 'react-router-dom';
+import { useMount } from 'react-use';
 
 /** Настройки страницы и карты (выбор режима просмотра) */
 export const InfoPlate = () => {
+    const mapMode = useUnit(mapModel.$mapMode);
+
     const [searchParams, setSearchParams] = useSearchParams();
 
-    /** Сохраняем режим карты в query, чтобы не сбрасывать вкладку при перезагрузке */
-    useEffect(() => {
+    useMount(() => {
         const mapModeFromSearch = searchParams.get('mapMode') as MapMode | null;
 
         if (mapModeFromSearch) {
             mapModel.setMapMode(mapModeFromSearch);
         }
-    }, [searchParams]);
+    });
 
-    const mapMode = useUnit(mapModel.$mapMode);
+    /** Сохраняем режим карты в query, чтобы не сбрасывать вкладку при перезагрузке */
+    useEffect(() => {
+        if (mapMode) {
+            setSearchParams({ mapMode });
+        }
+    }, [mapMode]);
+
     const handleModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSearchParams({ ...searchParams, mapMode: e.target.value as MapMode });
+        mapModel.setMapMode(e.target.value as MapMode);
     };
 
     const editorPointsOnCorners = useUnit(mapModel.$editorPointsOnCorners);

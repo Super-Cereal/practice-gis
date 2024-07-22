@@ -41,9 +41,12 @@ sample({ clock: setIsChildModalOpen, target: $isChildModalOpen });
 //classifier
 const $isClassifierFormOpen = createStore(false);
 const setIsClassifierFormOpen = createEvent<boolean>();
-sample({ clock: setIsClassifierFormOpen, target: $isClassifierFormOpen  });
+sample({ clock: setIsClassifierFormOpen, target: $isClassifierFormOpen });
 
-
+//classifier
+const $isTopologyFormOpen = createStore(false);
+const setIsTopologyFormOpen = createEvent<boolean>();
+sample({ clock: setIsTopologyFormOpen, target: $isTopologyFormOpen });
 
 export const geoObjectFormModel = {
     $selectedEditorObject,
@@ -67,7 +70,9 @@ export const geoObjectFormModel = {
     $isClassifierFormOpen,
     setIsClassifierFormOpen,
 
-    $selectedGeoObjectId,
-    setSelectedGeoObjectId
+    $isTopologyFormOpen,
+    setIsTopologyFormOpen,
 
+    $selectedGeoObjectId,
+    setSelectedGeoObjectId,
 };

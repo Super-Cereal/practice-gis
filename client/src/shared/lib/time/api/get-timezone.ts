@@ -9,11 +9,10 @@ export interface GetTimezoneRequestParams {
 }
 
 export const getTimezoneRequest = async ({ anyId, lat, long }: GetTimezoneRequestParams) => {
-    const { timezone } = await post<{ timezone: Timezone[] }, Omit<GetTimezoneRequestParams, 'anyId'>>(
-        '/api/find-timezone',
-        { lat, long },
-        { domain: 'http://localhost:4000' },
-    );
+    const { timezone } = await post<{ timezone: Timezone[] }>('/api/find-timezone', {
+        domain: 'http://localhost:4000',
+        body: { lat, long },
+    });
 
     return { [anyId]: timezone[0] };
 };

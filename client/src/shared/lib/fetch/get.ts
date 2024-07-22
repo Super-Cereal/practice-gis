@@ -1,13 +1,5 @@
-import { domain } from './constants';
+import { request, type Settings } from './request';
 
-export function get<T>(path: string): Promise<T> {
-    return fetch(`${domain}${path}`, {
-        method: 'GET',
-    }).then((response) => {
-        if (!response.ok) {
-            throw new Error(response.statusText);
-        }
-
-        return response.json();
-    });
+export function get<RETURNS>(path: string, settings?: Settings): Promise<RETURNS> {
+    return request(path, 'GET', settings);
 }

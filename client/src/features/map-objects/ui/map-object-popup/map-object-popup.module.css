@@ -1,21 +1,24 @@
 .title {
     min-width: 200px;
+    margin-bottom: 4px;
 }
 
 .content {
+    margin-top: 12px;
     font-size: 16px;
 }
 
-.bottom,
-.bottomBlock {
+.textBlock {
+    display: flex;
+    flex-direction: column;
+    margin: 8px 0;
+}
+
+.bottom {
     display: flex;
     flex-direction: column;
 }
 
-.bottom {
+.textBlock {
     margin-top: 12px;
-}
-
-.bottomBlock {
-    margin: 8px 0;
 }

@@ -8,13 +8,19 @@ import { geoObjectModel } from '../../entities/geoobject';
 import { InfoPlate } from '../../features/info-plate';
 import { Aspects } from '../../features/aspects';
 import { MapEditorActions, MapEditorObjects } from '../../features/map-editor';
-import { geoObjectFormModel, GeoobjectForm, GeoaspectsList, GeoobjectEditFrom, GeoobjectСhildForm } from '../../features/geoobject-form';
+import {
+    geoObjectFormModel,
+    NewGeoobjectForm,
+    GeoaspectsList,
+    GeoobjectEditFrom,
+    GeoobjectСhildForm,
+    TopologyForm,
+} from '../../features/geoobject-form';
 import { MapObjectActions, MapObjects } from '../../features/map-objects';
 
 import { aspects } from './lib/mocks';
 
 import styles from './map.module.css';
-
 
 /** Рендерит карту и все ее настройки и действия */
 export const Map = () => {
@@ -24,6 +30,7 @@ export const Map = () => {
     const isModalAspectsOpen = useUnit(geoObjectFormModel.$isAspectsModalOpen);
     const isUpdateModalOpen = useUnit(geoObjectFormModel.$isUpdateModalOpen);
     const isChildModalOpen = useUnit(geoObjectFormModel.$isChildModalOpen);
+    const isTopologyFormOpen = useUnit(geoObjectFormModel.$isTopologyFormOpen);
 
     const mapEditable = $mapMode === 'edit';
 
@@ -33,6 +40,7 @@ export const Map = () => {
 
     const requestStatus = useUnit(geoObjectModel.$getGeoObjectsLoading);
 
+    console.log(isUpdateModalOpen);
     return (
         <>
             <div className={cx(styles.container)}>
@@ -54,10 +62,12 @@ export const Map = () => {
 
                 <aside className={styles.actions}>{mapEditable ? <MapEditorActions /> : <MapObjectActions />}</aside>
             </div>
-            {isUpdateModalOpen && <GeoobjectEditFrom/>}
-            {isChildModalOpen && <GeoobjectСhildForm/>}
-            {isModalFormOpen && <GeoobjectForm />}
-           {/*  {isModalAspectsOpen && <GeoaspectsList />} */}
+            {isUpdateModalOpen && <GeoobjectEditFrom />}
+            {isChildModalOpen && <GeoobjectСhildForm />}
+            {isModalFormOpen && <NewGeoobjectForm />}
+            {isModalFormOpen && <NewGeoobjectForm />}
+            {isTopologyFormOpen && <TopologyForm />}
+            {/*  {isModalAspectsOpen && <GeoaspectsList />} */}
         </>
     );
 };

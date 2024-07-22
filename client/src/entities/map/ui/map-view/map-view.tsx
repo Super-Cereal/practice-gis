@@ -18,20 +18,12 @@ export const MapView = ({ loading, children }: Props) => {
             <MapContainer className={styles.container} center={[59.957, 30.409]} zoom={15} scrollWheelZoom={true}>
                 <_MapSetter />
 
-                {loading ? (
-                    <div className={styles.loader}>
-                        <Loader />
-                    </div>
-                ) : (
-                    <>
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
 
-                        {children}
-                    </>
-                )}
+                {children}
             </MapContainer>
         </div>
     );
