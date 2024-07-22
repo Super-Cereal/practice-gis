@@ -1,7 +1,7 @@
 import React from 'react';
 import { Popup } from 'react-leaflet';
 
-import { type GeoObject, type GeometryGeoJSON, getCenterByCoords } from '../../../../entities/geoobject';
+import { GEO_OBJECT_STATUS, type GeoObject, type GeometryGeoJSON, getCenterByCoords } from '../../../../entities/geoobject';
 import { useTimezoneAndLocalTime } from '../../../../shared/lib/time';
 import { TextWithCopy } from '../../../../shared/ui/text-with-copy';
 
@@ -29,6 +29,9 @@ const Content = ({ object, geometry: { type, coordinates } }: Props) => {
 
     const { timezone, localTime } = useTimezoneAndLocalTime(getCenterByCoords(coordinates), id);
 
+    const getStatusKey = (status: number) => {
+        return Object.entries(GEO_OBJECT_STATUS).find(([_, value]) => value === status)?.[0];
+    };
     return (
         <>
             <h3 className={styles.title}>
@@ -51,6 +54,12 @@ const Content = ({ object, geometry: { type, coordinates } }: Props) => {
                 <span>
                     <b>Язык:</b> {geoObjectInfo?.language}
                 </span>
+
+                {object.status &&
+                    <span>
+                        <b>Статус:</b> {getStatusKey(object.status)}
+                    </span>
+                }
             </div>
         </>
     );

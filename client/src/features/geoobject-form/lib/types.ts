@@ -14,3 +14,8 @@ export interface FormFieldsForClassifier {
     code: string;
     commonInfo: string;
 }
+
+export interface FormParentChild {
+    parentGeographicalObjectId: string;
+    childGeographicalObjectId: string;
+}

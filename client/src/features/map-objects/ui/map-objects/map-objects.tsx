@@ -6,14 +6,18 @@ import { MapObjectPopup } from '../map-object-popup/map-object-popup';
 import { geoObjectModel, getGeometry, type GeoObject, type GeometryGeoJSON } from '../../../../entities/geoobject';
 
 import { mapObjectsModel } from '../../lib/map-objects.model';
+import { infoPlateModel } from '../../../info-plate/lib';
 
 export const MapObjects = () => {
     const geoObjects = useUnit(geoObjectModel.$geoObjects);
     const selectedObject = useUnit(mapObjectsModel.$selectedGeoobject);
 
+    const showArchiveObjects = useUnit(infoPlateModel.$showArchiveObjects);
+    const filteredGeoObjects = showArchiveObjects ? geoObjects : geoObjects.filter(obj => obj.status !== 100);
+
     return (
         <>
-            {geoObjects.map((object) => {
+            {filteredGeoObjects.map((object) => {
                 const geometry = getGeometry(object);
 
                 if (!geometry) {

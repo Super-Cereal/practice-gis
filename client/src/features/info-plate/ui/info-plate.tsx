@@ -3,17 +3,19 @@ import { useUnit } from 'effector-react';
 import { useSearchParams } from 'react-router-dom';
 import { useMount } from 'react-use';
 
-import { Button } from '../../shared/ui/button';
-import { mapModel } from '../../entities/map';
-import type { MapMode } from '../../entities/map/lib/types';
-import { aspectsModel } from '../../entities/geoobject';
+import { Button } from '../../../shared/ui/button';
+import { mapModel } from '../../../entities/map';
+import type { MapMode } from '../../../entities/map/lib/types';
+import { aspectsModel } from '../../../entities/geoobject';
 
 import styles from './info-plate.module.css';
+import { createEvent, createStore, sample } from 'effector';
+import { infoPlateModel } from '../lib';
 
 /** Настройки страницы и карты (выбор режима просмотра) */
 export const InfoPlate = () => {
     const mapMode = useUnit(mapModel.$mapMode);
-
+    const showArchiveObjects = useUnit(infoPlateModel.$showArchiveObjects);
     const [searchParams, setSearchParams] = useSearchParams();
 
     useMount(() => {
@@ -40,6 +42,7 @@ export const InfoPlate = () => {
         mapModel.setEditorPointsOnCorners(e.target.checked);
     };
 
+
     return (
         <div className={styles.plate}>
             <div className={styles.settings}>
@@ -50,7 +53,13 @@ export const InfoPlate = () => {
                         <option value="edit">Создание новых геообьектов</option>
                     </select>
                 </label>
-
+                <label>
+                    <span>Показать архивные элементы:</span>
+                    <input 
+                    type="checkbox"
+                     onChange={(e) => infoPlateModel.showArchiveObjectsChanged(e.target.checked)} 
+                     checked={showArchiveObjects} />
+                </label>
                 {mapMode === 'edit' && (
                     <label>
                         <span>Включить отображение точек на углах:</span>

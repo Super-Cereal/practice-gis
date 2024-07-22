@@ -1,1 +1,1 @@
-export { InfoPlate } from './info-plate';
+export { InfoPlate } from './ui/info-plate';
