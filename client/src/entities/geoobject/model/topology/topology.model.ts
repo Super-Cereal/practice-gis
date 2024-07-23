@@ -31,6 +31,7 @@ sample({ clock: getParentChildLinksFx.doneData, target: $parentChildLinks });
 
 //добавить родитель-ребенок связь
 const addParentChildLinkFx = createEffect(addParentChildLinkRequest);
+sample({ clock: addParentChildLinkFx.done, target: getParentChildLinks });
 
 const $topologies = createStore<TopologyLink[]>([]);
 

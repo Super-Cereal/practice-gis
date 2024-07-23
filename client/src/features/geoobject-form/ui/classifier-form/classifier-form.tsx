@@ -50,9 +50,10 @@ export const ClassifierForm: FC<ClassifierFormProps> = ({ geoObject }) => {
 
     //создание нового класса
     const handleSaveClassifier = async (data: FormFieldsForClassifier) => {
-        await classifiersModel.saveClassifierFx(data);
+        const classifier = await classifiersModel.saveClassifierFx(data);
 
         setIsCreateClassifierFormOpen(false);
+        setSelectedClassifier(classifier);
         reset();
     };
 
