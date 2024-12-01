@@ -97,13 +97,8 @@ export const Map = () => {
                 </div>
 
                 <div className={styles.map}>
-                    <MapContainer center={[59.955, 30.3]} zoom={12} style={{ height: '100vh', width: '100%' }}>
+                    <MapContainer center={[59.955, 30.3]} zoom={12} style={{ height: '85vh', width: '100%' }}>
                         <_MapSetter />
-
-                        <TileLayer
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        />
 
                         <LayersControl position="topright">
                             <LayersControl.Overlay name="Clipping Mask" checked={isClipping}>
@@ -116,6 +111,18 @@ export const Map = () => {
                                     </Popup>
                                 </Marker>
                             </LayersControl.Overlay>
+                            <LayersControl.BaseLayer checked name="OpenStreetMap">
+                                <TileLayer
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                />
+                            </LayersControl.BaseLayer>
+                            <LayersControl.BaseLayer name="Satellite">
+                                <TileLayer
+                                    url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                                    attribution='&copy; <a href="https://www.esri.com">Esri</a>'
+                                />
+                            </LayersControl.BaseLayer>
                         </LayersControl>
 
 

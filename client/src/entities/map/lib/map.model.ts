@@ -25,6 +25,10 @@ const $isClippingMode = createStore<boolean>(false);
 const setClippingMode = createEvent<boolean>();
 sample({ clock: setClippingMode, target: $isClippingMode });
 
+const $descriptionMode = createStore<boolean>(false);
+const setDescriptionMode = createEvent<boolean>();
+sample({ clock: setDescriptionMode, target: $descriptionMode });
+
 export const mapModel = {
     $map,
     setMap,
@@ -40,4 +44,7 @@ export const mapModel = {
 
     setClippingMode,
     $isClippingMode,
+
+    setDescriptionMode,
+    $descriptionMode,
 };

@@ -28,6 +28,10 @@ export const MapEditorPopup = (props: Props) => {
 const Content = ({ object }: Props) => {
     const { _id, type, readonly } = object;
 
+    //
+
+
+
     const map = useUnit(mapModel.$map);
 
     const handleRemoveSelect = (e: React.MouseEvent) => {
@@ -43,7 +47,9 @@ const Content = ({ object }: Props) => {
     };
 
     const handleModalFormOpen = () => {
+
         geoObjectFormModel.setSelectedEditorObject(object);
+
         geoObjectFormModel.setIsGeoObjectModalOpen(true);
     };
 

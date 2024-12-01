@@ -2,8 +2,15 @@ import type { LatLngTuple } from 'leaflet';
 import type { Classifier } from './classifiers';
 import type { GEO_OBJECT_STATUS } from './constants';
 
+export interface parentGeoObjects {
+    id: string;
+    childGeographicalObjectId: string;
+    parentGeographicalObjectId: string;
+}
+
 export interface GeoObject extends DraftGeoObject {
     id: string;
+    /*     parentGeoObjects: parentGeoObjects[]; */
 }
 
 export interface DraftGeoObject {

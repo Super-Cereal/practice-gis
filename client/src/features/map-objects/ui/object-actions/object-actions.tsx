@@ -63,10 +63,12 @@ export const MapObjectItem: React.FC<MapObjectItemProps> = ({ geoObject, parentG
         } else {
             editorModel.setClippedObject(null)
         }
-
-
-
         mapModel.setClippingMode(!isClippingMode)
+    };
+    const handleDescription = (geoObject: GeoObject) => {
+        geoObjectFormModel.setSelectedObjectToEdit(geoObject);
+
+        mapModel.setDescriptionMode(true)
     };
 
 
@@ -86,6 +88,9 @@ export const MapObjectItem: React.FC<MapObjectItemProps> = ({ geoObject, parentG
                 </Button>
                 <Button mix={styles.btn} onClick={() => handleZoom(geoObject)}>
                     Приблизить
+                </Button>
+                <Button mix={styles.btn} onClick={() => handleDescription(geoObject)}>
+                    Раскрыть описание
                 </Button>
                 {mapEditable &&
                     <Button mix={styles.btn} onClick={() => handleClipping(geoObject)}>

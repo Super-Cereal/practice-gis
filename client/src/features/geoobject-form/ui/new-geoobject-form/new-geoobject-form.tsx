@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useUnit } from 'effector-react';
 
-import { geoObjectModel } from '../../../../entities/geoobject';
+import { geoObjectModel, topologyModel } from '../../../../entities/geoobject';
 import { Modal } from '../../../../shared/ui/modal';
 import { mapEditorModel } from '../../../map-editor';
 
@@ -15,6 +15,7 @@ import { mapModel } from '../../../../entities/map';
 import { mapObjectsModel } from '../../../map-objects';
 
 import styles from './new-geoobject-form.module.css';
+import { editorModel } from '../../../map-editor/lib/editor.model';
 
 const typeToLabel = {
     Point: 'точки',
@@ -24,6 +25,11 @@ const typeToLabel = {
 
 /** Форма сохраняет черновики */
 export const NewGeoobjectForm = () => {
+    const isClippingMode = useUnit(mapModel.$isClippingMode);
+    const clippedObject = useUnit(editorModel.$clippedObject);
+
+
+
     // поля для формы
     const {
         register,
@@ -42,11 +48,23 @@ export const NewGeoobjectForm = () => {
     const handleSave = async (data: FormFields) => {
         const savedGeoobject = await geoObjectModel.saveGeoObjectFx(mapDataToGeoobject(data, editorObject));
 
+        if (isClippingMode && clippedObject) {
+
+
+            await topologyModel.addParentChildLinkFx({
+                parentGeographicalObjectId: clippedObject.id,
+                childGeographicalObjectId: savedGeoobject.id,
+            });
+
+            console.log('parent child');
+
+
+        }
         // После успешного сохранения удаляем выбранный обьект
         mapEditorModel.deleteObject(editorObject._id);
 
         // Открываем модалку редактирования
-        mapModel.setMapMode('view');
+        /*   mapModel.setMapMode('view'); */
 
         /*    mapObjectsModel.setSelectedGeoobject(savedGeoobject);  !!!!!!!!!!!!!!!!!!!!!!*/
 
