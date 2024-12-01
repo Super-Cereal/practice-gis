@@ -47,7 +47,9 @@ export const NewGeoobjectForm = () => {
 
         // Открываем модалку редактирования
         mapModel.setMapMode('view');
-        mapObjectsModel.setSelectedGeoobject(savedGeoobject);
+
+        /*    mapObjectsModel.setSelectedGeoobject(savedGeoobject);  !!!!!!!!!!!!!!!!!!!!!!*/
+
         geoObjectFormModel.setIsUpdateModalOpen(true);
 
         handleClose();

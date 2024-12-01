@@ -1,5 +1,4 @@
 import type { LatLngTuple } from 'leaflet';
-
 import type { Classifier } from './classifiers';
 import type { GEO_OBJECT_STATUS } from './constants';
 

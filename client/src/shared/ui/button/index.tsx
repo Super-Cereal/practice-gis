@@ -6,7 +6,7 @@ import './index.scss';
 
 interface Props extends React.PropsWithChildren, React.ButtonHTMLAttributes<HTMLButtonElement> {
     mix?: string;
-    color?: 'blue' | 'orange';
+    color?: 'blue' | 'orange' | 'violet';
     size?: 's' | 'm';
 }
 

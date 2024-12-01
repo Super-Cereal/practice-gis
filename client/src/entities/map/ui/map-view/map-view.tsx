@@ -31,11 +31,13 @@ export const MapView = ({ loading, children }: Props) => {
 
 /** Сохраняет map в стор, чтобы его можно было использовать вне компонента MapContainer */
 const _MapSetter = () => {
+
     const map = useMap();
 
     useEffect(() => {
         mapModel.setMap(map);
     }, [map]);
+
 
     return null;
 };

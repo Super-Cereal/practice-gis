@@ -13,7 +13,8 @@ import { Form } from '../../../../shared/ui/form';
 type Fields = Pick<AssignedAspect, 'endPoint' | 'geographicalObjectId' | 'code'>;
 
 export const AssignAspectForm = () => {
-    const selectedGeoobject = useUnit(mapObjectsModel.$selectedGeoobject);
+    const selectedGeoobjects = useUnit(mapObjectsModel.$selectedGeoobjects);
+    const selectedGeoobject = selectedGeoobjects[0]
 
     const {
         register,

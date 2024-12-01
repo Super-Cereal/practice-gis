@@ -1,11 +1,18 @@
 import { createStore, createEvent, sample } from 'effector';
 
 import type { EditorObject } from '../../map-editor';
+import { GeoObject } from '../../../entities/geoobject';
 
-// Создаем стор для выбранного черновика
+// СОСТОЯНИЕ ДЛЯ ВЫБРАННОГО ЧЕРНОВИКА В EDIT MODE  В
+
 const $selectedEditorObject = createStore<EditorObject | null>(null);
 const setSelectedEditorObject = createEvent<EditorObject | null>();
 sample({ clock: setSelectedEditorObject, target: $selectedEditorObject });
+
+// для вЫБРАННОГО ГЕОБЪЕТКА ДЛЯ РЕДАКТИРОВАНИЯ
+const $selectedObjectToEdit = createStore<GeoObject | null>(null);
+const setSelectedObjectToEdit = createEvent<GeoObject | null>();
+sample({ clock: setSelectedObjectToEdit, target: $selectedObjectToEdit });
 
 //form
 const $isGeoObjectModalOpen = createStore(false);
@@ -58,4 +65,7 @@ export const geoObjectFormModel = {
 
     $isAssignAspectModalOpen,
     setIsAssignAspectModalOpen,
+
+    $selectedObjectToEdit,
+    setSelectedObjectToEdit,
 };

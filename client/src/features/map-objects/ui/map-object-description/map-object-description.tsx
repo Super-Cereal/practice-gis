@@ -65,9 +65,9 @@ export const MapObjectDescription = ({ geoObject, childGeoObjects, parentGeoObje
                     <div className={styles.noObject}>Классификаторов пока нет</div>
                 )}
 
-                <Button mix={styles.btn} onClick={handleAddClassFormOpen}>
+                {/*   <Button mix={styles.btn} onClick={handleAddClassFormOpen}>
                     Добавить обьекту классификатор
-                </Button>
+                </Button> */}
             </Spoiler>
 
             <Spoiler mix={styles.spoiler} title="Аспекты" badgeText="А">

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { LeafletMouseEvent } from 'leaflet';
+import { LatLngTuple, LeafletMouseEvent } from 'leaflet';
 import { useUnit } from 'effector-react';
 
 import { Button } from '../../../../shared/ui/button';
@@ -10,19 +10,43 @@ import { EditorObject } from '../../lib/types';
 import { useSelectedObjectsByType } from '../../lib/use-objects-by-type';
 
 import styles from './map-editor-actions.module.scss';
+import { MapObjectActions } from '../../../map-objects';
+import { pointInsidePolygon } from '../../../../utils/IsPolygonInside';
+import { getGeometry } from '../../../../entities/geoobject';
 
 /** Рендерит список действий в черновиковом режиме (обьединение/удаление кнопок/полигонов) */
 export const MapEditorActions = () => {
     const map = useUnit(mapModel.$map);
+    const isClippingMode = useUnit(mapModel.$isClippingMode);
+    const clippedObject = useUnit(editorModel.$clippedObject);
 
     // Клик по карте создает новую точку
     useEffect(() => {
         if (!map) {
+            console.log(' (!map)');
             return;
         }
-
         const handleMapClick = (e: LeafletMouseEvent) => {
-            editorModel.addObject({ type: 'Point', coordinates: [e.latlng.lat, e.latlng.lng] });
+            if (isClippingMode && clippedObject) {
+
+                const clippedPolygon = getGeometry(clippedObject)
+
+                const isPointInsidePolygon = pointInsidePolygon(
+                    ([e.latlng.lat, e.latlng.lng]),
+                    clippedPolygon?.coordinates as LatLngTuple[])
+
+                if (!isPointInsidePolygon) {
+                    console.log('точка не может быть вне родительского полигона');
+
+                }
+                else {
+                    editorModel.addObject({ type: 'Point', coordinates: [e.latlng.lat, e.latlng.lng] });
+                }
+
+            } else {
+                editorModel.addObject({ type: 'Point', coordinates: [e.latlng.lat, e.latlng.lng] });
+            }
+
         };
 
         map.addEventListener('click', handleMapClick);
@@ -30,7 +54,7 @@ export const MapEditorActions = () => {
         return () => {
             map.removeEventListener('click', handleMapClick);
         };
-    }, [map]);
+    }, [map, isClippingMode, clippedObject]);
 
     const unitePointsTo = (type: Exclude<EditorObject['type'], 'Point'>) => {
         map?.closePopup();
@@ -44,6 +68,7 @@ export const MapEditorActions = () => {
 
     return (
         <div>
+            < MapObjectActions />
             <h2>Выбранные геообъекты:</h2>
 
             <ObjectsActionsContainer

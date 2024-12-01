@@ -2,13 +2,25 @@ import { createStore, sample, createEvent } from 'effector';
 import { nanoid } from 'nanoid';
 
 import type { EditorObject, EditorPoint } from './types';
-import { geoObjectModel, getGeometry } from '../../../entities/geoobject';
+import { GeoObject, geoObjectModel, getGeometry } from '../../../entities/geoobject';
 import { mapModel } from '../../../entities/map';
 
 const $objects = createStore<Record<EditorObject['_id'], EditorObject>>({});
 const $selectedObjects = sample({
     clock: $objects,
     fn: (objects) => Object.values(objects).filter(({ selected }) => selected),
+});
+
+// Хранилище для текущего объекта клиппирования
+const $clippedObject = createStore<GeoObject | null>(null);
+
+// Событие для добавления текущего объекта клиппирования
+const setClippedObject = createEvent<GeoObject | null>();
+
+// Обработка установки текущего приближенного объекта
+sample({
+    clock: setClippedObject,
+    target: $clippedObject,
 });
 
 /** Добавить обьект по координатам */
@@ -83,6 +95,9 @@ export const editorModel = {
     deleteObject,
 
     unitePointsTo,
+
+    setClippedObject,
+    $clippedObject,
 };
 
 /**

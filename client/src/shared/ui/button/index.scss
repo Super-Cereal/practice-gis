@@ -14,15 +14,20 @@
     transition: 0.2s;
 
     &_color_blue {
-        background: #6bbaff;
+        background: #b9d8f4;
 
-        color: #265178;
+        color: #111e2a;
     }
 
     &_color_orange {
-        background: #f28b53;
+        background: #d97373;
 
-        color: #853d16;
+        color: #381414;
+    }
+    &_color_violet {
+        background: #f5d182;
+
+        color: #271b29;
     }
 
     &_size_m {

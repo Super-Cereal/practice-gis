@@ -34,7 +34,8 @@ export const GeoobjectСhildForm = () => {
     const aspects = useUnit(aspectsModel.$uniqueAspects);
 
     //родитель
-    const parentGeoObject = useUnit(mapObjectsModel.$selectedGeoobject);
+    const parentGeoObject = useUnit(geoObjectFormModel.$selectedObjectToEdit);
+
 
     const {
         register,

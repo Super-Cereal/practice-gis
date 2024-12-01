@@ -21,6 +21,10 @@ const $mapAspect = createStore<DraftAspect | null>(null);
 const setMapAspect = createEvent<DraftAspect | null>();
 sample({ clock: setMapAspect, target: $mapAspect });
 
+const $isClippingMode = createStore<boolean>(false);
+const setClippingMode = createEvent<boolean>();
+sample({ clock: setClippingMode, target: $isClippingMode });
+
 export const mapModel = {
     $map,
     setMap,
@@ -33,4 +37,7 @@ export const mapModel = {
 
     $editorPointsOnCorners,
     setEditorPointsOnCorners,
+
+    setClippingMode,
+    $isClippingMode,
 };

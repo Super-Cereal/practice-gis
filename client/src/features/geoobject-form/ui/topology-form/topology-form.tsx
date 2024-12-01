@@ -27,7 +27,8 @@ interface Fields {
 
 export const TopologyForm = () => {
     // сохраненный объект для изменения
-    const selectedGeoobject = useUnit(mapObjectsModel.$selectedGeoobject);
+
+    const selectedGeoobject = useUnit(geoObjectFormModel.$selectedObjectToEdit);
 
     const {
         register,

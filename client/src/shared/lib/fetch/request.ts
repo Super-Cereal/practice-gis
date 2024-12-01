@@ -27,7 +27,9 @@ export function request<RETURNS>(path: string, method: Method, settings?: Settin
         if (!response.ok) {
             throw new Error(response.statusText);
         }
-
+        if (method === 'DELETE') {
+            return;
+        }
         if (response.statusText !== 'No Content') {
             return response.json();
         }

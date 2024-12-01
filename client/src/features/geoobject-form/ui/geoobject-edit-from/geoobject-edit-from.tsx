@@ -20,7 +20,8 @@ import styles from './geoobject-edit-from.module.css';
 
 export const GeoobjectEditFrom = () => {
     // сохраненный  объект для изменения
-    const selectedGeoobject = useUnit(mapObjectsModel.$selectedGeoobject);
+
+    const selectedGeoobject = useUnit(geoObjectFormModel.$selectedObjectToEdit);
 
     const {
         register,

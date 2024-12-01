@@ -47,11 +47,11 @@ const Content = ({ object }: Props) => {
         geoObjectFormModel.setIsGeoObjectModalOpen(true);
     };
 
-    // const selectedAspect = useUnit(mapModel.$mapAspect);
-    // const handleModalAspectsOpen = () => {
-    //     geoObjectFormModel.setSelectedEditorObject({ _id, type });
-    //     geoObjectFormModel.setIsAspectsModalOpen(true);
-    // };
+    /*     const selectedAspect = useUnit(mapModel.$mapAspect);
+        const handleModalAspectsOpen = () => {
+           geoObjectFormModel.setSelectedEditorObject({ _id, type });
+            geoObjectFormModel.setIsAspectsModalOpen(true);
+        }; */
 
     return (
         <>
