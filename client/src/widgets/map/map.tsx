@@ -97,7 +97,7 @@ export const Map = () => {
                 </div>
 
                 <div className={styles.map}>
-                    <MapContainer center={[59.955, 30.3]} zoom={12} style={{ height: '85vh', width: '100%' }}>
+                    <MapContainer center={[59.955, 30.3]} zoom={12} style={{ height: '90vh', width: '100%' }}>
                         <_MapSetter />
 
                         <LayersControl position="topright">

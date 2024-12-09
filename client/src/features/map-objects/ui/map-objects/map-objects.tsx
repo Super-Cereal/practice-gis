@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useUnit } from 'effector-react';
 import { Circle, Polygon, Polyline, useMap } from 'react-leaflet';
 import { MapObjectPopup } from '../map-object-popup/map-object-popup';
-import { aspectsModel, geoObjectModel, getGeometry, topologyModel, type GeoObject, type GeometryGeoJSON } from '../../../../entities/geoobject';
+import {
+    aspectsModel,
+    geoObjectModel,
+    getGeometry,
+    topologyModel,
+    type GeoObject,
+    type GeometryGeoJSON,
+} from '../../../../entities/geoobject';
 import { mapObjectsModel } from '../../lib/map-objects.model';
 import { mapModel } from '../../../../entities/map';
 import { editorModel } from '../../../map-editor/lib/editor.model';
@@ -31,7 +38,7 @@ export const MapObjects = () => {
                 .flatMap((id) => geoObjects.find((item) => item.id === id))
                 .filter((geoObject): geoObject is GeoObject => geoObject !== undefined);
 
-            const preFilteredGeoobjects = geoObjects.filter((geoObject) => geoObject.id === clippedObject?.id);
+            const preFilteredGeoobjects = geoObjects.filter((geoObject) => geoObject.id !== clippedObject?.id);
             preFilteredGeoobjects.push(...childGeoObjects);
             setFilteredGeoobjects(preFilteredGeoobjects);
         } else if (!clippedObject) {
@@ -45,7 +52,6 @@ export const MapObjects = () => {
             const currentZoom = map.getZoom();
             setZoom(currentZoom);
             console.log('currentZoom', currentZoom);
-
         };
 
         map.on('zoomend', handleZoom);
@@ -82,9 +88,8 @@ const getProps = (
     geometry: GeometryGeoJSON,
     selectedObjects: GeoObject[],
     zoomedObject: GeoObject | null,
-    zoom: number
+    zoom: number,
 ) => {
-
     const { type, coordinates } = geometry;
     const isSelected = selectedObjects.some((selectedObject) => selectedObject.id === object.id);
     const isZoomed = zoomedObject && zoomedObject.id === object.id;
@@ -92,16 +97,15 @@ const getProps = (
     // Размеры объектов зависят от уровня зума
     const sizeMultiplier = Math.max(1, zoom / 12);
 
-    let sizeMultiplierForRadius = 18
+    let sizeMultiplierForRadius = 18;
 
     if (zoom >= 16) {
-        sizeMultiplierForRadius = zoom
+        sizeMultiplierForRadius = zoom;
     } else if (zoom > 13 && zoom < 16) {
-        sizeMultiplierForRadius = zoom / 3
+        sizeMultiplierForRadius = zoom / 3;
     } else if (zoom <= 13) {
-        sizeMultiplierForRadius = zoom / 10
+        sizeMultiplierForRadius = zoom / 10;
     }
-
 
     const radius = 100 / sizeMultiplierForRadius; // Радиус точек
 
