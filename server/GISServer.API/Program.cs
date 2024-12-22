@@ -16,6 +16,7 @@ builder.Services.AddScoped<IAspectService, AspectService>();
 builder.Services.AddScoped<ITopologyService, TopologyService>();
 builder.Services.AddScoped<IGeoObjectClassifiersService, GeoObjectClassifiersService>();
 builder.Services.AddScoped<IParentChildService, ParentChildService>();
+builder.Services.AddScoped<PolygonService>();
 
 builder.Services.AddScoped<IGeoObjectRepository, GeoObjectRepository>();
 builder.Services.AddScoped<IClassifierRepository, ClassifierRepository>();
@@ -30,6 +31,12 @@ builder.Services.AddSingleton<TopologyMapper>();
 builder.Services.AddSingleton<AspectMapper>();
 builder.Services.AddScoped<ParentChildMapper>();
 builder.Services.AddSingleton<GeoObjectClassifiersMapper>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new PolygonConverter());
+    });
 
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -49,7 +56,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+
 app.UseAuthorization();
 app.MapControllers();
 

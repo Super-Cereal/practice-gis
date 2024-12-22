@@ -1,8 +1,10 @@
 ﻿using GISServer.API.Model;
 using GISServer.API.Mapper;
 using GISServer.Domain.Model;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
+using GeoJSON.Net.Feature;
+using GeoJSON.Net.Geometry;
+using System.Text.Json.Nodes;
+
 
 namespace GISServer.API.Service
 {
@@ -13,11 +15,12 @@ namespace GISServer.API.Service
         private readonly GeoObjectMapper _geoObjectMapper;
         private readonly AspectMapper _aspectMapper;
         private readonly ClassifierMapper _classifierMapper;
+        private readonly PolygonService _polygonService;
 
         public GeoObjectService(
-                IGeoObjectRepository repository, 
+                IGeoObjectRepository repository,
                 IClassifierRepository classifierRepository,
-                GeoObjectMapper geoObjectMapper, 
+                GeoObjectMapper geoObjectMapper,
                 ClassifierMapper classifierMapper,
                 AspectMapper aspectMapper)
         {
@@ -27,6 +30,35 @@ namespace GISServer.API.Service
             _classifierMapper = classifierMapper;
             _aspectMapper = aspectMapper;
         }
+
+        public Task<Feature> UnionPolygons(Polygon polygon1, Polygon polygon2)
+        {
+            var featureCollection = CreateFeatureCollection(polygon1, polygon2);
+            Console.WriteLine(featureCollection);
+            var result = _polygonService.Union(featureCollection);
+            return Task.FromResult(result); 
+        }
+
+        public Task<Feature> IntersectPolygons(Polygon polygon1, Polygon polygon2)
+        {
+            var featureCollection = CreateFeatureCollection(polygon1, polygon2);
+            var result = _polygonService.Intersection(featureCollection);
+            return Task.FromResult(result); 
+        }
+
+
+
+        // Создание коллекции Feature из двух полигонов
+        private GeoJSON.Net.Feature.FeatureCollection CreateFeatureCollection(Polygon polygon1, Polygon polygon2)
+        {
+            var features = new List<Feature>
+    {
+        new Feature(polygon1),
+        new Feature(polygon2)
+    };
+            return new GeoJSON.Net.Feature.FeatureCollection(features);
+        }
+
 
         public GeoObjectDTO InitGeoObject(GeoObjectDTO geoObjectDTO)
         {

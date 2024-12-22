@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { get, post, put, del } from '../../../shared/lib/fetch';
-import type { GeoObject, DraftGeoObject } from '../model/types';
+import type { GeoObject, DraftGeoObject, GeometryGeoJSON, PolygonsRequestDTO } from '../model/types';
 
 export const getGeoObjectsRequest = async () => {
     const data = await get<GeoObject[]>('/api/GeoObject');
@@ -37,6 +37,30 @@ export const deleteGeoObjectRequest = async (id: string) => {
         toast('Обьект удален', { type: 'success' });
     } catch (e) {
         toast('Что-то пошло не так', { type: 'error' });
+        console.log(e);
+        throw e;
+    }
+};
+
+export const unionPolygonsRequest = async (request: PolygonsRequestDTO) => {
+    try {
+        const data = await post('/api/GeoObject/UnionPolygons', { body: request });
+        toast('Полигоны успешно объединены', { type: 'success' });
+        return data;
+    } catch (e) {
+        toast('Ошибка при объединении полигонов', { type: 'error' });
+        console.log(e);
+        throw e;
+    }
+};
+
+export const intersectPolygonsRequest = async (request: PolygonsRequestDTO) => {
+    try {
+        const data = await post('/api/GeoObject/IntersectPolygons', { body: request });
+        toast('Полигоны успешно пересечены', { type: 'success' });
+        return data;
+    } catch (e) {
+        toast('Ошибка при пересечении полигонов', { type: 'error' });
         console.log(e);
         throw e;
     }

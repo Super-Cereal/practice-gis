@@ -73,3 +73,13 @@ export type GeometryGeoJSON =
           type: 'PolyLine' | 'Polygon';
           coordinates: LatLngTuple[];
       };
+
+export type GeometryGeoJSONPolygon = {
+    type: 'PolyLine' | 'Polygon';
+    coordinates: LatLngTuple[][];
+};
+
+export interface PolygonsRequestDTO {
+    Polygon1: GeometryGeoJSONPolygon;
+    Polygon2: GeometryGeoJSONPolygon;
+}

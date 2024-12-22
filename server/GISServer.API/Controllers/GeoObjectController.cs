@@ -2,24 +2,92 @@
 using GISServer.API.Service;
 using GISServer.API.Model;
 using GISServer.Domain.Model;
+using GeoJSON.Net.Feature;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace GISServer.API.Controllers
 {
 
     [ApiController]
     [Route("api/[controller]")]
+ 
+
     public class GeoObjectController : ControllerBase
     {
         private readonly IGeoObjectService _geoObjectService;
         private readonly IGeoObjectClassifiersService _geoObjectClassifierService;
+        private readonly PolygonService _polygonService;
 
         public GeoObjectController(
-                IGeoObjectService service, 
-                IGeoObjectClassifiersService geoObjectClassifierService)
+                IGeoObjectService service,
+                IGeoObjectClassifiersService geoObjectClassifierService,
+            PolygonService polygonService)
         {
             _geoObjectService = service;
             _geoObjectClassifierService = geoObjectClassifierService;
+            _polygonService = polygonService;
         }
+
+        [HttpPost("UnionPolygons")]
+        public async Task<ActionResult<Feature>> UnionPolygons([FromBody] PolygonOpDTO request)
+        {
+            try
+            {
+                // Логируем запрос
+                Console.WriteLine("Received request: " + JsonSerializer.Serialize(request));
+
+                if (request == null)
+                {
+                    Console.WriteLine("Request is null.");
+                    return BadRequest("Request body is null.");
+                }
+
+                if (request.Polygon1 == null || request.Polygon2 == null)
+                {
+                    Console.WriteLine("Invalid request: One or both polygons are null.");
+                    return BadRequest("Both Polygon1 and Polygon2 must be provided.");
+                }
+
+                Console.WriteLine("Polygon1 des: " + JsonSerializer.Serialize(request.Polygon1));
+                Console.WriteLine("Polygon2 des: " + JsonSerializer.Serialize(request.Polygon2));
+
+                // Логируем перед вызовом сервиса
+                Console.WriteLine("Calling GeoObjectService.UnionPolygons...");
+                Console.WriteLine("....................................................." + request);
+                var result = await _geoObjectService.UnionPolygons(request.Polygon1, request.Polygon2);
+
+                // Логируем результат
+                Console.WriteLine("Union operation result: " + JsonSerializer.Serialize(result));
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Логируем исключение
+                Console.WriteLine("Exception occurred: " + ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
+
+        [HttpPost("IntersectPolygons")]
+        public async Task<ActionResult<Feature>> IntersectPolygons([FromBody] PolygonOpDTO request)
+        {
+            try
+            {
+                var result = await _geoObjectService.IntersectPolygons(request.Polygon1, request.Polygon2);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
 
         [HttpGet]
         public async Task<ActionResult> GetGeoObjects()
