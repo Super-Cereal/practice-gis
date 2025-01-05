@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using GeoJSON.Net.Geometry;
 
 namespace GISServer.API.Controllers
 {
@@ -31,55 +32,64 @@ namespace GISServer.API.Controllers
             _polygonService = polygonService;
         }
 
+
+
+        //////////////////////////////////////////////////////////////////////////
         [HttpPost("UnionPolygons")]
         public async Task<ActionResult<Feature>> UnionPolygons([FromBody] PolygonOpDTO request)
         {
             try
             {
-                // Логируем запрос
-                Console.WriteLine("Received request: " + JsonSerializer.Serialize(request));
-
-                if (request == null)
+                if (request == null || request.Polygon1 == null || request.Polygon2 == null)
                 {
-                    Console.WriteLine("Request is null.");
-                    return BadRequest("Request body is null.");
-                }
-
-                if (request.Polygon1 == null || request.Polygon2 == null)
-                {
-                    Console.WriteLine("Invalid request: One or both polygons are null.");
                     return BadRequest("Both Polygon1 and Polygon2 must be provided.");
                 }
 
-                Console.WriteLine("Polygon1 des: " + JsonSerializer.Serialize(request.Polygon1));
-                Console.WriteLine("Polygon2 des: " + JsonSerializer.Serialize(request.Polygon2));
+                // Логируем входные данные
+                Console.WriteLine($"Polygon1: {JsonSerializer.Serialize(request.Polygon1)}");
+                Console.WriteLine($"Polygon2: {JsonSerializer.Serialize(request.Polygon2)}");
 
-                // Логируем перед вызовом сервиса
-                Console.WriteLine("Calling GeoObjectService.UnionPolygons...");
-                Console.WriteLine("....................................................." + request);
-                var result = await _geoObjectService.UnionPolygons(request.Polygon1, request.Polygon2);
+                // Преобразуем PolygonDTO в GeoJSON Polygon
+                var polygon1 = ConvertToGeoJsonPolygon(request.Polygon1);
+                var polygon2 = ConvertToGeoJsonPolygon(request.Polygon2);
 
-                // Логируем результат
-                Console.WriteLine("Union operation result: " + JsonSerializer.Serialize(result));
+                // Логируем преобразованные данные
+                Console.WriteLine($"Converted Polygon1 GeoJSON: {JsonSerializer.Serialize(polygon1)}");
+                Console.WriteLine($"Converted Polygon2 GeoJSON: {JsonSerializer.Serialize(polygon2)}");
+
+                // Создаем FeatureCollection
+                var featureCollection = CreateFeatureCollection(polygon1, polygon2);
+
+                // Вызываем сервис для объединения
+                var result = await _geoObjectService.UnionPolygons(featureCollection);
 
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                // Логируем исключение
-                Console.WriteLine("Exception occurred: " + ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
-
 
         [HttpPost("IntersectPolygons")]
         public async Task<ActionResult<Feature>> IntersectPolygons([FromBody] PolygonOpDTO request)
         {
             try
             {
-                var result = await _geoObjectService.IntersectPolygons(request.Polygon1, request.Polygon2);
+                if (request == null || request.Polygon1 == null || request.Polygon2 == null)
+                {
+                    return BadRequest("Both Polygon1 and Polygon2 must be provided.");
+                }
+
+                var polygon1 = ConvertToGeoJsonPolygon(request.Polygon1);
+                var polygon2 = ConvertToGeoJsonPolygon(request.Polygon2);
+
+                // Создаем FeatureCollection
+                var featureCollection = CreateFeatureCollection(polygon1, polygon2);
+
+                // Вызываем сервис для пересечения
+                var result = await _geoObjectService.IntersectPolygons(featureCollection);
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -88,6 +98,40 @@ namespace GISServer.API.Controllers
             }
         }
 
+        private GeoJSON.Net.Geometry.Polygon ConvertToGeoJsonPolygon(PolygonDTO polygonDTO)
+        {
+            // Преобразуем координаты в LineString
+            var lineStrings = polygonDTO.Coordinates.Select(line =>
+            {
+                // Замкнем контур, если нужно
+                if (!line[0].SequenceEqual(line[line.Count - 1]))
+                {
+                    line.Add(line[0]);  // Замкнем контур
+                }
+
+                // Преобразуем координаты в LineString (GeoJSON формат)
+                return new GeoJSON.Net.Geometry.LineString(line.Select(coord => new GeoJSON.Net.Geometry.Position(coord[0], coord[1])).ToList());
+            }).ToList();
+
+            // Создаем и возвращаем GeoJSON Polygon
+            return new GeoJSON.Net.Geometry.Polygon(lineStrings);
+        }
+
+        private FeatureCollection CreateFeatureCollection(GeoJSON.Net.Geometry.Polygon polygon1, GeoJSON.Net.Geometry.Polygon polygon2)
+        {
+            var features = new List<Feature>
+    {
+        new Feature(polygon1),
+        new Feature(polygon2)
+    };
+
+            return new FeatureCollection(features);
+        }
+
+
+
+
+        /// ////////////////////////////////////////////////////////////
 
         [HttpGet]
         public async Task<ActionResult> GetGeoObjects()

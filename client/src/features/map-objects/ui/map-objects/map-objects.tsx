@@ -101,10 +101,10 @@ const getProps = (
 
     if (zoom >= 16) {
         sizeMultiplierForRadius = zoom;
-    } else if (zoom > 13 && zoom < 16) {
+    } else if (zoom > 11 && zoom < 16) {
         sizeMultiplierForRadius = zoom / 3;
-    } else if (zoom <= 13) {
-        sizeMultiplierForRadius = zoom / 10;
+    } else if (zoom <= 11) {
+        sizeMultiplierForRadius = zoom / 20;
     }
 
     const radius = 100 / sizeMultiplierForRadius; // Радиус точек

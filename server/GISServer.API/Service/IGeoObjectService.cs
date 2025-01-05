@@ -25,8 +25,8 @@ namespace GISServer.API.Service
         public Task<List<AspectDTO>> GetGeoObjectAspects(Guid geoObjectId);
 
 
-        public Task<Feature> UnionPolygons(Polygon polygon1, Polygon polygon2);
-        public Task<Feature> IntersectPolygons(Polygon polygon1, Polygon polygon2);
+        public Task<Feature> UnionPolygons(FeatureCollection featureCollection);
+        public Task<Feature> IntersectPolygons(FeatureCollection featureCollection);
 
     }
 }

@@ -4,6 +4,7 @@ using GISServer.Domain.Model;
 using GeoJSON.Net.Feature;
 using GeoJSON.Net.Geometry;
 using System.Text.Json.Nodes;
+using System.Text.Json;
 
 
 namespace GISServer.API.Service
@@ -31,32 +32,44 @@ namespace GISServer.API.Service
             _aspectMapper = aspectMapper;
         }
 
-        public Task<Feature> UnionPolygons(Polygon polygon1, Polygon polygon2)
+        public Task<Feature> UnionPolygons(FeatureCollection featureCollection)
         {
-            var featureCollection = CreateFeatureCollection(polygon1, polygon2);
-            Console.WriteLine(featureCollection);
+            // Логируем входные данные
+            Console.WriteLine($"Received FeatureCollection for Union: {JsonSerializer.Serialize(featureCollection)}");
+
+            // Проверка на null
+            if (featureCollection == null || featureCollection.Features.Count == 0)
+            {
+                throw new ArgumentNullException(nameof(featureCollection), "FeatureCollection cannot be null or empty.");
+            }
+
+            // Выполняем операцию объединения
             var result = _polygonService.Union(featureCollection);
-            return Task.FromResult(result); 
+
+            // Логируем результат
+            Console.WriteLine($"Union operation result: {JsonSerializer.Serialize(result)}");
+
+            return Task.FromResult(result);
         }
 
-        public Task<Feature> IntersectPolygons(Polygon polygon1, Polygon polygon2)
+        public Task<Feature> IntersectPolygons(FeatureCollection featureCollection)
         {
-            var featureCollection = CreateFeatureCollection(polygon1, polygon2);
+            // Логируем входные данные
+            Console.WriteLine($"Received FeatureCollection for Intersection: {JsonSerializer.Serialize(featureCollection)}");
+
+            // Проверка на null
+            if (featureCollection == null || featureCollection.Features.Count == 0)
+            {
+                throw new ArgumentNullException(nameof(featureCollection), "FeatureCollection cannot be null or empty.");
+            }
+
+            // Выполняем операцию пересечения
             var result = _polygonService.Intersection(featureCollection);
-            return Task.FromResult(result); 
-        }
 
+            // Логируем результат
+            Console.WriteLine($"Intersection operation result: {JsonSerializer.Serialize(result)}");
 
-
-        // Создание коллекции Feature из двух полигонов
-        private GeoJSON.Net.Feature.FeatureCollection CreateFeatureCollection(Polygon polygon1, Polygon polygon2)
-        {
-            var features = new List<Feature>
-    {
-        new Feature(polygon1),
-        new Feature(polygon2)
-    };
-            return new GeoJSON.Net.Feature.FeatureCollection(features);
+            return Task.FromResult(result);
         }
 
 
