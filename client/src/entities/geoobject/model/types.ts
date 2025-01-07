@@ -74,12 +74,48 @@ export type GeometryGeoJSON =
           coordinates: LatLngTuple[];
       };
 
-export type GeometryGeoJSONPolygon = {
-    type: 'PolyLine' | 'Polygon';
-    coordinates: LatLngTuple[][];
-};
-
 export interface PolygonsRequestDTO {
     Polygon1: GeometryGeoJSONPolygon;
     Polygon2: GeometryGeoJSONPolygon;
 }
+
+export type GeometryGeoJSONPolygon = {
+    type: 'Polygon';
+    coordinates: LatLngTuple[][];
+};
+
+export type FeatureCollection = {
+    type: 'FeatureCollection';
+    features: Feature[];
+    properties: Record<string, any>;
+};
+
+export type Feature = {
+    type: 'Feature';
+    geometry: GeometryGeoJSONPolygon;
+    properties: Record<string, any>;
+};
+
+export const convertPolygonsToFeatureCollection = (
+    polygon1: GeometryGeoJSONPolygon,
+    polygon2: GeometryGeoJSONPolygon,
+): FeatureCollection => {
+    const features: Feature[] = [
+        {
+            type: 'Feature',
+            geometry: polygon1,
+            properties: {},
+        },
+        {
+            type: 'Feature',
+            geometry: polygon2,
+            properties: {},
+        },
+    ];
+
+    return {
+        type: 'FeatureCollection',
+        features: features,
+        properties: {},
+    };
+};

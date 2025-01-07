@@ -3,11 +3,10 @@ using GISServer.API.Service;
 using GISServer.API.Model;
 using GISServer.Domain.Model;
 using GeoJSON.Net.Feature;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using GeoJSON.Net.Geometry;
+
+
+using Newtonsoft.Json;
+
 
 namespace GISServer.API.Controllers
 {
@@ -36,59 +35,49 @@ namespace GISServer.API.Controllers
 
         //////////////////////////////////////////////////////////////////////////
         [HttpPost("UnionPolygons")]
-        public async Task<ActionResult<Feature>> UnionPolygons([FromBody] PolygonOpDTO request)
+        public async Task<ActionResult<PolygonOpDTO>> UnionPolygons([FromBody]  PolygonOpDTO dto)
         {
             try
             {
-                if (request == null || request.Polygon1 == null || request.Polygon2 == null)
+                Console.WriteLine($"Received DTO: {JsonConvert.SerializeObject(dto)}");
+
+                if (dto.FeatureCollection == null)
                 {
-                    return BadRequest("Both Polygon1 and Polygon2 must be provided.");
+                    return BadRequest("FeatureCollection is null.");
                 }
 
-                // Логируем входные данные
-                Console.WriteLine($"Polygon1: {JsonSerializer.Serialize(request.Polygon1)}");
-                Console.WriteLine($"Polygon2: {JsonSerializer.Serialize(request.Polygon2)}");
+                if (dto.FeatureCollection.Features.Count < 2)
+                {
+                    return BadRequest("FeatureCollection must contain at least two features.");
+                }
 
-                // Преобразуем PolygonDTO в GeoJSON Polygon
-                var polygon1 = ConvertToGeoJsonPolygon(request.Polygon1);
-                var polygon2 = ConvertToGeoJsonPolygon(request.Polygon2);
-
-                // Логируем преобразованные данные
-                Console.WriteLine($"Converted Polygon1 GeoJSON: {JsonSerializer.Serialize(polygon1)}");
-                Console.WriteLine($"Converted Polygon2 GeoJSON: {JsonSerializer.Serialize(polygon2)}");
-
-                // Создаем FeatureCollection
-                var featureCollection = CreateFeatureCollection(polygon1, polygon2);
-
-                // Вызываем сервис для объединения
-                var result = await _geoObjectService.UnionPolygons(featureCollection);
+                var result = await _geoObjectService.UnionPolygons(dto.FeatureCollection);
 
                 return Ok(result);
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+
+
 
         [HttpPost("IntersectPolygons")]
         public async Task<ActionResult<Feature>> IntersectPolygons([FromBody] PolygonOpDTO request)
         {
             try
             {
-                if (request == null || request.Polygon1 == null || request.Polygon2 == null)
+                if (request == null || request.FeatureCollection == null || request.FeatureCollection.Features.Count < 2)
                 {
-                    return BadRequest("Both Polygon1 and Polygon2 must be provided.");
+                    return BadRequest("FeatureCollection must contain at least two features.");
                 }
 
-                var polygon1 = ConvertToGeoJsonPolygon(request.Polygon1);
-                var polygon2 = ConvertToGeoJsonPolygon(request.Polygon2);
-
-                // Создаем FeatureCollection
-                var featureCollection = CreateFeatureCollection(polygon1, polygon2);
-
-                // Вызываем сервис для пересечения
-                var result = await _geoObjectService.IntersectPolygons(featureCollection);
+              
+                // Вызываем сервис для пересечения полигонов
+                var result = await _geoObjectService.IntersectPolygons(request.FeatureCollection);
 
                 return Ok(result);
             }
@@ -98,36 +87,9 @@ namespace GISServer.API.Controllers
             }
         }
 
-        private GeoJSON.Net.Geometry.Polygon ConvertToGeoJsonPolygon(PolygonDTO polygonDTO)
-        {
-            // Преобразуем координаты в LineString
-            var lineStrings = polygonDTO.Coordinates.Select(line =>
-            {
-                // Замкнем контур, если нужно
-                if (!line[0].SequenceEqual(line[line.Count - 1]))
-                {
-                    line.Add(line[0]);  // Замкнем контур
-                }
 
-                // Преобразуем координаты в LineString (GeoJSON формат)
-                return new GeoJSON.Net.Geometry.LineString(line.Select(coord => new GeoJSON.Net.Geometry.Position(coord[0], coord[1])).ToList());
-            }).ToList();
-
-            // Создаем и возвращаем GeoJSON Polygon
-            return new GeoJSON.Net.Geometry.Polygon(lineStrings);
-        }
-
-        private FeatureCollection CreateFeatureCollection(GeoJSON.Net.Geometry.Polygon polygon1, GeoJSON.Net.Geometry.Polygon polygon2)
-        {
-            var features = new List<Feature>
-    {
-        new Feature(polygon1),
-        new Feature(polygon2)
-    };
-
-            return new FeatureCollection(features);
-        }
-
+       
+      
 
 
 

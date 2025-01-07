@@ -1,11 +1,12 @@
-﻿using GeoJSON.Net.Geometry;
+﻿
+
+using System.Text.Json.Serialization;
 
 namespace GISServer.API.Model
 {
-    public class PolygonOpDTO
+    public class PolygonOpDTO : JsonFeatureCollectionWrap<PolygonOpDTO>
     {
-        public PolygonDTO Polygon1 { get; set; }
-        public PolygonDTO Polygon2 { get; set; }
+        [JsonPropertyName("FeatureCollection")]
+        public GeoJSON.Net.Feature.FeatureCollection FeatureCollection { get; set; } = default!;
     }
-
 }

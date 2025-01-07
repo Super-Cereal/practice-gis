@@ -5,7 +5,8 @@ using GISServer.Infrastructure.Data;
 using GISServer.Infrastructure.Service;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-
+using GISServer.API.Model;
+using Newtonsoft.Json;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<Context>();
@@ -55,6 +56,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 
 app.UseAuthorization();
@@ -111,4 +113,37 @@ using (var myContext = new Context())
         await myContext.SaveChangesAsync();
     }
 }
+
+app.MapPost("/union", (PolygonOpDTO request, PolygonService service) =>
+{
+    try
+    {
+
+        var result = service.Union(request.FeatureCollection);
+        var json = JsonConvert.SerializeObject(result);
+        return Results.Text(json, "application/json");
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(ex.Message);
+    }
+})
+.WithName("UnionPolygons");
+
+app.MapPost("/intersect", (PolygonOpDTO request, PolygonService service) =>
+{
+    try
+    {
+        var result = service.Intersection(request.FeatureCollection);
+        var json = JsonConvert.SerializeObject(result);
+        return Results.Text(json, "application/json");
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(ex.Message);
+    }
+})
+.WithName("IntersectPolygons");
+
+
 app.Run();

@@ -37,13 +37,7 @@ namespace GISServer.API.Service
             // Логируем входные данные
             Console.WriteLine($"Received FeatureCollection for Union: {JsonSerializer.Serialize(featureCollection)}");
 
-            // Проверка на null
-            if (featureCollection == null || featureCollection.Features.Count == 0)
-            {
-                throw new ArgumentNullException(nameof(featureCollection), "FeatureCollection cannot be null or empty.");
-            }
-
-            // Выполняем операцию объединения
+         
             var result = _polygonService.Union(featureCollection);
 
             // Логируем результат
@@ -54,14 +48,7 @@ namespace GISServer.API.Service
 
         public Task<Feature> IntersectPolygons(FeatureCollection featureCollection)
         {
-            // Логируем входные данные
-            Console.WriteLine($"Received FeatureCollection for Intersection: {JsonSerializer.Serialize(featureCollection)}");
-
-            // Проверка на null
-            if (featureCollection == null || featureCollection.Features.Count == 0)
-            {
-                throw new ArgumentNullException(nameof(featureCollection), "FeatureCollection cannot be null or empty.");
-            }
+            
 
             // Выполняем операцию пересечения
             var result = _polygonService.Intersection(featureCollection);
