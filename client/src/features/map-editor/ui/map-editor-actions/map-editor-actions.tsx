@@ -6,15 +6,19 @@ import { Button } from '../../../../shared/ui/button';
 import { mapModel } from '../../../../entities/map';
 
 import { editorModel } from '../../lib/editor.model';
-import { EditorObject, EditorPolygon } from '../../lib/types';
+import { EditorObject, EditorPolygon, featureToEditorObject } from '../../lib/types';
 import { useSelectedObjectsByType } from '../../lib/use-objects-by-type';
 
 import styles from './map-editor-actions.module.scss';
 import { MapObjectActions, mapObjectsModel } from '../../../map-objects';
 import { pointInsidePolygon } from '../../../../utils/IsPolygonInside';
 import { GeoObject, getGeometry } from '../../../../entities/geoobject';
-import { unionPolygonsRequest } from '../../../../entities/geoobject/api/requests';
-import { GeometryGeoJSONPolygon } from '../../../../entities/geoobject/model/types';
+import { intersectPolygonsRequest, unionPolygonsRequest } from '../../../../entities/geoobject/api/requests';
+import {
+    convertPolygonsToFeatureCollection,
+    FeatureCollection,
+    GeometryGeoJSONPolygon,
+} from '../../../../entities/geoobject/model/types';
 
 /** Рендерит список действий в черновиковом режиме (обьединение/удаление кнопок/полигонов) */
 export const MapEditorActions = () => {
@@ -80,14 +84,15 @@ export const MapEditorActions = () => {
         return [coordinates];
     };
 
+    const scalar = 1000000;
+
     const Union = (selectedPolygons: EditorObject[]) => {
         const isPolygon = selectedPolygons.every((obj): obj is EditorPolygon => obj.type === 'Polygon');
-
         if (!isPolygon) {
             throw new Error("All selected objects must have type 'Polygon'.");
         }
 
-        const Polygons: GeometryGeoJSONPolygon[] = selectedPolygons.map((obj) => ({
+        const Polygons = selectedPolygons.map((obj) => ({
             type: obj.type,
             coordinates: closePolygon(obj.coordinates),
         }));
@@ -96,25 +101,100 @@ export const MapEditorActions = () => {
             throw new Error('At least two polygons are required.');
         }
 
-        const Polygon1 = Polygons[0];
-        const Polygon2 = Polygons[1];
+        if (isPolygon) {
+            /*  const sanitizedPolygons = Polygons.map(({ readonly, selected, _id, ...rest }) => rest); */
+            //@ts-ignore
+            const FC = convertPolygonsToFeatureCollection(Polygons as GeometryGeoJSONPolygon[]);
 
-        console.log(Polygons);
+            unionPolygonsRequest({ FeatureCollection: FC }).then((result) => {
+                console.log(selectedPolygons[0]);
 
-        unionPolygonsRequest({ Polygon1, Polygon2 });
+                editorModel.deleteObject(selectedPolygons[0]._id);
+                editorModel.deleteObject(selectedPolygons[1]._id);
+
+                console.log('result1', result);
+
+                result.geometry.coordinates = result.geometry.coordinates.map((ring) => {
+                    if (
+                        ring.length > 0 &&
+                        (ring[0][0] !== ring[ring.length - 1][0] || ring[0][1] !== ring[ring.length - 1][1])
+                    ) {
+                        ring.push([...ring[0]]); // Добавляем копию первой точки в конец
+                    }
+
+                    return ring.map(([lon, lat]) => [
+                        parseFloat((lat / scalar).toFixed(6)), // Разделяем на scalar для восстановления координат
+                        parseFloat((lon / scalar).toFixed(6)), // Разделяем на scalar для восстановления координат
+                    ]);
+                });
+
+                console.log('result2', result);
+
+                /*         const obj = featureToEditorObject(result); */
+                editorModel.addObject({ type: 'Polygon', coordinates: result.geometry.coordinates[0] });
+            });
+        }
     };
-    /*  const Interspect = (geoObjectIds: string[]) => {
-        map?.closePopup();
 
-        editorModel.unitePointsTo(type);
-    }; */
+    const Interspect = (selectedPolygons: EditorObject[]) => {
+        const isPolygon = selectedPolygons.every((obj): obj is EditorPolygon => obj.type === 'Polygon');
+        if (!isPolygon) {
+            throw new Error("All selected objects must have type 'Polygon'.");
+        }
+
+        const Polygons = selectedPolygons.map((obj) => ({
+            type: obj.type,
+            coordinates: closePolygon(obj.coordinates),
+        }));
+
+        if (Polygons.length < 2) {
+            throw new Error('At least two polygons are required.');
+        }
+
+        if (isPolygon) {
+            /*  const sanitizedPolygons = Polygons.map(({ readonly, selected, _id, ...rest }) => rest); */
+            //@ts-ignore
+            const FC = convertPolygonsToFeatureCollection(Polygons as GeometryGeoJSONPolygon[]);
+
+            intersectPolygonsRequest({ FeatureCollection: FC }).then((result) => {
+                console.log(selectedPolygons[0]);
+
+                editorModel.deleteObject(selectedPolygons[0]._id);
+                editorModel.deleteObject(selectedPolygons[1]._id);
+
+                console.log('result1', result);
+
+                result.geometry.coordinates = result.geometry.coordinates.map((ring) => {
+                    if (
+                        ring.length > 0 &&
+                        (ring[0][0] !== ring[ring.length - 1][0] || ring[0][1] !== ring[ring.length - 1][1])
+                    ) {
+                        ring.push([...ring[0]]); // Добавляем копию первой точки в конец
+                    }
+
+                    return ring.map(([lon, lat]) => [
+                        parseFloat((lat / scalar).toFixed(6)), // Разделяем на scalar для восстановления координат
+                        parseFloat((lon / scalar).toFixed(6)), // Разделяем на scalar для восстановления координат
+                    ]);
+                });
+
+                console.log('result2', result);
+
+                /*         const obj = featureToEditorObject(result); */
+                editorModel.addObject({ type: 'Polygon', coordinates: result.geometry.coordinates[0] });
+            });
+        }
+    };
 
     return (
         <div>
             <MapObjectActions />
             <h2>Выбранные геообъекты:</h2>
             {selectedPolygons.length === 2 && (
-                <Button onClick={() => Union(selectedPolygons)}>Обьединить полигоны</Button>
+                <>
+                    <Button onClick={() => Union(selectedPolygons)}>Обьединить полигоны</Button>
+                    <Button onClick={() => Interspect(selectedPolygons)}>Пересечь полигоны</Button>
+                </>
             )}
             <ObjectsActionsContainer
                 objects={selectedPoints}

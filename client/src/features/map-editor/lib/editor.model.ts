@@ -38,6 +38,7 @@ sample({
             readonly: readonly ?? false,
         };
 
+        console.log('Adding object:', newObject); // Лог добавляемого объекта
         return { ...objects, [newObject._id]: newObject };
     },
     target: $objects,

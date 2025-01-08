@@ -118,7 +118,7 @@ app.MapPost("/union", (PolygonOpDTO request, PolygonService service) =>
 {
     try
     {
-
+        Console.WriteLine($"Received DTO: {JsonConvert.SerializeObject(request)}");
         var result = service.Union(request.FeatureCollection);
         var json = JsonConvert.SerializeObject(result);
         return Results.Text(json, "application/json");
@@ -134,6 +134,7 @@ app.MapPost("/intersect", (PolygonOpDTO request, PolygonService service) =>
 {
     try
     {
+        Console.WriteLine($"Received DTO: {JsonConvert.SerializeObject(request)}");
         var result = service.Intersection(request.FeatureCollection);
         var json = JsonConvert.SerializeObject(result);
         return Results.Text(json, "application/json");

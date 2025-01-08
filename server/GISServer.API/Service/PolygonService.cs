@@ -6,14 +6,20 @@ using GeoJSON.Net.Geometry;
 
 namespace GISServer.API.Service
 {
+
     public class PolygonService
     {
         private const int MinimumOfInputObjects = 2;
 
-        // Union of multiple polygons using Clipper2Lib
+        /// <summary>
+        /// Объеденяет несколько полигонов в 1
+        /// </summary>
+        /// <param name="featureCollection">Коллекция фишек</param>
+        /// <returns></returns>
         public Feature Union(FeatureCollection featureCollection)
         {
             var pathsCollection = ConvertToPathsCollection(featureCollection);
+
             var previous = UnionPolygons(pathsCollection);
 
             return ConvertToGeoJSON(previous);
@@ -135,5 +141,5 @@ namespace GISServer.API.Service
             return pathsCollection;
         }
     }
-    }
+}
 

@@ -3,7 +3,7 @@ import { useUnit } from 'effector-react';
 import cx from 'classnames';
 import { useMount } from 'react-use';
 import { LayersControl, MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
-import L from 'leaflet';
+import L, { CRS } from 'leaflet';
 
 import { mapModel } from '../../entities/map';
 import { aspectsModel, classifiersModel, geoObjectModel, getGeometry, topologyModel } from '../../entities/geoobject';
@@ -47,13 +47,11 @@ const MapZoomHandler = () => {
 };
 /** Сохраняет map в стор, чтобы его можно было использовать вне компонента MapContainer */
 const _MapSetter = () => {
-
     const map = useMap();
 
     useEffect(() => {
         mapModel.setMap(map);
     }, [map]);
-
 
     return null;
 };
@@ -97,7 +95,12 @@ export const Map = () => {
                 </div>
 
                 <div className={styles.map}>
-                    <MapContainer center={[59.955, 30.3]} zoom={12} style={{ height: '90vh', width: '100%' }}>
+                    <MapContainer
+                        center={[59.955, 30.3]}
+                        zoom={12}
+                        style={{ height: '90vh', width: '100%' }}
+                        crs={CRS.EPSG3857}
+                    >
                         <_MapSetter />
 
                         <LayersControl position="topright">
@@ -124,7 +127,6 @@ export const Map = () => {
                                 />
                             </LayersControl.BaseLayer>
                         </LayersControl>
-
 
                         <MapZoomHandler />
                         <MapObjects />

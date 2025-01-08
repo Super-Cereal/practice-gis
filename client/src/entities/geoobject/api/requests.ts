@@ -1,6 +1,13 @@
 import { toast } from 'react-toastify';
 import { get, post, put, del } from '../../../shared/lib/fetch';
-import type { GeoObject, DraftGeoObject, GeometryGeoJSON, PolygonsRequestDTO } from '../model/types';
+import type {
+    GeoObject,
+    DraftGeoObject,
+    GeometryGeoJSON,
+    FeatureCollectionRequestDTO,
+    FeatureCollection,
+    Feature,
+} from '../model/types';
 
 export const getGeoObjectsRequest = async () => {
     const data = await get<GeoObject[]>('/api/GeoObject');
@@ -42,10 +49,14 @@ export const deleteGeoObjectRequest = async (id: string) => {
     }
 };
 
-export const unionPolygonsRequest = async (request: PolygonsRequestDTO) => {
+export const unionPolygonsRequest = async (request: FeatureCollectionRequestDTO): Promise<Feature> => {
     try {
-        const data = await post('/api/GeoObject/UnionPolygons', { body: request });
+        const data: Feature = await post('/union', { body: request });
         toast('Полигоны успешно объединены', { type: 'success' });
+
+        if (data.geometry.coordinates.length == 0) {
+            toast('Ошибка при объединении полигонов', { type: 'error' });
+        }
         return data;
     } catch (e) {
         toast('Ошибка при объединении полигонов', { type: 'error' });
@@ -54,10 +65,13 @@ export const unionPolygonsRequest = async (request: PolygonsRequestDTO) => {
     }
 };
 
-export const intersectPolygonsRequest = async (request: PolygonsRequestDTO) => {
+export const intersectPolygonsRequest = async (request: FeatureCollectionRequestDTO): Promise<Feature> => {
     try {
-        const data = await post('/api/GeoObject/IntersectPolygons', { body: request });
+        const data: Feature = await post('/intersect', { body: request });
         toast('Полигоны успешно пересечены', { type: 'success' });
+        if (data.geometry.coordinates.length == 0) {
+            toast('Ошибка при объединении полигонов', { type: 'error' });
+        }
         return data;
     } catch (e) {
         toast('Ошибка при пересечении полигонов', { type: 'error' });

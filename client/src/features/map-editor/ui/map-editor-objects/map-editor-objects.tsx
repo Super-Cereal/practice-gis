@@ -17,8 +17,8 @@ export const MapEditorObjects = () => {
     const currentObject = useUnit(editorModel.$clippedObject); // Хранит текущий полигон
 
     const [zoom, setZoom] = useState<number>(12);
+    /*     const [objects, setObjects] = useState<EditorObject[]>([]); */
     const map = useMap();
-
 
     const objects = Object.values(useUnit(editorModel.$objects)).filter((obj: EditorObject) => {
         if (!isClippingMode || !currentObject) return true;
@@ -34,7 +34,6 @@ export const MapEditorObjects = () => {
             const currentZoom = map.getZoom();
             setZoom(currentZoom);
             console.log('currentZoom', currentZoom);
-
         };
 
         map.on('zoomend', handleZoom);
@@ -61,7 +60,6 @@ export const MapEditorObjects = () => {
     );
 };
 
-
 /**
  * Функция для получения свойств компонента на основе типа объекта
  */
@@ -71,16 +69,15 @@ const getProps = (object: EditorObject, zoom: number) => {
     // Размеры объектов зависят от уровня зума
     const sizeMultiplier = Math.max(1, zoom / 12);
 
-    let sizeMultiplierForRadius = 18
+    let sizeMultiplierForRadius = 18;
 
     if (zoom >= 16) {
-        sizeMultiplierForRadius = zoom
+        sizeMultiplierForRadius = zoom;
     } else if (zoom > 13 && zoom < 16) {
-        sizeMultiplierForRadius = zoom / 3
+        sizeMultiplierForRadius = zoom / 3;
     } else if (zoom <= 13) {
-        sizeMultiplierForRadius = zoom / 10
+        sizeMultiplierForRadius = zoom / 10;
     }
-
 
     const radius = 100 / sizeMultiplierForRadius; // Радиус точек
     const weight = 2 * sizeMultiplier; // Толщина линий
@@ -114,6 +111,5 @@ const getProps = (object: EditorObject, zoom: number) => {
                 positions: coordinates as LatLngTuple[],
                 Component: Polygon,
             };
-
     }
 };
