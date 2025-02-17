@@ -20,6 +20,7 @@ export const MapObjects = () => {
     const selectedAspect = useUnit(mapModel.$mapAspect);
     const assignedAspects = useUnit(aspectsModel.$assignedAspects);
     const zoomedObject = useUnit(mapObjectsModel.$zoomedObject);
+    const pointsOnCorners = useUnit(mapModel.$editorPointsOnCorners);
 
     const clippedObject = useUnit(editorModel.$clippedObject);
 
@@ -31,6 +32,8 @@ export const MapObjects = () => {
     const map = useMap();
 
     useEffect(() => {
+        let filtered = geoObjects;
+
         if (clippedObject) {
             const childGeoObjects = parentChildLinks
                 .filter((link) => link.parentGeographicalObjectId === clippedObject.id)
@@ -38,27 +41,43 @@ export const MapObjects = () => {
                 .flatMap((id) => geoObjects.find((item) => item.id === id))
                 .filter((geoObject): geoObject is GeoObject => geoObject !== undefined);
 
-            const preFilteredGeoobjects = geoObjects.filter((geoObject) => geoObject.id !== clippedObject?.id);
-            preFilteredGeoobjects.push(...childGeoObjects);
-            setFilteredGeoobjects(preFilteredGeoobjects);
-        } else if (!clippedObject) {
-            setFilteredGeoobjects(geoObjects);
+            filtered = geoObjects.filter((geoObject) => geoObject.id !== clippedObject?.id);
+            filtered.push(...childGeoObjects);
         }
-    }, [clippedObject, geoObjects]);
 
-    // Слушатель изменения масштаба
+        // Фильтруем по выбранному аспекту
+        if (selectedAspect) {
+            filtered = geoObjects.filter((geoObject) =>
+                assignedAspects.some(
+                    ({ geographicalObjectId, code }) =>
+                        geoObject.id === geographicalObjectId && selectedAspect.code === code,
+                ),
+            );
+        }
+
+        setFilteredGeoobjects(filtered);
+    }, [clippedObject, geoObjects, selectedAspect, assignedAspects, parentChildLinks]);
+
     useEffect(() => {
         const handleZoom = () => {
             const currentZoom = map.getZoom();
             setZoom(currentZoom);
-            console.log('currentZoom', currentZoom);
         };
 
         map.on('zoomend', handleZoom);
         return () => {
             map.off('zoomend', handleZoom);
         };
-    }, [map]);
+    }, [map, pointsOnCorners]);
+
+    // Отдельный useEffect для setEditorPointsOnCorners
+    useEffect(() => {
+        if (zoom <= 13) {
+            mapModel.setEditorPointsOnCorners(false);
+        } else {
+            mapModel.setEditorPointsOnCorners(true);
+        }
+    }, [zoom]);
 
     return (
         <>
@@ -95,19 +114,20 @@ const getProps = (
     const isZoomed = zoomedObject && zoomedObject.id === object.id;
 
     // Размеры объектов зависят от уровня зума
+    const initialRadius = 10; // Например, радиус точек по умолчанию в пикселях
+
+    // Размеры объектов зависят от уровня зума
     const sizeMultiplier = Math.max(1, zoom / 12);
 
-    let sizeMultiplierForRadius = 18;
+    let sizeMultiplierForRadius = initialRadius;
 
     if (zoom >= 16) {
         sizeMultiplierForRadius = zoom;
-    } else if (zoom > 11 && zoom < 16) {
+    } else if (zoom > 13 && zoom < 16) {
         sizeMultiplierForRadius = zoom / 3;
-    } else if (zoom <= 11) {
-        sizeMultiplierForRadius = zoom / 20;
     }
 
-    const radius = 100 / sizeMultiplierForRadius; // Радиус точек
+    const radius = (initialRadius * sizeMultiplierForRadius) / 100;
 
     const weight = 2 * sizeMultiplier; // Толщина линий
     const common: Record<string, any> = {

@@ -81,9 +81,9 @@ export const MapObjectItem: React.FC<MapObjectItemProps> = ({ geoObject, parentG
                 <Button mix={styles.btn} onClick={() => handleZoom(geoObject)}>
                     Приблизить
                 </Button>
-                <Button mix={styles.btn} onClick={() => handleDescription(geoObject)}>
+                {/*    <Button mix={styles.btn} onClick={() => handleDescription(geoObject)}>
                     Раскрыть описание
-                </Button>
+                </Button> */}
                 {mapEditable && (
                     <Button mix={styles.btn} onClick={() => handleClipping(geoObject)}>
                         {isClippingMode ? 'Отключить редактор' : 'Редактировать местность'}
